@@ -1,0 +1,18 @@
+name: Continuous Integration
+on: push
+
+jobs:
+  ci:
+    name: CI
+    uses: acidicoala/KoalaBox/.github/workflows/build-and-package.yml@a9a657f17a353cd273e3127bdd2c864610008d83
+    permissions:
+      contents: write
+    with:
+      modules: >-
+        ["SmokeAPI"]
+
+      zip_command: >
+        zip -j $ZIP_NAME
+        artifacts/*/*.dll
+
+      config: Debug

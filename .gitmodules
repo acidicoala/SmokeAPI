@@ -1,0 +1,3 @@
+[submodule "KoalaBox"]
+	path = KoalaBox
+	url = ../../acidicoala/KoalaBox.git
