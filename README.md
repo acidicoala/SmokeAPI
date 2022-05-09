@@ -56,7 +56,7 @@ Try installing the unlocker in hook mode first. If it doesn't work, try installi
 
 1. Find `steam_api.dll`/`steam_api64.dll` file in game directory, and add `_o` to it's name, e.g. `steam_api64_o.dll`.
 2. Download the latest SmokeAPI release zip from [SmokeAPI Releases].
-3. From SmokeAPI archive unpack `steam_api.dll`/`steam_api64.dll`, depending on the game bitness, and place it next the original steam_api DLL file.
+3. From SmokeAPI archive unpack `steam_api.dll`/`steam_api64.dll`, depending on the game bitness, and place it next to the original steam_api DLL file.
 
 If the unlocker is not working as expected, then please fully read the [Generic Unlocker Installation Instructions] before seeking help in the support forum.
 
@@ -68,7 +68,7 @@ If the unlocker is not working as expected, then please fully read the [Generic 
 
 ## ⚙ Configuration
 
-SmokeAPI does not require any manual configuration. By default, it uses the most reasonable options and tries to unlock all DLCs that it can. However, there might be circumstances in which you need more custom-tailored behaviour. In this case you can use a configuration file SmokeAPI.json that you can find here in this repository. To use it, just drop it alongside the SmokeAPI DLL. It will be read upon each launch of a game. In the absence of the config file, default value specified below will be used.
+SmokeAPI does not require any manual configuration. By default, it uses the most reasonable options and tries to unlock all DLCs that it can. However, there might be circumstances in which you need more custom-tailored behaviour. In this case you can use a configuration file [SmokeAPI.json] that you can find here in this repository. To use it, simply place it next to the SmokeAPI DLL. It will be read upon each launch of a game. In the absence of the config file, default value specified below will be used.
 
 | Option                  | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 | Type             | Default |
 |-------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------|:-------:|
@@ -83,6 +83,7 @@ SmokeAPI does not require any manual configuration. By default, it uses the most
 
 ¹ DLC/Item IDs can be obtained from https://steamdb.info. You need to be logged in with your steam account in order to see accurate inventory item IDs.
 
+[SmokeAPI.json]: res/SmokeAPI.json
 [manually maintained list of DLC IDs]: https://github.com/acidicoala/public-entitlements/blob/main/steam/v1/dlc.json
 
 ## 👋 Acknowledgements

@@ -34,7 +34,8 @@ configure_linker_exports(
 
 configure_build_config(extra_build_config)
 
-set(SMOKE_API_SOURCES
+set(
+    SMOKE_API_SOURCES
     src/smoke_api/smoke_api.cpp
     src/smoke_api/smoke_api.hpp
     src/steam_api_exports/steam_api_flat.cpp
