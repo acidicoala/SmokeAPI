@@ -25,7 +25,6 @@ set(
 )
 
 configure_linker_exports(
-    UNDECORATE false
     FORWARDED_DLL "${ORIGINAL_DLL}_o"
     INPUT_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/steam_api_exports"
     INPUT_DLLS "${DLL_INPUT}"

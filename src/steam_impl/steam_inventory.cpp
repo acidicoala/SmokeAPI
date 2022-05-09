@@ -122,18 +122,18 @@ namespace steam_inventory {
         const uint32_t* punValueBufferSizeOut,
         const std::function<bool()>& original_function
     ) {
+        const auto common_info = fmt::format(
+            "{} -> Handle: {}, Index: {}, Name: '{}'", function_name, resultHandle, unItemIndex, pchPropertyName
+        );
+
         const auto success = original_function();
 
         if (!success) {
-            logger->warn("{} -> result is false", function_name);
+            logger->warn("{}, Result is false", common_info);
             return false;
         }
 
-        logger->debug(
-            "{} -> handle: {}, index: {}, propertyName: '{}', buffer: {}",
-            function_name, resultHandle, unItemIndex, pchPropertyName,
-            String(pchValueBuffer, *punValueBufferSizeOut - 1)
-        );
+        logger->debug("{}, Buffer: '{}'", common_info, String(pchValueBuffer, *punValueBufferSizeOut - 1));
 
         return success;
     }
@@ -145,7 +145,7 @@ namespace steam_inventory {
     ) {
         const auto success = original_function();
 
-        logger->debug("{} -> handle: {}", function_name, fmt::ptr(pResultHandle));
+        logger->debug("{} -> Handle: {}", function_name, fmt::ptr(pResultHandle));
 
         return success;
     }
@@ -160,11 +160,11 @@ namespace steam_inventory {
     ) {
         const auto success = original_function();
 
-        logger->trace("{} -> handle: {}", function_name, fmt::ptr(pResultHandle));
+        logger->debug("{} -> Handle: {}", function_name, fmt::ptr(pResultHandle));
 
         if (success && pInstanceIDs != nullptr) {
             for (int i = 0; i < unCountInstanceIDs; i++) {
-                logger->trace("  index: {}, itemId: {}", i, pInstanceIDs[i]);
+                logger->debug("  Index: {}, ItemId: {}", i, pInstanceIDs[i]);
             }
         }
 
@@ -182,9 +182,9 @@ namespace steam_inventory {
 
         if (pOutBuffer != nullptr) {
             String buffer((char*) pOutBuffer, *punOutBufferSize);
-            logger->debug("{} -> handle: {}, buffer: '{}'", function_name, resultHandle, buffer);
+            logger->debug("{} -> Handle: {}, Buffer: '{}'", function_name, resultHandle, buffer);
         } else {
-            logger->debug("{} -> handle: {}, size: '{}'", function_name, resultHandle, *punOutBufferSize);
+            logger->debug("{} -> Handle: {}, Size: '{}'", function_name, resultHandle, *punOutBufferSize);
         }
 
         return success;
@@ -199,18 +199,18 @@ namespace steam_inventory {
         const auto success = original_function();
 
         if (!success) {
-            logger->warn("{} -> result is false", function_name);
+            logger->warn("{} -> Result is false", function_name);
             return false;
         }
 
         if (punItemDefIDsArraySize) {
-            logger->debug("{} -> size: '{}'", function_name, *punItemDefIDsArraySize);
+            logger->debug("{} -> Size: {}", function_name, *punItemDefIDsArraySize);
         }
 
         if (pItemDefIDs) { // Definitions were copied
             for (int i = 0; i < *punItemDefIDsArraySize; i++) {
                 const auto& def = pItemDefIDs[i];
-                logger->debug("  Definition index: '{}', ID: {}", i, def);
+                logger->debug("  Index: {}, ID: {}", i, def);
             }
         }
 
@@ -225,17 +225,18 @@ namespace steam_inventory {
         const uint32_t* punValueBufferSizeOut,
         const std::function<bool()>& original_function
     ) {
+        const auto common_info = fmt::format(
+            "{} -> Definition ID: {}, Name: '{}'", function_name, iDefinition, pchPropertyName
+        );
+
         const auto success = original_function();
 
         if (!success) {
-            logger->warn("{} -> result is false", function_name);
+            logger->warn("{}, Result is false", common_info);
             return false;
         }
 
-        logger->debug(
-            "{} -> Definition ID: {}, name: '{}', buffer: '{}'",
-            function_name, iDefinition, pchPropertyName, String(pchValueBuffer, *punValueBufferSizeOut - 1)
-        );
+        logger->debug("{}, Buffer: '{}'", common_info, String(pchValueBuffer, *punValueBufferSizeOut - 1));
 
         return success;
     }

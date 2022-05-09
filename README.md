@@ -37,6 +37,7 @@ The list of games where inventory emulation has been shown to work is as follows
 - Hero Siege
 - Project Winter
 - Euro Truck Simulator 2
+- Bloons TD 6
 
 </details>
 
