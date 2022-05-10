@@ -12,7 +12,7 @@ ___
 
 📥 [Download the latest release](https://github.com/acidicoala/SmokeAPI/releases/latest)
 
-💬 [Official forum topic]()
+💬 [Official forum topic](https://cs.rin.ru/forum/viewtopic.php?p=2597932#p2597932)
 
 ## ℹ Introduction
 
