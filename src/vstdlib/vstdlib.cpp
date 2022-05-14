@@ -19,15 +19,15 @@ VIRTUAL(bool) SharedLibraryStopPlaying(PARAMS(void* arg)) { // NOLINT(misc-unuse
 
 struct CallbackData {
     [[maybe_unused]] void* pad1[1];
-    void* set_callback_name_address;
-    [[maybe_unused]] void* pad15[15];
-    void* callback_address;
+    void* set_callback_name_address; // to_do: fetch online
+    [[maybe_unused]] void* pad19[17];
+    void* callback_address; // to_do: fetch online
 };
 
 struct CoroutineData {
-    CallbackData* callback_data;
-    [[maybe_unused]] uint32_t pad3[3];
-    const char* callback_name;
+    CallbackData* callback_data; // to_do: fetch online
+    [[maybe_unused]] uint32_t pad4[3];
+    const char* callback_name; // to_do: fetch online
 };
 
 VIRTUAL(void) set_callback_name(PARAMS(const char** p_name)) {
