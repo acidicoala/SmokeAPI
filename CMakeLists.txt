@@ -65,3 +65,4 @@ configure_output_name(${ORIGINAL_DLL})
 configure_include_directories()
 
 target_link_libraries(SmokeAPI PRIVATE KoalaBox)
+
