@@ -90,7 +90,7 @@ namespace steam_functions {
             const auto version_number = stoi(version_string.substr(prefix.length()));
 
             if (version_number < min_version) {
-                util::panic("Unsupported old version of {}: {}", version_string, version_number);
+                logger->warn("Legacy version of {}: {}", version_string, version_number);
             }
 
             if (version_number > max_version) {

@@ -2,21 +2,9 @@
 <project version="4">
   <component name="CMakeSharedSettings">
     <configurations>
-      <configuration PROFILE_NAME="Debug [32]" ENABLED="true" GENERATION_DIR="build/32" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Visual Studio 2022 [x86]" GENERATION_OPTIONS="-G &quot;Visual Studio 17 2022&quot; -A Win32">
-        <ADDITIONAL_GENERATION_ENVIRONMENT>
-          <envs>
-            <env name="VERSION_SUFFIX" value="-debug" />
-          </envs>
-        </ADDITIONAL_GENERATION_ENVIRONMENT>
-      </configuration>
-      <configuration PROFILE_NAME="Debug [64]" ENABLED="true" GENERATION_DIR="build/64" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Visual Studio 2022 [amd64]" GENERATION_OPTIONS="-G &quot;Visual Studio 17 2022&quot; -A x64">
-        <ADDITIONAL_GENERATION_ENVIRONMENT>
-          <envs>
-            <env name="VERSION_SUFFIX" value="-debug" />
-          </envs>
-        </ADDITIONAL_GENERATION_ENVIRONMENT>
-      </configuration>
-      <configuration PROFILE_NAME="Relase [64]" ENABLED="true" GENERATION_DIR="build/64/release" CONFIG_NAME="Release" TOOLCHAIN_NAME="Visual Studio 2022 [amd64]" GENERATION_OPTIONS="-G &quot;Visual Studio 17 2022&quot; -A x64" />
+      <configuration PROFILE_NAME="Debug [32]" ENABLED="true" GENERATION_DIR="build/32" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Visual Studio 2022 [x86]" GENERATION_OPTIONS="-G &quot;Visual Studio 17 2022&quot; -A Win32" />
+      <configuration PROFILE_NAME="Debug [64]" ENABLED="true" GENERATION_DIR="build/64" CONFIG_NAME="Debug" TOOLCHAIN_NAME="Visual Studio 2022 [amd64]" GENERATION_OPTIONS="-G &quot;Visual Studio 17 2022&quot; -A x64" />
+      <configuration PROFILE_NAME="Relase [64]" ENABLED="false" GENERATION_DIR="build/64/release" CONFIG_NAME="Release" TOOLCHAIN_NAME="Visual Studio 2022 [amd64]" GENERATION_OPTIONS="-G &quot;Visual Studio 17 2022&quot; -A x64" />
     </configurations>
   </component>
 </project>
