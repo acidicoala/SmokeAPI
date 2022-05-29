@@ -118,9 +118,10 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetItemDefinitionProperty(
     ISteamInventory*, SteamItemDef_t, const char*, char*, uint32_t*
 );
 
-// vstdlib
+// koalageddon
 
 DLL_EXPORT(HCoroutine) Coroutine_Create(void* callback_address, struct CoroutineData* data);
+DLL_EXPORT(void) Log_Interface(const char* interface_name, const char* function_name);
 
 namespace steam_functions {
     using namespace koalabox;

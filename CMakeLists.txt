@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(SmokeAPI VERSION 1.0.0)
+project(SmokeAPI VERSION 1.0.2)
 
 include(KoalaBox/cmake/KoalaBox.cmake)
 
@@ -53,7 +53,8 @@ set(
     src/steam_functions/steam_functions.hpp
     src/steam_types/steam_types.hpp
     src/steamclient_exports/steamclient.cpp
-    src/vstdlib/vstdlib.cpp
+    src/koalageddon/vstdlib.cpp
+    src/koalageddon/steamclient.cpp
     src/main.cpp
     ${GENERATED_LINKER_EXPORTS}
 )

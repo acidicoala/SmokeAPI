@@ -2,13 +2,15 @@
 #include <steam_functions/steam_functions.hpp>
 #include <build_config.h>
 
-#include <koalabox/loader.hpp>
 #include <koalabox/config_parser.hpp>
-#include <koalabox/file_logger.hpp>
-#include <koalabox/win_util.hpp>
-#include <koalabox/hook.hpp>
 #include <koalabox/dll_monitor.hpp>
+#include <koalabox/file_logger.hpp>
+#include <koalabox/hook.hpp>
+#include <koalabox/loader.hpp>
+#include <koalabox/patcher.hpp>
+#include <koalabox/win_util.hpp>
 
+#define DETOUR_EX(FUNC, ADDRESS) hook::detour_or_warn(ADDRESS, #FUNC, reinterpret_cast<FunctionAddress>(FUNC));
 #define DETOUR(FUNC) hook::detour_or_warn(original_library, #FUNC, reinterpret_cast<FunctionAddress>(FUNC));
 
 namespace smoke_api {
@@ -50,10 +52,23 @@ namespace smoke_api {
                 if (util::strings_are_equal(exe_name, "steam.exe")) { // target vstdlib_s.dll
                     logger->info("🐨 Detected Koalageddon mode 💥");
 
-                    dll_monitor::init(VSTDLIB_DLL, [](const HMODULE& library) {
-                        original_library = library;
+                    dll_monitor::init({VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& library, const String& name) {
+                        original_library = library; // TODO: Is this necessary?
 
-                        DETOUR(Coroutine_Create)
+                        if (name == VSTDLIB_DLL) {
+                            // Family Sharing functions
+                            DETOUR(Coroutine_Create)
+                        } else if (name == STEAMCLIENT_DLL) {
+                            // Unlocking functions
+                            // TODO: Un-hardcode the pattern
+                            const String pattern("55 8B EC 8B ?? ?? ?? ?? ?? 81 EC ?? ?? ?? ?? 53 FF 15");
+                            auto Log_Interface_address = (FunctionAddress) patcher::find_pattern_address(
+                                win_util::get_module_info(library), "Log_Interface", pattern
+                            );
+                            if (Log_Interface_address) {
+                                DETOUR_EX(Log_Interface, Log_Interface_address)
+                            }
+                        }
                     });
                 } else if (config.hook_steamclient) { // target steamclient(64).dll
                     logger->info("🪝 Detected hook mode for SteamClient");
