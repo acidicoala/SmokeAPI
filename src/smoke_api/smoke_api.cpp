@@ -135,8 +135,8 @@ namespace smoke_api {
         }
     }
 
-    bool should_unlock(uint32_t appId) {
-        return config.unlock_all != config.override.contains(appId);
+    bool should_unlock(uint32_t app_id) {
+        return config.unlock_all != config.override.contains(app_id);
     }
 
 }

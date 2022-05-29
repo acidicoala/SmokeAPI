@@ -4,16 +4,15 @@ using namespace koalabox;
 
 namespace steam_apps {
 
-    bool IsSubscribedApp(const String& function_name, AppId_t appID);
+    bool IsDlcUnlocked(const String& function_name, AppId_t app_id, AppId_t dlc_id);
 
-    bool IsDlcInstalled(const String& function_name, AppId_t appID);
-
-    int GetDLCCount(const String& function_name, const std::function<int()>& original_function);
+    int GetDLCCount(const String& function_name, AppId_t app_id, const std::function<int()>& original_function);
 
     bool GetDLCDataByIndex(
         const String& function_name,
+        AppId_t app_id,
         int iDLC,
-        AppId_t* pAppID,
+        AppId_t* pDlcId,
         bool* pbAvailable,
         char* pchName,
         int cchNameBufferSize,

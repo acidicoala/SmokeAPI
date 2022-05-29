@@ -6,15 +6,15 @@ using namespace smoke_api;
 // ISteamApps
 
 DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsSubscribedApp(ISteamApps*, AppId_t appID) {
-    return steam_apps::IsSubscribedApp(__func__, appID);
+    return steam_apps::IsDlcUnlocked(__func__, 0, appID);
 }
 
 DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsDlcInstalled(ISteamApps*, AppId_t appID) {
-    return steam_apps::IsDlcInstalled(__func__, appID);
+    return steam_apps::IsDlcUnlocked(__func__, 0, appID);
 }
 
 DLL_EXPORT(int) SteamAPI_ISteamApps_GetDLCCount(ISteamApps* self) {
-    return steam_apps::GetDLCCount(__func__, [&]() {
+    return steam_apps::GetDLCCount(__func__, 0, [&]() {
         GET_ORIGINAL_FUNCTION(SteamAPI_ISteamApps_GetDLCCount)
 
         return SteamAPI_ISteamApps_GetDLCCount_o(self);
@@ -29,7 +29,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamApps_BGetDLCDataByIndex(
     char* pchName,
     int cchNameBufferSize
 ) {
-    return steam_apps::GetDLCDataByIndex(__func__, iDLC, pAppID, pbAvailable, pchName, cchNameBufferSize, [&]() {
+    return steam_apps::GetDLCDataByIndex(__func__, 0, iDLC, pAppID, pbAvailable, pchName, cchNameBufferSize, [&]() {
         GET_ORIGINAL_FUNCTION(SteamAPI_ISteamApps_BGetDLCDataByIndex)
 
         return SteamAPI_ISteamApps_BGetDLCDataByIndex_o(

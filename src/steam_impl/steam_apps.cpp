@@ -51,14 +51,15 @@ void save_to_cache(const String& app_id_str) {
     }
 }
 
-void fetch_and_cache_dlcs() {
-    uint32_t app_id;
-    try {
-        app_id = steam_functions::get_app_id_or_throw();
-        logger->info("Detected App ID: {}", app_id);
-    } catch (const Exception& ex) {
-        logger->error("Failed to get app ID: {}", ex.what());
-        return;
+void fetch_and_cache_dlcs(AppId_t app_id) {
+    if (not app_id) {
+        try {
+            app_id = steam_functions::get_app_id_or_throw();
+            logger->info("Detected App ID: {}", app_id);
+        } catch (const Exception& ex) {
+            logger->error("Failed to get app ID: {}", ex.what());
+            return;
+        }
     }
 
     const auto app_id_str = std::to_string(app_id);
@@ -131,28 +132,30 @@ void fetch_and_cache_dlcs() {
     }
 }
 
+String get_app_id_log(const AppId_t app_id) {
+    return app_id ? fmt::format("App ID: {}, ", app_id) : "";
+}
 
-namespace steam_apps{
+namespace steam_apps {
 
-    bool IsSubscribedApp(const String& function_name, AppId_t appID) {
-        const auto subscribed = should_unlock(appID);
+    bool IsDlcUnlocked(const String& function_name, AppId_t app_id, AppId_t dlc_id) {
+        const auto app_id_unlocked = not app_id or should_unlock(app_id); // true if app_id == 0
+        const auto dlc_id_unlocked = should_unlock(dlc_id);
 
-        logger->info("{} -> App ID: {}, Subscribed: {}", function_name, appID, subscribed);
+        const auto installed = app_id_unlocked and dlc_id_unlocked;
 
-        return subscribed;
-    }
-
-    bool IsDlcInstalled(const String& function_name, AppId_t appID) {
-        const auto installed = should_unlock(appID);
-
-        logger->info("{} -> App ID: {}, Installed: {}", function_name, appID, installed);
+        logger->info("{} -> {}DLC ID: {}, Unlocked: {}", function_name, get_app_id_log(app_id), dlc_id, installed);
 
         return installed;
     }
 
-    int GetDLCCount(const String& function_name, const std::function<int()>& original_function) {
+    int GetDLCCount(const String& function_name, const AppId_t app_id, const std::function<int()>& original_function) {
         static std::mutex section;
         std::lock_guard<std::mutex> guard(section);
+
+        if (app_id) {
+            logger->debug("{} -> App ID: {}", function_name, app_id);
+        }
 
         // Compute count only once
         static int total_count = [&]() {
@@ -171,7 +174,7 @@ namespace steam_apps{
             }
 
             logger->debug("Game has {} or more DLCs. Fetching DLCs from a web API.", max_dlc);
-            fetch_and_cache_dlcs();
+            fetch_and_cache_dlcs(app_id);
 
             const auto fetched_count = static_cast<int>(cached_dlcs.size());
             logger->debug("{} -> Fetched/cached DLC count: {}", function_name, fetched_count);
@@ -186,8 +189,9 @@ namespace steam_apps{
 
     bool GetDLCDataByIndex(
         const String& function_name,
+        AppId_t app_id,
         int iDLC,
-        AppId_t* pAppID,
+        AppId_t* pDlcId,
         bool* pbAvailable,
         char* pchName,
         int cchNameBufferSize,
@@ -195,13 +199,13 @@ namespace steam_apps{
     ) {
         const auto print_dlc_info = [&](const String& tag) {
             logger->info(
-                "{} -> [{}] index: {}, App ID: {}, available: {}, name: '{}'",
-                function_name, tag, iDLC, *pAppID, *pbAvailable, pchName
+                "{} -> [{}] {}index: {}, DLC ID: {}, available: {}, name: '{}'",
+                function_name, tag, get_app_id_log(app_id), iDLC, *pDlcId, *pbAvailable, pchName
             );
         };
 
         const auto fill_dlc_info = [&](const AppId_t id) {
-            *pAppID = id;
+            *pDlcId = id;
             *pbAvailable = should_unlock(id);
 
             auto name = fmt::format("DLC #{} with ID: {} ", iDLC, id);
@@ -216,8 +220,8 @@ namespace steam_apps{
                 return false;
             }
 
-            const auto app_id = config.dlc_ids[index];
-            fill_dlc_info(app_id);
+            const auto dlc_id = config.dlc_ids[index];
+            fill_dlc_info(dlc_id);
             print_dlc_info("injected");
             return true;
         };
@@ -229,7 +233,7 @@ namespace steam_apps{
                 const auto success = original_function();
 
                 if (success) {
-                    *pbAvailable = should_unlock(*pAppID);
+                    *pbAvailable = should_unlock(*pDlcId);
                     print_dlc_info("original");
                 } else {
                     logger->warn("{} -> original function failed for index: {}", function_name, iDLC);
@@ -254,8 +258,8 @@ namespace steam_apps{
 
         // Cached index
         if (iDLC < cached_dlcs.size()) {
-            const auto app_id = cached_dlcs[iDLC];
-            fill_dlc_info(app_id);
+            const auto dlc_id = cached_dlcs[iDLC];
+            fill_dlc_info(dlc_id);
             print_dlc_info("cached");
             return true;
         }

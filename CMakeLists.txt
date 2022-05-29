@@ -62,6 +62,11 @@ if (CMAKE_SIZEOF_VOID_P EQUAL 4)
         SMOKE_API_SOURCES ${SMOKE_API_SOURCES}
         src/koalageddon/vstdlib.cpp
         src/koalageddon/steamclient.cpp
+        src/steamclient_virtuals/client_app_manager.cpp
+        src/steamclient_virtuals/client_apps.cpp
+        src/steamclient_virtuals/client_inventory.cpp
+        src/steamclient_virtuals/client_user.cpp
+        src/steamclient_virtuals/client_utils.cpp
     )
 endif ()
 

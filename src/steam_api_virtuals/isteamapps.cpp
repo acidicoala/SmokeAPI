@@ -4,15 +4,15 @@
 using namespace smoke_api;
 
 VIRTUAL(bool) ISteamApps_BIsSubscribedApp(PARAMS(AppId_t appID)) { // NOLINT(misc-unused-parameters)
-    return steam_apps::IsSubscribedApp(__func__, appID);
+    return steam_apps::IsDlcUnlocked(__func__, 0, appID);
 }
 
 VIRTUAL(bool) ISteamApps_BIsDlcInstalled(PARAMS(AppId_t appID)) { // NOLINT(misc-unused-parameters)
-    return steam_apps::IsDlcInstalled(__func__, appID);
+    return steam_apps::IsDlcUnlocked(__func__, 0, appID);
 }
 
 VIRTUAL(int) ISteamApps_GetDLCCount(PARAMS()) {
-    return steam_apps::GetDLCCount(__func__, [&]() {
+    return steam_apps::GetDLCCount(__func__, 0, [&]() {
         GET_ORIGINAL_VIRTUAL_FUNCTION(ISteamApps_GetDLCCount)
 
         return ISteamApps_GetDLCCount_o(ARGS());
@@ -28,7 +28,7 @@ VIRTUAL(bool) ISteamApps_BGetDLCDataByIndex(
         int cchNameBufferSize
     )
 ) {
-    return steam_apps::GetDLCDataByIndex(__func__, iDLC, pAppID, pbAvailable, pchName, cchNameBufferSize, [&]() {
+    return steam_apps::GetDLCDataByIndex(__func__, 0, iDLC, pAppID, pbAvailable, pchName, cchNameBufferSize, [&]() {
         GET_ORIGINAL_VIRTUAL_FUNCTION(ISteamApps_BGetDLCDataByIndex)
 
         return ISteamApps_BGetDLCDataByIndex_o(

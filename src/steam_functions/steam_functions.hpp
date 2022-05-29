@@ -123,6 +123,16 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetItemDefinitionProperty(
 DLL_EXPORT(HCoroutine) Coroutine_Create(void* callback_address, struct CoroutineData* data);
 DLL_EXPORT(void) Log_Interface(const char* interface_name, const char* function_name);
 
+// IClientApps
+VIRTUAL(int) IClientApps_GetDLCCount(PARAMS(AppId_t));
+VIRTUAL(bool) IClientApps_BGetDLCDataByIndex(PARAMS(AppId_t, int, AppId_t*, bool*, char*, int));
+
+// IClientAppManager
+VIRTUAL(bool) IClientAppManager_IsAppDlcInstalled(PARAMS(AppId_t, AppId_t));
+
+// IClientUser
+VIRTUAL(bool) IClientUser_IsSubscribedApp(PARAMS(AppId_t));
+
 namespace steam_functions {
     using namespace koalabox;
 

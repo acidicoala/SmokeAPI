@@ -58,6 +58,6 @@ namespace smoke_api {
 
     void shutdown();
 
-    bool should_unlock(uint32_t appId);
+    bool should_unlock(uint32_t app_id);
 
 }
