@@ -7,8 +7,10 @@
 #include <koalabox/file_logger.hpp>
 #include <koalabox/hook.hpp>
 #include <koalabox/loader.hpp>
-#include <koalabox/patcher.hpp>
 #include <koalabox/win_util.hpp>
+#ifndef _WIN64
+#include <koalabox/patcher.hpp>
+#endif
 
 #define DETOUR_EX(FUNC, ADDRESS) hook::detour_or_warn(ADDRESS, #FUNC, reinterpret_cast<FunctionAddress>(FUNC));
 #define DETOUR(FUNC) hook::detour_or_warn(original_library, #FUNC, reinterpret_cast<FunctionAddress>(FUNC));
@@ -49,7 +51,8 @@ namespace smoke_api {
             if (is_hook_mode) {
                 hook::init(true);
 
-                if (util::strings_are_equal(exe_name, "steam.exe")) { // target vstdlib_s.dll
+                if (util::strings_are_equal(exe_name, "steam.exe")) {
+#ifndef _WIN64
                     logger->info("🐨 Detected Koalageddon mode 💥");
 
                     dll_monitor::init({VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& library, const String& name) {
@@ -70,6 +73,7 @@ namespace smoke_api {
                             }
                         }
                     });
+#endif
                 } else if (config.hook_steamclient) { // target steamclient(64).dll
                     logger->info("🪝 Detected hook mode for SteamClient");
 

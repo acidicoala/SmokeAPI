@@ -53,11 +53,17 @@ set(
     src/steam_functions/steam_functions.hpp
     src/steam_types/steam_types.hpp
     src/steamclient_exports/steamclient.cpp
-    src/koalageddon/vstdlib.cpp
-    src/koalageddon/steamclient.cpp
     src/main.cpp
     ${GENERATED_LINKER_EXPORTS}
 )
+
+if (CMAKE_SIZEOF_VOID_P EQUAL 4)
+    set(
+        SMOKE_API_SOURCES ${SMOKE_API_SOURCES}
+        src/koalageddon/vstdlib.cpp
+        src/koalageddon/steamclient.cpp
+    )
+endif ()
 
 add_library(SmokeAPI SHARED ${SMOKE_API_SOURCES} ${VERSION_RESOURCE})
 

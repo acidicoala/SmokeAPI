@@ -3,8 +3,6 @@
 
 #include <koalabox/hook.hpp>
 
-#pragma warning(disable: 4731) // 'ebp' modified by inline assembly...
-
 using namespace smoke_api;
 
 DLL_EXPORT(void) Log_Interface(const char* interface_name, const char* function_name) {
