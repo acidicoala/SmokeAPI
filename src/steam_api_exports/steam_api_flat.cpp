@@ -111,7 +111,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetResultItemProperty(
 ) {
     return steam_inventory::GetResultItemProperty(
         __func__, resultHandle, unItemIndex, pchPropertyName, pchValueBuffer, punValueBufferSizeOut, [&]() {
-            GET_ORIGINAL_VIRTUAL_FUNCTION(SteamAPI_ISteamInventory_GetResultItemProperty)
+            GET_ORIGINAL_FUNCTION(SteamAPI_ISteamInventory_GetResultItemProperty)
 
             return SteamAPI_ISteamInventory_GetResultItemProperty_o(
                 self, resultHandle, unItemIndex, pchPropertyName, pchValueBuffer, punValueBufferSizeOut
@@ -126,7 +126,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_CheckResultSteamID(
     CSteamID steamIDExpected
 ) {
     return steam_inventory::CheckResultSteamID(__func__, resultHandle, steamIDExpected, [&]() {
-        GET_ORIGINAL_VIRTUAL_FUNCTION(SteamAPI_ISteamInventory_CheckResultSteamID)
+        GET_ORIGINAL_FUNCTION(SteamAPI_ISteamInventory_CheckResultSteamID)
 
         return SteamAPI_ISteamInventory_CheckResultSteamID_o(self, resultHandle, steamIDExpected);
     });
