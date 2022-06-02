@@ -67,14 +67,14 @@ namespace steam_functions {
     };
 
     FunctionOrdinalMap steam_inventory_ordinal_map = { // NOLINT(cert-err58-cpp)
-        {"ISteamInventory_GetResultStatus",           {{1, 0}}},
-        {"ISteamInventory_GetResultItems",            {{1, 1}}},
-        {"ISteamInventory_GetResultItemProperty",     {{2, 2}}},
-        {"ISteamInventory_CheckResultSteamID",        {{1, 3},  {2, 4}}},
-        {"ISteamInventory_GetAllItems",               {{1, 5},  {2, 6}}},
-        {"ISteamInventory_GetItemsByID",              {{1, 6},  {2, 7}}},
-        {"ISteamInventory_SerializeResult",           {{1, 7},  {2, 8}}},
-        {"ISteamInventory_GetItemDefinitionIDs",      {{1, 20}, {2, 21}}},
+        {"ISteamInventory_GetResultStatus",       {{1, 0}}},
+        {"ISteamInventory_GetResultItems",        {{1, 1}}},
+        {"ISteamInventory_GetResultItemProperty", {{2, 2}}},
+        {"ISteamInventory_CheckResultSteamID",    {{1, 3},  {2, 4}}},
+        {"ISteamInventory_GetAllItems",           {{1, 5},  {2, 6}}},
+        {"ISteamInventory_GetItemsByID",          {{1, 6},  {2, 7}}},
+        {"ISteamInventory_SerializeResult",       {{1, 7},  {2, 8}}},
+        {"ISteamInventory_GetItemDefinitionIDs",  {{1, 20}, {2, 21}}},
     };
 
     int extract_version_number(
@@ -138,9 +138,11 @@ namespace steam_functions {
             return;
         }
 
-        static Set<void*> hooked_interfaces;
+        static Set<std::pair<void*, String>> hooked_interfaces;
 
-        if (hooked_interfaces.contains(interface)) {
+        const auto interface_pair = std::pair{interface, version_string};
+
+        if (hooked_interfaces.contains(interface_pair)) {
             // This interface is already hooked. Skipping it.
             return;
         }
@@ -196,7 +198,7 @@ namespace steam_functions {
             return;
         }
 
-        hooked_interfaces.insert(interface);
+        hooked_interfaces.insert(interface_pair);
     }
 
     HSteamPipe get_steam_pipe_or_throw() {
