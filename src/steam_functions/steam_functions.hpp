@@ -74,13 +74,12 @@ VIRTUAL(EUserHasLicenseForAppResult) ISteamUser_UserHasLicenseForApp(PARAMS(CSte
 VIRTUAL(EResult) ISteamInventory_GetResultStatus(PARAMS(uint32_t));
 VIRTUAL(bool) ISteamInventory_GetResultItems(PARAMS(SteamInventoryResult_t, SteamItemDetails_t*, uint32_t*));
 VIRTUAL(bool) ISteamInventory_GetResultItemProperty(
-    PARAMS(SteamInventoryResult_t, uint32_t, const char*, char*, const uint32_t*)
+    PARAMS(SteamInventoryResult_t, uint32_t, const char*, char*, uint32_t*)
 );
 VIRTUAL(bool) ISteamInventory_GetAllItems(PARAMS(SteamInventoryResult_t*));
 VIRTUAL(bool) ISteamInventory_GetItemsByID(PARAMS(SteamInventoryResult_t*, const SteamItemInstanceID_t*, uint32_t));
 VIRTUAL(bool) ISteamInventory_SerializeResult(PARAMS(SteamInventoryResult_t, void*, uint32_t*));
 VIRTUAL(bool) ISteamInventory_GetItemDefinitionIDs(PARAMS(SteamItemDef_t*, uint32_t*));
-VIRTUAL(bool) ISteamInventory_GetItemDefinitionProperty(PARAMS(SteamItemDef_t, const char*, char*, uint32_t*));
 VIRTUAL(bool) ISteamInventory_CheckResultSteamID(PARAMS(SteamInventoryResult_t, CSteamID));
 
 // API
@@ -105,7 +104,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetResultItems(
     ISteamInventory*, SteamInventoryResult_t, SteamItemDetails_t*, uint32_t*
 );
 DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetResultItemProperty(
-    ISteamInventory*, SteamInventoryResult_t, uint32_t, const char*, char*, const uint32_t*
+    ISteamInventory*, SteamInventoryResult_t, uint32_t, const char*, char*, uint32_t*
 );
 DLL_EXPORT(bool) SteamAPI_ISteamInventory_CheckResultSteamID(ISteamInventory*, SteamInventoryResult_t, CSteamID);
 DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetAllItems(ISteamInventory*, SteamInventoryResult_t*);
@@ -114,11 +113,8 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetItemsByID(
 );
 DLL_EXPORT(bool) SteamAPI_ISteamInventory_SerializeResult(ISteamInventory*, SteamInventoryResult_t, void*, uint32_t*);
 DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetItemDefinitionIDs(ISteamInventory*, SteamItemDef_t*, uint32_t*);
-DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetItemDefinitionProperty(
-    ISteamInventory*, SteamItemDef_t, const char*, char*, uint32_t*
-);
 
-// koalageddon
+// Koalageddon mode
 
 DLL_EXPORT(HCoroutine) Coroutine_Create(void* callback_address, struct CoroutineData* data);
 DLL_EXPORT(void) Log_Interface(const char* interface_name, const char* function_name);
@@ -132,6 +128,21 @@ VIRTUAL(bool) IClientAppManager_IsAppDlcInstalled(PARAMS(AppId_t, AppId_t));
 
 // IClientUser
 VIRTUAL(bool) IClientUser_IsSubscribedApp(PARAMS(AppId_t));
+
+// IClientInventory
+VIRTUAL(EResult) IClientInventory_GetResultStatus(PARAMS(SteamInventoryResult_t));
+VIRTUAL(bool) IClientInventory_GetResultItems(
+    PARAMS(SteamInventoryResult_t, SteamItemDetails_t*, uint32_t, uint32_t *)
+);
+//////
+VIRTUAL(bool) IClientInventory_GetResultItemProperty(
+    PARAMS(SteamInventoryResult_t, uint32_t, const char*, char*, uint32_t, uint32_t*)
+);
+VIRTUAL(bool) IClientInventory_CheckResultSteamID(PARAMS(SteamInventoryResult_t, CSteamID));
+VIRTUAL(bool) IClientInventory_GetAllItems(PARAMS(SteamInventoryResult_t*));
+VIRTUAL(bool) IClientInventory_GetItemsByID(PARAMS(SteamInventoryResult_t*, const SteamItemInstanceID_t*, uint32_t));
+VIRTUAL(bool) IClientInventory_SerializeResult(PARAMS(SteamInventoryResult_t, void*, uint32_t, uint32_t *));
+VIRTUAL(bool) IClientInventory_GetItemDefinitionIDs(PARAMS(SteamItemDef_t*, uint32_t, uint32_t *));
 
 namespace steam_functions {
     using namespace koalabox;

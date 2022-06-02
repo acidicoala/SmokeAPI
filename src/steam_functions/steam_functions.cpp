@@ -75,7 +75,6 @@ namespace steam_functions {
         {"ISteamInventory_GetItemsByID",              {{1, 6},  {2, 7}}},
         {"ISteamInventory_SerializeResult",           {{1, 7},  {2, 8}}},
         {"ISteamInventory_GetItemDefinitionIDs",      {{1, 20}, {2, 21}}},
-        {"ISteamInventory_GetItemDefinitionProperty", {{1, 21}, {2, 22}}},
     };
 
     int extract_version_number(
@@ -189,7 +188,6 @@ namespace steam_functions {
             HOOK_STEAM_INVENTORY(ISteamInventory_GetItemsByID)
             HOOK_STEAM_INVENTORY(ISteamInventory_SerializeResult)
             HOOK_STEAM_INVENTORY(ISteamInventory_GetItemDefinitionIDs)
-            HOOK_STEAM_INVENTORY(ISteamInventory_GetItemDefinitionProperty)
 
             if (version_number >= 2) {
                 HOOK_STEAM_INVENTORY(ISteamInventory_GetResultItemProperty)

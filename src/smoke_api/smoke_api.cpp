@@ -107,7 +107,6 @@ namespace smoke_api {
                         DETOUR(SteamAPI_ISteamInventory_GetAllItems)
                         DETOUR(SteamAPI_ISteamInventory_GetItemsByID)
                         DETOUR(SteamAPI_ISteamInventory_GetItemDefinitionIDs)
-                        DETOUR(SteamAPI_ISteamInventory_GetItemDefinitionProperty)
                     });
                 }
             } else {

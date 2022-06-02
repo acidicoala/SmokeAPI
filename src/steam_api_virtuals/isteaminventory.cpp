@@ -40,7 +40,7 @@ VIRTUAL(bool) ISteamInventory_GetResultItemProperty(
         uint32_t unItemIndex,
         const char* pchPropertyName,
         char* pchValueBuffer,
-        const uint32_t* punValueBufferSizeOut
+        uint32_t * punValueBufferSizeOut
     )
 ) {
     return steam_inventory::GetResultItemProperty(
@@ -114,28 +114,4 @@ VIRTUAL(bool) ISteamInventory_GetItemDefinitionIDs(
 
         return ISteamInventory_GetItemDefinitionIDs_o(ARGS(pItemDefIDs, punItemDefIDsArraySize));
     });
-}
-
-VIRTUAL(bool) ISteamInventory_GetItemDefinitionProperty(
-    PARAMS(
-        SteamItemDef_t iDefinition,
-        const char* pchPropertyName,
-        char* pchValueBuffer,
-        uint32_t * punValueBufferSizeOut
-    )
-) {
-    return steam_inventory::GetItemDefinitionProperty(
-        __func__, iDefinition, pchPropertyName, pchValueBuffer, punValueBufferSizeOut, [&]() {
-            GET_ORIGINAL_VIRTUAL_FUNCTION(ISteamInventory_GetItemDefinitionProperty)
-
-            return ISteamInventory_GetItemDefinitionProperty_o(
-                ARGS(
-                    iDefinition,
-                    pchPropertyName,
-                    pchValueBuffer,
-                    punValueBufferSizeOut
-                )
-            );
-        }
-    );
 }

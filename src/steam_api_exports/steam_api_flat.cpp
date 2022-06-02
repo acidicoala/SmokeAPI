@@ -107,7 +107,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetResultItemProperty(
     uint32_t unItemIndex,
     const char* pchPropertyName,
     char* pchValueBuffer,
-    const uint32_t* punValueBufferSizeOut
+    uint32_t* punValueBufferSizeOut
 ) {
     return steam_inventory::GetResultItemProperty(
         __func__, resultHandle, unItemIndex, pchPropertyName, pchValueBuffer, punValueBufferSizeOut, [&]() {
@@ -179,22 +179,4 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetItemDefinitionIDs(
 
         return SteamAPI_ISteamInventory_GetItemDefinitionIDs_o(self, pItemDefIDs, punItemDefIDsArraySize);
     });
-}
-
-DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetItemDefinitionProperty(
-    ISteamInventory* self,
-    SteamItemDef_t iDefinition,
-    const char* pchPropertyName,
-    char* pchValueBuffer,
-    uint32_t* punValueBufferSizeOut
-) {
-    return steam_inventory::GetItemDefinitionProperty(
-        __func__, iDefinition, pchPropertyName, pchValueBuffer, punValueBufferSizeOut, [&]() {
-            GET_ORIGINAL_FUNCTION(SteamAPI_ISteamInventory_GetItemDefinitionProperty)
-
-            return SteamAPI_ISteamInventory_GetItemDefinitionProperty_o(
-                self, iDefinition, pchPropertyName, pchValueBuffer, punValueBufferSizeOut
-            );
-        }
-    );
 }

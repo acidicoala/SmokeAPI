@@ -119,7 +119,7 @@ namespace steam_inventory {
         uint32_t unItemIndex,
         const char* pchPropertyName,
         char* pchValueBuffer,
-        const uint32_t* punValueBufferSizeOut,
+        uint32_t* punValueBufferSizeOut,
         const std::function<bool()>& original_function
     ) {
         const auto common_info = fmt::format(
@@ -210,33 +210,9 @@ namespace steam_inventory {
         if (pItemDefIDs) { // Definitions were copied
             for (int i = 0; i < *punItemDefIDsArraySize; i++) {
                 const auto& def = pItemDefIDs[i];
-                logger->debug("  Index: {}, ID: {}", i, def);
+                 logger->debug("  Index: {}, ID: {}", i, def);
             }
         }
-
-        return success;
-    }
-
-    bool GetItemDefinitionProperty(
-        const String& function_name,
-        SteamItemDef_t iDefinition,
-        const char* pchPropertyName,
-        char* pchValueBuffer,
-        const uint32_t* punValueBufferSizeOut,
-        const std::function<bool()>& original_function
-    ) {
-        const auto common_info = fmt::format(
-            "{} -> Definition ID: {}, Name: '{}'", function_name, iDefinition, pchPropertyName
-        );
-
-        const auto success = original_function();
-
-        if (!success) {
-            logger->warn("{}, Result is false", common_info);
-            return false;
-        }
-
-        logger->debug("{}, Buffer: '{}'", common_info, String(pchValueBuffer, *punValueBufferSizeOut - 1));
 
         return success;
     }

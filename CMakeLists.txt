@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 
-project(SmokeAPI VERSION 1.0.2)
+project(SmokeAPI VERSION 1.0.3)
 
 include(KoalaBox/cmake/KoalaBox.cmake)
 
@@ -66,7 +66,6 @@ if (CMAKE_SIZEOF_VOID_P EQUAL 4)
         src/steamclient_virtuals/client_apps.cpp
         src/steamclient_virtuals/client_inventory.cpp
         src/steamclient_virtuals/client_user.cpp
-        src/steamclient_virtuals/client_utils.cpp
     )
 endif ()
 

@@ -64,7 +64,7 @@ namespace steam_inventory {
         uint32_t unItemIndex,
         const char* pchPropertyName,
         char* pchValueBuffer,
-        const uint32_t* punValueBufferSizeOut,
+        uint32_t* punValueBufferSizeOut,
         const std::function<bool()>& original_function
     );
 
@@ -97,14 +97,6 @@ namespace steam_inventory {
         const std::function<bool()>& original_function
     );
 
-    bool GetItemDefinitionProperty(
-        const String& function_name,
-        SteamItemDef_t iDefinition,
-        const char* pchPropertyName,
-        char* pchValueBuffer,
-        const uint32_t* punValueBufferSizeOut,
-        const std::function<bool()>& original_function
-    );
 
     bool CheckResultSteamID(
         const String& function_name,

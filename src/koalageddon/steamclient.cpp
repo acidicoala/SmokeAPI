@@ -30,24 +30,20 @@ DLL_EXPORT(void) Log_Interface(const char* interface_name, const char* function_
 
 #define HOOK(FUNC, ORDINAL) hook_function(FUNC, #FUNC, ORDINAL);
 
-        if (compound_name == "IClientAppManager::IsAppDlcInstalled") {
+        if (util::strings_are_equal(interface_name, "IClientAppManager")) {
             HOOK(IClientAppManager_IsAppDlcInstalled, 8)
-        } else if (compound_name == "IClientApps::GetDLCCount") {
+        } else if (util::strings_are_equal(interface_name, "IClientApps")) {
             HOOK(IClientApps_GetDLCCount, 8)
-        } else if (compound_name == "IClientApps::BGetDLCDataByIndex") {
             HOOK(IClientApps_BGetDLCDataByIndex, 9)
-        } else if (compound_name == "IClientUser::IsSubscribedApp") {
-            HOOK(IClientUser_IsSubscribedApp, 0xB5)
         } else if (util::strings_are_equal(interface_name, "IClientInventory")) {
-            if (util::strings_are_equal(function_name, "GetResultItems")) {
-                auto* function_address = interface_address[0x2]; // TODO: Un-hardcode
-                logger->debug("{} -> {}::{} @ {}", __func__, interface_name, function_name, function_address);
-            }
-        } else if (util::strings_are_equal(interface_name, "IClientUtils")) {
-            if (util::strings_are_equal(function_name, "GetAppID")) {
-                auto* function_address = interface_address[0x12]; // TODO: Un-hardcode
-                logger->debug("{} -> {}::{} @ {}", __func__, interface_name, function_name, function_address);
-            }
+            HOOK(IClientInventory_GetResultStatus, 0)
+            HOOK(IClientInventory_GetResultItems, 2)
+            HOOK(IClientInventory_GetResultItemProperty, 3)
+            HOOK(IClientInventory_CheckResultSteamID, 5)
+            HOOK(IClientInventory_GetAllItems, 8)
+            HOOK(IClientInventory_GetItemsByID, 9)
+            HOOK(IClientInventory_SerializeResult, 6)
+            HOOK(IClientInventory_GetItemDefinitionIDs, 19)
         }
 
         GET_ORIGINAL_FUNCTION(Log_Interface)
