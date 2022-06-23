@@ -14,7 +14,7 @@
     );
 
 #define GET_ORIGINAL_VIRTUAL_FUNCTION(FUNC) \
-    static const auto FUNC##_o = hook::get_original_function( \
+    const auto FUNC##_o = hook::get_original_function( \
         true, \
         smoke_api::original_library, \
         #FUNC, \

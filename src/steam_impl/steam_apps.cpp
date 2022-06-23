@@ -149,42 +149,49 @@ namespace steam_apps {
         return installed;
     }
 
+//    std::mutex section;
     int GetDLCCount(const String& function_name, const AppId_t app_id, const std::function<int()>& original_function) {
-        static std::mutex section;
-        std::lock_guard<std::mutex> guard(section);
+        try {
+//            std::lock_guard<std::mutex> guard(section);
 
-        if (app_id) {
-            logger->debug("{} -> App ID: {}", function_name, app_id);
-        }
+            const auto total_count = [&](int count) {
+                logger->info("{} -> Responding with DLC count: {}", function_name, count);
+                return count;
+            };
 
-        // Compute count only once // FIXME: This doesn't work in Koalageddon mode
-        static int total_count = [&]() {
+            if (app_id) {
+                logger->debug("{} -> App ID: {}", function_name, app_id);
+            }
+
+            // Compute count only once // FIXME: This doesn't work in Koalageddon mode
             original_dlc_count = original_function();
             logger->debug("{} -> Original DLC count: {}", function_name, original_dlc_count);
 
             const auto injected_count = static_cast<int>(config.dlc_ids.size());
             logger->debug("{} -> Injected DLC count: {}", function_name, injected_count);
 
-            if (original_dlc_count < max_dlc) {
-                // Steamworks may max out this value at 64, depending on how much unowned DLCs the user has.
-                // Despite this limit, some games with more than 64 DLCs still keep using this method.
-                // This means we have to fetch full list of IDs from web api.
 
-                return original_dlc_count + injected_count;
+            if (original_dlc_count < max_dlc) {
+                return total_count(original_dlc_count + injected_count);
             }
 
-            logger->debug("Game has {} or more DLCs. Fetching DLCs from a web API.", max_dlc);
-            fetch_and_cache_dlcs(app_id);
+            // Steamworks may max out this value at 64, depending on how much unowned DLCs the user has.
+            // Despite this limit, some games with more than 64 DLCs still keep using this method.
+            // This means we have to fetch full list of IDs from web api.
+            static std::once_flag flag;
+            std::call_once(flag, [&]() {
+                logger->debug("Game has {} or more DLCs. Fetching DLCs from a web API.", max_dlc);
+                fetch_and_cache_dlcs(app_id);
+            });
 
             const auto fetched_count = static_cast<int>(cached_dlcs.size());
             logger->debug("{} -> Fetched/cached DLC count: {}", function_name, fetched_count);
 
-            return fetched_count + injected_count;
-        }();
-
-        logger->info("{} -> Responding with DLC count: {}", function_name, total_count);
-
-        return total_count;
+            return total_count(fetched_count + injected_count);
+        } catch (const Exception& ex) {
+            logger->error("{} -> {}", function_name, ex.what());
+            return 0;
+        }
     }
 
     bool GetDLCDataByIndex(

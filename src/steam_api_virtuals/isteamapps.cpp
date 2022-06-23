@@ -12,8 +12,9 @@ VIRTUAL(bool) ISteamApps_BIsDlcInstalled(PARAMS(AppId_t appID)) { // NOLINT(misc
 }
 
 VIRTUAL(int) ISteamApps_GetDLCCount(PARAMS()) {
+    GET_ORIGINAL_VIRTUAL_FUNCTION(ISteamApps_GetDLCCount)
+
     return steam_apps::GetDLCCount(__func__, 0, [&]() {
-        GET_ORIGINAL_VIRTUAL_FUNCTION(ISteamApps_GetDLCCount)
 
         return ISteamApps_GetDLCCount_o(ARGS());
     });
