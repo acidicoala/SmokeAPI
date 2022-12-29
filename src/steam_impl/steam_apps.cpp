@@ -1,5 +1,5 @@
 #include <smoke_api/smoke_api.hpp>
-#include <steam_impl/steam_impl.hpp>
+#include <steam_impl/steam_apps.hpp>
 
 #include <koalabox/io.hpp>
 
@@ -163,8 +163,6 @@ namespace steam_apps {
                 logger->debug("{} -> App ID: {}", function_name, app_id);
             }
 
-            // Compute count only once
-            // FIXME: This doesn't work in Koalageddon mode
             original_dlc_count = original_function();
             logger->debug("{} -> Original DLC count: {}", function_name, original_dlc_count);
 

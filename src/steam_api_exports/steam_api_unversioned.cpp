@@ -1,6 +1,5 @@
 #include <smoke_api/smoke_api.hpp>
-#include <steam_impl/steam_impl.hpp>
-#include <steam_functions/steam_functions.hpp>
+#include <steam_impl/steam_client.hpp>
 
 #include <koalabox/win_util.hpp>
 
@@ -18,9 +17,9 @@ String get_versioned_interface(const String& version_prefix, const String& fallb
 
     if (not version_map.contains(version_prefix)) {
         try {
-            String rdata = win_util::get_pe_section_data_or_throw(original_library, ".rdata");
+            const String rdata = win_util::get_pe_section_data_or_throw(original_library, ".rdata");
 
-            std::regex regex(version_prefix + "\\d{3}");
+            const std::regex regex(version_prefix + "\\d{3}");
             std::smatch match;
             if (std::regex_search(rdata, match, regex)) {
                 version_map[version_prefix] = match[0];

@@ -1,6 +1,9 @@
-#include <steam_impl/steam_impl.hpp>
+#include <smoke_api/smoke_api.hpp>
+#include <steam_functions/steam_functions.hpp>
 
-namespace steam_client{
+using namespace smoke_api;
+
+namespace steam_client {
 
     void* GetGenericInterface(
         const String& function_name,

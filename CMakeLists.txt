@@ -45,10 +45,13 @@ set(
     src/steam_api_virtuals/isteaminventory.cpp
     src/steam_api_virtuals/isteamuser.cpp
     src/steam_impl/steam_apps.cpp
+    src/steam_impl/steam_apps.hpp
     src/steam_impl/steam_client.cpp
-    src/steam_impl/steam_impl.hpp
+    src/steam_impl/steam_client.hpp
     src/steam_impl/steam_inventory.cpp
+    src/steam_impl/steam_inventory.hpp
     src/steam_impl/steam_user.cpp
+    src/steam_impl/steam_user.hpp
     src/steam_functions/steam_functions.cpp
     src/steam_functions/steam_functions.hpp
     src/steam_types/steam_types.hpp

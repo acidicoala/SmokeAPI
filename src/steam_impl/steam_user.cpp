@@ -1,4 +1,4 @@
-#include <steam_impl/steam_impl.hpp>
+#include <steam_impl/steam_user.hpp>
 #include <smoke_api/smoke_api.hpp>
 
 namespace steam_user {

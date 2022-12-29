@@ -1,5 +1,5 @@
-#include <steam_impl/steam_impl.hpp>
 #include <smoke_api/smoke_api.hpp>
+#include <steam_impl/steam_inventory.hpp>
 
 // TODO: Figure out why it doesn't work in koalageddon mode
 namespace steam_inventory {
@@ -25,7 +25,7 @@ namespace steam_inventory {
         const std::function<bool(SteamItemDef_t*, uint32_t*)>& get_item_definition_ids
     ) {
         static std::mutex section;
-        std::lock_guard<std::mutex> guard(section);
+        const std::lock_guard<std::mutex> guard(section);
 
         const auto success = original_function();
 
@@ -120,7 +120,7 @@ namespace steam_inventory {
         uint32_t unItemIndex,
         const char* pchPropertyName,
         char* pchValueBuffer,
-        uint32_t* punValueBufferSizeOut,
+        const uint32_t* punValueBufferSizeOut,
         const std::function<bool()>& original_function
     ) {
         const auto common_info = fmt::format(

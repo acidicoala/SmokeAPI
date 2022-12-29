@@ -57,7 +57,7 @@ namespace smoke_api {
         logger->info("Loaded Koalageddon config from the {}", kg_config_source);
 
         dll_monitor::init({VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& library, const String& name) {
-            original_library = library; // TODO: Is this necessary?
+            original_library = library;
 
             if (name == VSTDLIB_DLL) {
                 // Family Sharing functions

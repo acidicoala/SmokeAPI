@@ -1,45 +1,7 @@
+#include <smoke_api/smoke_api.hpp>
 #include <steam_functions/steam_functions.hpp>
 
-using namespace koalabox;
-
-namespace steam_apps {
-
-    bool IsDlcUnlocked(const String& function_name, AppId_t app_id, AppId_t dlc_id);
-
-    int GetDLCCount(const String& function_name, AppId_t app_id, const std::function<int()>& original_function);
-
-    bool GetDLCDataByIndex(
-        const String& function_name,
-        AppId_t app_id,
-        int iDLC,
-        AppId_t* pDlcId,
-        bool* pbAvailable,
-        char* pchName,
-        int cchNameBufferSize,
-        const std::function<bool()>& original_function
-    );
-
-}
-
-namespace steam_user {
-
-    EUserHasLicenseForAppResult UserHasLicenseForApp(
-        const String& function_name,
-        AppId_t appID,
-        const std::function<EUserHasLicenseForAppResult()>& original_function
-    );
-
-}
-
-namespace steam_client {
-
-    void* GetGenericInterface(
-        const String& function_name,
-        const String& interface_version,
-        const std::function<void*()>& original_function
-    );
-
-}
+using namespace smoke_api;
 
 namespace steam_inventory {
 
@@ -64,7 +26,7 @@ namespace steam_inventory {
         uint32_t unItemIndex,
         const char* pchPropertyName,
         char* pchValueBuffer,
-        uint32_t* punValueBufferSizeOut,
+        const uint32_t* punValueBufferSizeOut,
         const std::function<bool()>& original_function
     );
 

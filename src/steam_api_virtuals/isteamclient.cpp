@@ -1,6 +1,5 @@
 #include <smoke_api/smoke_api.hpp>
-#include <steam_impl/steam_impl.hpp>
-#include <steam_functions/steam_functions.hpp>
+#include <steam_impl/steam_client.hpp>
 
 using namespace smoke_api;
 

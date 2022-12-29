@@ -1,5 +1,5 @@
 #include <smoke_api/smoke_api.hpp>
-#include <steam_impl/steam_impl.hpp>
+#include <steam_impl/steam_inventory.hpp>
 
 using namespace smoke_api;
 

@@ -55,6 +55,8 @@ typedef uint64_t CSteamID;
 
 typedef uint32_t HCoroutine;
 
+// TODO: Refactor into multiple headers
+
 // ISteamClient
 VIRTUAL(void*) ISteamClient_GetISteamApps(PARAMS(HSteamUser, HSteamPipe, const char*));
 VIRTUAL(void*) ISteamClient_GetISteamUser(PARAMS(HSteamUser, HSteamPipe, const char*));
