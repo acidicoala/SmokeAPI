@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.22)
+cmake_minimum_required(VERSION 3.24)
 
 project(SmokeAPI VERSION 1.0.3)
 
@@ -76,4 +76,3 @@ configure_output_name(${ORIGINAL_DLL})
 configure_include_directories()
 
 target_link_libraries(SmokeAPI PRIVATE KoalaBox)
-

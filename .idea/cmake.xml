@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeSharedSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug [32] (Template: copy and set the 32-bit toolchain)" ENABLED="false" GENERATION_DIR="build/32/debug" CONFIG_NAME="Debug" GENERATION_OPTIONS="-G &quot;Visual Studio 17 2022&quot; -A Win32" />
+      <configuration PROFILE_NAME="Debug [64] (Template: copy and set the 64-bit toolchain)" ENABLED="false" GENERATION_DIR="build/64/debug" CONFIG_NAME="Debug" GENERATION_OPTIONS="-G &quot;Visual Studio 17 2022&quot; -A x64" />
+    </configurations>
+  </component>
+</project>
