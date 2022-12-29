@@ -34,7 +34,6 @@ SmokeAPI aims to support all released SteamAPI versions. When it encountered a n
 
 Steam inventory does not work in all games with steam inventory because of custom implementation, and online checks.
 The list of games where inventory emulation has been shown to work is as follows:
-- Hero Siege
 - Project Winter
 - Euro Truck Simulator 2
 - Bloons TD 6
@@ -80,6 +79,7 @@ SmokeAPI does not require any manual configuration. By default, it uses the most
 | `dlc_ids`               | When game requests list of all DLCs from Steam and the number of registered DLCs is greater than 64, Steam may not return all of them. In this case, SmokeAPI will fetch all released DLCs from Web API. In some games, however (like Monster Hunter: World), web api also doesn't return all possible DLCs. To address this issue, you can specify the missing DLC IDs¹ in this option. For some games (including MH:W), however, it is not necessary because SmokeAPI will also automatically fetch a [manually maintained list of DLC IDs] that are missing from web api | List of Integers |  `[]`   |
 | `auto_inject_inventory` | Toggles whether SmokeAPI should automatically inject a list of all registered inventory items, when a game queries user inventory                                                                                                                                                                                                                                                                                                                                                                                                                                           | Boolean          | `true`  |
 | `inventory_items`       | A list of inventory items IDs¹ that will be added in addition to the automatically injected items                                                                                                                                                                                                                                                                                                                                                                                                                                                                           | List of Integers |  `[]`   |
+| `koalageddon_config`    | An object that specifies patterns and offsets required for koalageddon mode. It can be used to override online config for testing or development purposes.                                                                                                                                                                                                                                                                                                                                                                                                                  | Object           | `null`  |
 
 ¹ DLC/Item IDs can be obtained from https://steamdb.info. You need to be logged in with your steam account in order to see accurate inventory item IDs.
 

@@ -1,6 +1,7 @@
 #include <steam_impl/steam_impl.hpp>
 #include <smoke_api/smoke_api.hpp>
 
+// TODO: Figure out why it doesn't work in koalageddon mode
 namespace steam_inventory {
 
     EResult GetResultStatus(

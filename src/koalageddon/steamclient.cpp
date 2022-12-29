@@ -5,8 +5,7 @@
 
 using namespace smoke_api;
 
-
-DLL_EXPORT(void) Log_Interface(const char* interface_name, const char* function_name) {
+DLL_EXPORT(void) SteamClient_Interface_Interceptor(const char* interface_name, const char* function_name) {
     try {
         void**** parent_ebp;
 
@@ -29,7 +28,7 @@ DLL_EXPORT(void) Log_Interface(const char* interface_name, const char* function_
         const auto compound_name = interface_name + String("::") + function_name;
 
 #define HOOK(FUNC, ORDINAL) hook_function(FUNC, #FUNC, ORDINAL);
-
+        // TODO: Parametrize ordinals
         if (util::strings_are_equal(interface_name, "IClientAppManager")) {
             HOOK(IClientAppManager_IsAppDlcInstalled, 8)
         } else if (util::strings_are_equal(interface_name, "IClientApps")) {
@@ -46,8 +45,8 @@ DLL_EXPORT(void) Log_Interface(const char* interface_name, const char* function_
             HOOK(IClientInventory_GetItemDefinitionIDs, 19)
         }
 
-        GET_ORIGINAL_FUNCTION(Log_Interface)
-        Log_Interface_o(interface_name, function_name);
+        GET_ORIGINAL_FUNCTION(SteamClient_Interface_Interceptor)
+        SteamClient_Interface_Interceptor_o(interface_name, function_name);
     } catch (const Exception& ex) {
         logger->error("{} -> Error: {}", __func__, ex.what());
     }

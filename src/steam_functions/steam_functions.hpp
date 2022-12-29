@@ -117,7 +117,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetItemDefinitionIDs(ISteamInventory*,
 // Koalageddon mode
 
 DLL_EXPORT(HCoroutine) Coroutine_Create(void* callback_address, struct CoroutineData* data);
-DLL_EXPORT(void) Log_Interface(const char* interface_name, const char* function_name);
+DLL_EXPORT(void) SteamClient_Interface_Interceptor(const char* interface_name, const char* function_name);
 
 // IClientApps
 VIRTUAL(int) IClientApps_GetDLCCount(PARAMS(AppId_t));

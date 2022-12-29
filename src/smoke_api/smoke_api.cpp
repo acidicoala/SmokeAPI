@@ -18,15 +18,43 @@
 namespace smoke_api {
     Config config = {}; // NOLINT(cert-err58-cpp)
 
+    KoalageddonConfig koalageddon_config = {};
+
     HMODULE original_library = nullptr;
 
     bool is_hook_mode = false;
 
     Path self_directory;
 
+    void init_config() {
+        // TODO: Detect koalageddon mode first, and then fetch config from corresponding directory
+        config = config_parser::parse<Config>(self_directory / PROJECT_NAME".json");
+    }
+
+    /**
+     * @return A string representing the source of the config.
+     */
+    String init_koalageddon_config() {
+        try {
+            // First try to read a local config override
+            koalageddon_config = config.koalageddon_config.get<KoalageddonConfig>();
+            return "local config override";
+        } catch (const Exception& ex) {
+            logger->debug("Local config parse exception: {}", ex.what());
+        }
+
+        // TODO: Remote source with local cache
+
+        // Finally, fallback on the default config
+        return "default config bundled in the binary";
+    }
+
     void init_koalageddon_mode() {
 #ifndef _WIN64
         logger->info("🐨 Detected Koalageddon mode 💥");
+
+        const auto kg_config_source = init_koalageddon_config();
+        logger->info("Loaded Koalageddon config from the {}", kg_config_source);
 
         dll_monitor::init({VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& library, const String& name) {
             original_library = library; // TODO: Is this necessary?
@@ -36,13 +64,14 @@ namespace smoke_api {
                 DETOUR(Coroutine_Create)
             } else if (name == STEAMCLIENT_DLL) {
                 // Unlocking functions
-                // TODO: Un-hardcode the pattern
-                const String pattern("55 8B EC 8B ?? ?? ?? ?? ?? 81 EC ?? ?? ?? ?? 53 FF 15");
-                auto Log_Interface_address = (FunctionAddress) patcher::find_pattern_address(
-                    win_util::get_module_info(library), "Log_Interface", pattern
+                auto interface_interceptor_address = (FunctionAddress) patcher::find_pattern_address(
+                    win_util::get_module_info(library),
+                    "SteamClient_Interface_Interceptor",
+                    koalageddon_config.interface_interceptor_pattern
                 );
-                if (Log_Interface_address) {
-                    DETOUR_EX(Log_Interface, Log_Interface_address)
+
+                if (interface_interceptor_address) {
+                    DETOUR_EX(SteamClient_Interface_Interceptor, interface_interceptor_address)
                 }
             }
         });
@@ -91,7 +120,7 @@ namespace smoke_api {
 
             self_directory = loader::get_module_dir(self_module);
 
-            config = config_parser::parse<Config>(self_directory / PROJECT_NAME".json");
+            init_config();
 
             const auto exe_path = Path(win_util::get_module_file_name_or_throw(nullptr));
             const auto exe_name = exe_path.filename().string();
