@@ -159,17 +159,17 @@ namespace steam_apps {
                 return count;
             };
 
-            if (app_id) {
+            if (app_id != 0) {
                 logger->debug("{} -> App ID: {}", function_name, app_id);
             }
 
-            // Compute count only once // FIXME: This doesn't work in Koalageddon mode
+            // Compute count only once
+            // FIXME: This doesn't work in Koalageddon mode
             original_dlc_count = original_function();
             logger->debug("{} -> Original DLC count: {}", function_name, original_dlc_count);
 
             const auto injected_count = static_cast<int>(config.dlc_ids.size());
             logger->debug("{} -> Injected DLC count: {}", function_name, injected_count);
-
 
             if (original_dlc_count < max_dlc) {
                 return total_count(original_dlc_count + injected_count);

@@ -1,7 +1,6 @@
 {
-  "$version": 1,
+  "$version": 2,
   "logging": true,
-  "hook_steamclient": true,
   "unlock_all": true,
   "override": [],
   "dlc_ids": [],

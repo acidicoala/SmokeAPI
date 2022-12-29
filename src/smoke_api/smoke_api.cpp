@@ -24,6 +24,65 @@ namespace smoke_api {
 
     Path self_directory;
 
+    void init_koalageddon_mode() {
+#ifndef _WIN64
+        logger->info("🐨 Detected Koalageddon mode 💥");
+
+        dll_monitor::init({VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& library, const String& name) {
+            original_library = library; // TODO: Is this necessary?
+
+            if (name == VSTDLIB_DLL) {
+                // Family Sharing functions
+                DETOUR(Coroutine_Create)
+            } else if (name == STEAMCLIENT_DLL) {
+                // Unlocking functions
+                // TODO: Un-hardcode the pattern
+                const String pattern("55 8B EC 8B ?? ?? ?? ?? ?? 81 EC ?? ?? ?? ?? 53 FF 15");
+                auto Log_Interface_address = (FunctionAddress) patcher::find_pattern_address(
+                    win_util::get_module_info(library), "Log_Interface", pattern
+                );
+                if (Log_Interface_address) {
+                    DETOUR_EX(Log_Interface, Log_Interface_address)
+                }
+            }
+        });
+#endif
+    }
+
+    void init_proxy_mode() {
+        logger->info("🔀 Detected proxy mode");
+
+        original_library = loader::load_original_library(self_directory, ORIGINAL_DLL);
+    }
+
+    void init_hook_mode() {
+        logger->info("🪝 Detected hook mode");
+
+        dll_monitor::init(STEAMCLIENT_DLL, [](const HMODULE& library) {
+            original_library = library;
+
+            DETOUR(CreateInterface)
+        });
+
+        // Hooking steam_api has show itself to be less desirable than steamclient
+        // for the reasons outlined below:
+        //
+        // Calling original in flat functions will actually call the hooked functions
+        // because the original function redirects the execution to a function taken
+        // from self pointer, which would have been hooked by SteamInternal_*Interface
+        // functions.
+        //
+        // Furthermore, turns out that many flat functions share the same body,
+        // which looks like the following snippet:
+        //
+        //   mov rax, qword ptr ds:[rcx]
+        //   jmp qword ptr ds:[rax+immediate]
+        //
+        // This means that we end up inadvertently hooking unintended functions.
+        // Given that hooking steam_api has no apparent benefits, but has inherent flaws,
+        // the support for it has been dropped from this project.
+    }
+
     void init(HMODULE self_module) {
         try {
             DisableThreadLibraryCalls(self_module);
@@ -51,68 +110,13 @@ namespace smoke_api {
             if (is_hook_mode) {
                 hook::init(true);
 
-                if (util::strings_are_equal(exe_name, "steam.exe")) {
-#ifndef _WIN64
-                    logger->info("🐨 Detected Koalageddon mode 💥");
-
-                    dll_monitor::init({VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& library, const String& name) {
-                        original_library = library; // TODO: Is this necessary?
-
-                        if (name == VSTDLIB_DLL) {
-                            // Family Sharing functions
-                            DETOUR(Coroutine_Create)
-                        } else if (name == STEAMCLIENT_DLL) {
-                            // Unlocking functions
-                            // TODO: Un-hardcode the pattern
-                            const String pattern("55 8B EC 8B ?? ?? ?? ?? ?? 81 EC ?? ?? ?? ?? 53 FF 15");
-                            auto Log_Interface_address = (FunctionAddress) patcher::find_pattern_address(
-                                win_util::get_module_info(library), "Log_Interface", pattern
-                            );
-                            if (Log_Interface_address) {
-                                DETOUR_EX(Log_Interface, Log_Interface_address)
-                            }
-                        }
-                    });
-#endif
-                } else if (config.hook_steamclient) { // target steamclient(64).dll
-                    logger->info("🪝 Detected hook mode for SteamClient");
-
-                    dll_monitor::init(STEAMCLIENT_DLL, [](const HMODULE& library) {
-                        original_library = library;
-
-                        DETOUR(CreateInterface)
-                    });
-                } else { // target steam_api.dll
-                    logger->info("🪝 Detected hook mode for Steam_API");
-
-                    dll_monitor::init(ORIGINAL_DLL, [](const HMODULE& library) {
-                        original_library = library;
-
-                        DETOUR(SteamInternal_FindOrCreateUserInterface)
-                        DETOUR(SteamInternal_CreateInterface)
-                        DETOUR(SteamApps)
-                        DETOUR(SteamClient)
-                        DETOUR(SteamUser)
-
-                        DETOUR(SteamAPI_ISteamApps_BIsSubscribedApp)
-                        DETOUR(SteamAPI_ISteamApps_BIsDlcInstalled)
-                        DETOUR(SteamAPI_ISteamApps_GetDLCCount)
-                        DETOUR(SteamAPI_ISteamApps_BGetDLCDataByIndex)
-                        DETOUR(SteamAPI_ISteamClient_GetISteamGenericInterface)
-
-                        DETOUR(SteamAPI_ISteamInventory_GetResultStatus)
-                        DETOUR(SteamAPI_ISteamInventory_GetResultItems)
-                        DETOUR(SteamAPI_ISteamInventory_GetResultItemProperty)
-                        DETOUR(SteamAPI_ISteamInventory_CheckResultSteamID)
-                        DETOUR(SteamAPI_ISteamInventory_GetAllItems)
-                        DETOUR(SteamAPI_ISteamInventory_GetItemsByID)
-                        DETOUR(SteamAPI_ISteamInventory_GetItemDefinitionIDs)
-                    });
+                if (util::strings_are_equal(exe_name, "steam.exe") && !util::is_x64()) {
+                    init_koalageddon_mode();
+                } else {
+                    init_hook_mode();
                 }
             } else {
-                logger->info("🔀 Detected proxy mode for Steam_API");
-
-                original_library = loader::load_original_library(self_directory, ORIGINAL_DLL);
+                init_proxy_mode();
             }
             logger->info("🚀 Initialization complete");
         } catch (const Exception& ex) {

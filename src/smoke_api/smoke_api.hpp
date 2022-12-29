@@ -27,7 +27,6 @@ namespace smoke_api {
     struct Config {
         uint32_t $version = 1;
         bool logging = false;
-        bool hook_steamclient = true;
         bool unlock_all = true;
         Set<uint32_t> override;
         Vector<uint32_t> dlc_ids;
@@ -35,10 +34,9 @@ namespace smoke_api {
         Vector<uint32_t> inventory_items;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(
-            Config, $version,
+            Config, $version, // NOLINT(misc-const-correctness)
             logging,
             unlock_all,
-            hook_steamclient,
             override,
             dlc_ids,
             auto_inject_inventory,
