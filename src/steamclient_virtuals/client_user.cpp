@@ -3,7 +3,6 @@
 
 using namespace smoke_api;
 
-// TODO: Hook?
 VIRTUAL(bool) IClientUser_IsSubscribedApp(PARAMS(AppId_t app_id)) { // NOLINT(misc-unused-parameters)
     return steam_apps::IsDlcUnlocked(__func__, 0, app_id);
 }
