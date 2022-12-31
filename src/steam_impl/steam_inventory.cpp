@@ -66,8 +66,8 @@ namespace steam_inventory {
                 }
             });
         }
-        const auto auto_injected_count = auto_inventory_items.size();
 
+        const auto auto_injected_count = auto_inventory_items.size();
 
         if (not pOutItemsArray) {
             // If pOutItemsArray is NULL then we must set the array size.

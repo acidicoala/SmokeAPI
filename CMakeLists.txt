@@ -35,6 +35,7 @@ configure_build_config(extra_build_config)
 
 set(
     SMOKE_API_SOURCES
+    src/core/macros.hpp
     src/smoke_api/smoke_api.cpp
     src/smoke_api/smoke_api.hpp
     src/steam_api_exports/steam_api_flat.cpp
@@ -63,6 +64,8 @@ set(
 if (CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(
         SMOKE_API_SOURCES ${SMOKE_API_SOURCES}
+        src/koalageddon/koalageddon.hpp
+        src/koalageddon/koalageddon.cpp
         src/koalageddon/vstdlib.cpp
         src/koalageddon/steamclient.cpp
         src/steamclient_virtuals/client_app_manager.cpp

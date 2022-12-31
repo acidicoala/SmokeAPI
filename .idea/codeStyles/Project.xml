@@ -30,6 +30,7 @@
       </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="ObjectiveC">
+      <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
       <option name="BLANK_LINES_BEFORE_IMPORTS" value="0" />
       <option name="BLANK_LINES_AFTER_IMPORTS" value="0" />
       <option name="BLANK_LINES_AROUND_METHOD_IN_INTERFACE" value="0" />

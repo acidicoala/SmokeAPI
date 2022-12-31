@@ -148,7 +148,7 @@ namespace steam_functions {
         }
 
         static std::mutex section;
-        std::lock_guard<std::mutex> guard(section);
+        const std::lock_guard<std::mutex> guard(section);
 
         if (version_string.starts_with(STEAM_CLIENT)) {
             const auto version_number = extract_version_number(version_string, STEAM_CLIENT, 6, 20);

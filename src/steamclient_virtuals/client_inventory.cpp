@@ -19,7 +19,6 @@ VIRTUAL(bool) IClientInventory_GetResultItems(
         uint32_t * punOutItemsArraySize // 1st pass: ptr to out array size, 2nd pass: ptr to 0
     )
 ) {
-
     return steam_inventory::GetResultItems(
         __func__, resultHandle, pOutItemsArray, punOutItemsArraySize,
         [&]() {

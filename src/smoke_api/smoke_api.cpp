@@ -8,17 +8,13 @@
 #include <koalabox/hook.hpp>
 #include <koalabox/loader.hpp>
 #include <koalabox/win_util.hpp>
-#ifndef _WIN64
-#include <koalabox/patcher.hpp>
-#endif
 
-#define DETOUR_EX(FUNC, ADDRESS) hook::detour_or_warn(ADDRESS, #FUNC, reinterpret_cast<FunctionAddress>(FUNC));
-#define DETOUR(FUNC) hook::detour_or_warn(original_library, #FUNC, reinterpret_cast<FunctionAddress>(FUNC));
+#ifndef _WIN64
+#include <koalageddon/koalageddon.hpp>
+#endif
 
 namespace smoke_api {
     Config config = {}; // NOLINT(cert-err58-cpp)
-
-    KoalageddonConfig koalageddon_config = {};
 
     HMODULE original_library = nullptr;
 
@@ -29,53 +25,6 @@ namespace smoke_api {
     void init_config() {
         // TODO: Detect koalageddon mode first, and then fetch config from corresponding directory
         config = config_parser::parse<Config>(self_directory / PROJECT_NAME".json");
-    }
-
-    /**
-     * @return A string representing the source of the config.
-     */
-    String init_koalageddon_config() {
-        try {
-            // First try to read a local config override
-            koalageddon_config = config.koalageddon_config.get<KoalageddonConfig>();
-            return "local config override";
-        } catch (const Exception& ex) {
-            logger->debug("Local config parse exception: {}", ex.what());
-        }
-
-        // TODO: Remote source with local cache
-
-        // Finally, fallback on the default config
-        return "default config bundled in the binary";
-    }
-
-    void init_koalageddon_mode() {
-#ifndef _WIN64
-        logger->info("🐨 Detected Koalageddon mode 💥");
-
-        const auto kg_config_source = init_koalageddon_config();
-        logger->info("Loaded Koalageddon config from the {}", kg_config_source);
-
-        dll_monitor::init({VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& library, const String& name) {
-            original_library = library;
-
-            if (name == VSTDLIB_DLL) {
-                // Family Sharing functions
-                DETOUR(Coroutine_Create)
-            } else if (name == STEAMCLIENT_DLL) {
-                // Unlocking functions
-                auto interface_interceptor_address = (FunctionAddress) patcher::find_pattern_address(
-                    win_util::get_module_info(library),
-                    "SteamClient_Interface_Interceptor",
-                    koalageddon_config.interface_interceptor_pattern
-                );
-
-                if (interface_interceptor_address) {
-                    DETOUR_EX(SteamClient_Interface_Interceptor, interface_interceptor_address)
-                }
-            }
-        });
-#endif
     }
 
     void init_proxy_mode() {
@@ -90,7 +39,7 @@ namespace smoke_api {
         dll_monitor::init(STEAMCLIENT_DLL, [](const HMODULE& library) {
             original_library = library;
 
-            DETOUR(CreateInterface)
+            DETOUR_ORIGINAL(CreateInterface)
         });
 
         // Hooking steam_api has show itself to be less desirable than steamclient
@@ -139,8 +88,9 @@ namespace smoke_api {
             if (is_hook_mode) {
                 hook::init(true);
 
+                // TODO: Check if it's steam from valve
                 if (util::strings_are_equal(exe_name, "steam.exe") && !util::is_x64()) {
-                    init_koalageddon_mode();
+                    koalageddon::init();
                 } else {
                     init_hook_mode();
                 }

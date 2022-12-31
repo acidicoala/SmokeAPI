@@ -1,8 +1,8 @@
 #pragma once
 
 #include <koalabox/koalabox.hpp>
-
 #include <steam_types/steam_types.hpp>
+#include <core/macros.hpp>
 
 /**
  * By default, virtual functions are declared with __thiscall
@@ -37,9 +37,6 @@
 #define THIS ECX
 #endif
 
-#define DLL_EXPORT(TYPE) extern "C" __declspec( dllexport ) TYPE __cdecl
-#define VIRTUAL(TYPE) __declspec(noinline) TYPE __fastcall
-
 class ISteamClient;
 
 class ISteamApps;
@@ -52,8 +49,6 @@ typedef __int32 HSteamPipe;
 typedef __int32 HSteamUser;
 typedef uint32_t AppId_t;
 typedef uint64_t CSteamID;
-
-typedef uint32_t HCoroutine;
 
 // TODO: Refactor into multiple headers
 
@@ -116,11 +111,6 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetItemsByID(
 DLL_EXPORT(bool) SteamAPI_ISteamInventory_SerializeResult(ISteamInventory*, SteamInventoryResult_t, void*, uint32_t*);
 DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetItemDefinitionIDs(ISteamInventory*, SteamItemDef_t*, uint32_t*);
 
-// Koalageddon mode
-
-DLL_EXPORT(HCoroutine) Coroutine_Create(void* callback_address, struct CoroutineData* data);
-DLL_EXPORT(void) SteamClient_Interface_Interceptor(const char* interface_name, const char* function_name);
-
 // IClientApps
 VIRTUAL(int) IClientApps_GetDLCCount(PARAMS(AppId_t));
 VIRTUAL(bool) IClientApps_BGetDLCDataByIndex(PARAMS(AppId_t, int, AppId_t*, bool*, char*, int));
@@ -129,14 +119,13 @@ VIRTUAL(bool) IClientApps_BGetDLCDataByIndex(PARAMS(AppId_t, int, AppId_t*, bool
 VIRTUAL(bool) IClientAppManager_IsAppDlcInstalled(PARAMS(AppId_t, AppId_t));
 
 // IClientUser
-VIRTUAL(bool) IClientUser_IsSubscribedApp(PARAMS(AppId_t));
+VIRTUAL(bool) IClientUser_BIsSubscribedApp(PARAMS(AppId_t));
 
 // IClientInventory
 VIRTUAL(EResult) IClientInventory_GetResultStatus(PARAMS(SteamInventoryResult_t));
 VIRTUAL(bool) IClientInventory_GetResultItems(
     PARAMS(SteamInventoryResult_t, SteamItemDetails_t*, uint32_t, uint32_t *)
 );
-//////
 VIRTUAL(bool) IClientInventory_GetResultItemProperty(
     PARAMS(SteamInventoryResult_t, uint32_t, const char*, char*, uint32_t, uint32_t*)
 );
