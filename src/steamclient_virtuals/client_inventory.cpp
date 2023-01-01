@@ -39,7 +39,6 @@ VIRTUAL(bool) IClientInventory_GetResultItems(
     );
 }
 
-// TODO: Verify this function [ ] signature, in-game [ ]
 VIRTUAL(bool) IClientInventory_GetResultItemProperty(
     PARAMS(
         SteamInventoryResult_t resultHandle,
@@ -62,7 +61,6 @@ VIRTUAL(bool) IClientInventory_GetResultItemProperty(
     );
 }
 
-// TODO: Verify this function [x] signature, in-game [ ]
 VIRTUAL(bool) IClientInventory_CheckResultSteamID(
     PARAMS(
         SteamInventoryResult_t resultHandle,
@@ -76,8 +74,6 @@ VIRTUAL(bool) IClientInventory_CheckResultSteamID(
     });
 }
 
-
-// TODO: Verify this function [x] signature, in-game [ ]
 VIRTUAL(bool) IClientInventory_GetAllItems(PARAMS(SteamInventoryResult_t* pResultHandle)) {
     return steam_inventory::GetAllItems(__func__, pResultHandle, [&]() {
         GET_ORIGINAL_VIRTUAL_FUNCTION(IClientInventory_GetAllItems)
@@ -86,7 +82,6 @@ VIRTUAL(bool) IClientInventory_GetAllItems(PARAMS(SteamInventoryResult_t* pResul
     });
 }
 
-// TODO: Verify this function [x] signature, in-game [ ]
 VIRTUAL(bool) IClientInventory_GetItemsByID(
     PARAMS(
         SteamInventoryResult_t* pResultHandle,
@@ -101,7 +96,6 @@ VIRTUAL(bool) IClientInventory_GetItemsByID(
     });
 }
 
-// TODO: Verify this function [x] signature, in-game [ ]
 VIRTUAL(bool) IClientInventory_SerializeResult(
     PARAMS(
         SteamInventoryResult_t resultHandle,

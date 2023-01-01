@@ -6,14 +6,5 @@
   "dlc_ids": [],
   "auto_inject_inventory": true,
   "inventory_items": [],
-  "koalageddon_config": {
-    "interface_interceptor_pattern": "55 8B EC 8B ?? ?? ?? ?? ?? 81 EC ?? ?? ?? ?? 53 FF 15",
-    "function_ordinal_pattern": "8B 80 ?? ?? ?? ?? FF D0",
-    "callback_interceptor_address_offset": 1,
-    "callback_address_offset": 20,
-    "callback_data_offset": 0,
-    "callback_name_offset": 4,
-    "steamclient_interceptor_function_address_offset": 2,
-    "steamclient_interceptor_function_address_offset_client_user": 5
-  }
+  "koalageddon_config": null
 }

@@ -6,7 +6,14 @@
 
 using namespace smoke_api;
 
-//#define DETOUR_STRICT(FUNC, address) hook::detour((FunctionAddress) (address), #FUNC, (FunctionAddress) (FUNC));
+typedef uint32_t HCoroutine;
+DLL_EXPORT(HCoroutine) Coroutine_Create(void* callback_address, struct CoroutineData* data);
+
+namespace koalageddon {
+    void init_vstdlib_hooks() {
+        DETOUR_ORIGINAL(Coroutine_Create)
+    }
+}
 
 VIRTUAL(bool) SharedLicensesLockStatus(PARAMS(void* arg)) { // NOLINT(misc-unused-parameters)
     logger->debug("{} -> instance: {}, arg: {}", __func__, fmt::ptr(THIS), fmt::ptr(arg));
@@ -20,21 +27,21 @@ VIRTUAL(bool) SharedLibraryStopPlaying(PARAMS(void* arg)) { // NOLINT(misc-unuse
 
 struct CallbackData {
     FunctionAddress get_callback_intercept_address() {
-        return reinterpret_cast<FunctionAddress*>(this)[koalageddon::config.callback_interceptor_address_offset];
+        return reinterpret_cast<FunctionAddress*>(this)[koalageddon::config.vstdlib_callback_interceptor_address_offset];
     }
 
     FunctionAddress get_callback_address() {
-        return reinterpret_cast<FunctionAddress*>(this)[koalageddon::config.callback_data_offset];
+        return reinterpret_cast<FunctionAddress*>(this)[koalageddon::config.vstdlib_callback_address_offset];
     }
 };
 
 struct CoroutineData {
     CallbackData* get_callback_data() {
-        return reinterpret_cast<CallbackData**>(this)[koalageddon::config.callback_data_offset];
+        return reinterpret_cast<CallbackData**>(this)[koalageddon::config.vstdlib_callback_data_offset];
     }
 
     const char* get_callback_name() {
-        return reinterpret_cast<const char**>(this)[koalageddon::config.callback_name_offset];
+        return reinterpret_cast<const char**>(this)[koalageddon::config.vstdlib_callback_name_offset];
     }
 };
 

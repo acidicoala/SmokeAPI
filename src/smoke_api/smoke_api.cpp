@@ -88,12 +88,16 @@ namespace smoke_api {
             if (is_hook_mode) {
                 hook::init(true);
 
+#ifdef _WIN64
+                init_hook_mode();
+#else
                 // TODO: Check if it's steam from valve
-                if (util::strings_are_equal(exe_name, "steam.exe") && !util::is_x64()) {
+                if (util::strings_are_equal(exe_name, "steam.exe")) {
                     koalageddon::init();
                 } else {
                     init_hook_mode();
                 }
+#endif
             } else {
                 init_proxy_mode();
             }
