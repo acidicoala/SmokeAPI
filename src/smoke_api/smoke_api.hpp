@@ -27,6 +27,7 @@ namespace smoke_api {
     struct Config {
         uint32_t $version = 2;
         bool logging = false;
+        bool unlock_family_sharing = true;
         bool unlock_all = true;
         Set<uint32_t> override;
         Vector<uint32_t> dlc_ids;
@@ -39,6 +40,7 @@ namespace smoke_api {
         NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(
             Config, $version, // NOLINT(misc-const-correctness)
             logging,
+            unlock_family_sharing,
             unlock_all,
             override,
             dlc_ids,

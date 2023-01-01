@@ -38,7 +38,9 @@ namespace koalageddon {
 
                 if (name == VSTDLIB_DLL) {
                     // VStdLib DLL handles Family Sharing functions
-                    init_vstdlib_hooks();
+                    if (smoke_api::config.unlock_family_sharing) {
+                        init_vstdlib_hooks();
+                    }
                 } else if (name == STEAMCLIENT_DLL) {
                     // SteamClient DLL handles unlocking functions
                     init_steamclient_hooks();
