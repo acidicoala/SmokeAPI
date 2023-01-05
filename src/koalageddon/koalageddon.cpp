@@ -51,8 +51,6 @@ namespace koalageddon {
     }
 
     void init() {
-        logger->info("🐨 Detected Koalageddon mode 💥");
-
         std::thread([]() {
             const auto kg_config_source = init_koalageddon_config();
             logger->info("Loaded Koalageddon config from the {}", kg_config_source);

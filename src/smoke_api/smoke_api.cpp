@@ -58,6 +58,25 @@ namespace smoke_api {
         // the support for it has been dropped from this project.
     }
 
+    bool is_valve_steam(const String& exe_name) {
+        if (not util::strings_are_equal(exe_name, "steam.exe")) {
+            return false;
+        }
+
+        const HMODULE steam_handle = win_util::get_module_handle_or_throw(nullptr);
+        const auto manifest = win_util::get_module_manifest(steam_handle);
+
+        // Verify that it's steam from valve, and not some other executable coincidentally named steam
+
+        if (!manifest.has_value()) {
+            // Steam.exe is expected to have a manifest
+            return false;
+        }
+
+        // Steam.exe manifest is expected to contain this string
+        return manifest.value().find("valvesoftware.steam.steam") != String::npos;
+    }
+
     void init(HMODULE module_handle) {
         try {
             DisableThreadLibraryCalls(module_handle);
@@ -89,7 +108,9 @@ namespace smoke_api {
                 init_hook_mode();
 #else
                 // TODO: Check if it's steam from valve
-                if (util::strings_are_equal(exe_name, "steam.exe")) {
+                if (is_valve_steam(exe_name)) {
+                    logger->info("🐨💥 Detected Koalageddon mode");
+
                     koalageddon::init();
                 } else {
                     init_hook_mode();
