@@ -52,13 +52,13 @@ namespace smoke_api {
 
     extern Config config;
 
+    extern HMODULE self_module;
+
     extern HMODULE original_library;
 
     extern bool is_hook_mode;
 
-    extern Path self_directory;
-
-    void init(HMODULE self_module);
+    void init(HMODULE module_handle);
 
     void shutdown();
 

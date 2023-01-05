@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(SmokeAPI VERSION 1.1.0)
+project(SmokeAPI VERSION 2.0.0)
 
 include(KoalaBox/cmake/KoalaBox.cmake)
 
@@ -35,7 +35,13 @@ configure_build_config(extra_build_config)
 
 set(
     SMOKE_API_SOURCES
+    src/core/cache.cpp
+    src/core/cache.hpp
+    src/core/globals.cpp
+    src/core/globals.hpp
     src/core/macros.hpp
+    src/core/paths.cpp
+    src/core/paths.hpp
     src/smoke_api/smoke_api.cpp
     src/smoke_api/smoke_api.hpp
     src/steam_api_exports/steam_api_flat.cpp
@@ -61,6 +67,7 @@ set(
     ${GENERATED_LINKER_EXPORTS}
 )
 
+# Include koalageddon mode sources only in 32-bit builds
 if (CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(
         SMOKE_API_SOURCES ${SMOKE_API_SOURCES}

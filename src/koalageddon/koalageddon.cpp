@@ -1,12 +1,12 @@
 #include <build_config.h>
 #include <koalageddon/koalageddon.hpp>
+#include <core/cache.hpp>
 #include <smoke_api/smoke_api.hpp>
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/http_client.hpp>
-#include <koalabox/io.hpp>
 
 namespace koalageddon {
-    KoalageddonConfig config = {};
+    KoalageddonConfig config; // NOLINT(cert-err58-cpp)
 
     /**
     * @return A string representing the source of the config.
@@ -19,41 +19,38 @@ namespace koalageddon {
 
                 return "local config override";
             } catch (const Exception& ex) {
-                logger->error("Local koalageddon config parse exception: {}", ex.what());
+                logger->error("Failed to get local koalageddon config: {}", ex.what());
             }
         }
-
-        const auto config_cache_path = smoke_api::self_directory / "SmokeAPI.koalageddon.json";
 
         try {
             // Then try to fetch config from GitHub
             const String url = "https://raw.githubusercontent.com/acidicoala/public-entitlements/main/koalageddon/v2/steam.json";
             config = http_client::fetch_json(url).get<decltype(config)>();
 
-            io::write_file(config_cache_path, nlohmann::json(config).dump(2));
+            cache::save_koalageddon_config(config);
 
             return "GitHub repository";
         } catch (const Exception& ex) {
-            logger->error("Remote koalageddon config parse exception: {}", ex.what());
+            logger->error("Failed to get remote koalageddon config: {}", ex.what());
         }
 
         try {
-            // Then try to get a cached copy of a previously fetched config
-            const auto cache = io::read_file(config_cache_path);
+            // Then try to get a cached copy of a previously fetched config.
+            // We expect call to value() to throw if no koalageddon config is present
+            config = cache::get_koalageddon_config().value();
 
-            config = nlohmann::json::parse(cache).get<decltype(config)>();
-
-            return "Local cache";
+            return "disk cache";
         } catch (const Exception& ex) {
-            logger->error("Cached koalageddon config parse exception: {}", ex.what());
+            logger->error("Failed to get cached koalageddon config: {}", ex.what());
         }
 
         // Finally, fallback on the default config
+        config = {};
         return "default config bundled in the binary";
     }
 
     void init() {
-#ifndef _WIN64
         logger->info("🐨 Detected Koalageddon mode 💥");
 
         std::thread([]() {
@@ -66,13 +63,13 @@ namespace koalageddon {
                 smoke_api::original_library = library;
 
                 static auto init_count = 0;
-                if (name == VSTDLIB_DLL) {
+                if (util::strings_are_equal(name, VSTDLIB_DLL)) {
                     // VStdLib DLL handles Family Sharing functions
                     if (smoke_api::config.unlock_family_sharing) {
                         init_vstdlib_hooks();
                     }
                     init_count++;
-                } else if (name == STEAMCLIENT_DLL) {
+                } else if (util::strings_are_equal(name, STEAMCLIENT_DLL)) {
                     // SteamClient DLL handles unlocking functions
                     init_steamclient_hooks();
                     init_count++;
@@ -85,6 +82,5 @@ namespace koalageddon {
                 logger->error("Koalageddon mode dll monitor init error. Module: '{}', Message: {}", name, ex.what());
             }
         });
-#endif
     }
 }

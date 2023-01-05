@@ -38,17 +38,10 @@
 #endif
 
 class ISteamClient;
-
 class ISteamApps;
-
 class ISteamUser;
-
 class ISteamInventory;
 
-typedef __int32 HSteamPipe;
-typedef __int32 HSteamUser;
-typedef uint32_t AppId_t;
-typedef uint64_t CSteamID;
 
 // TODO: Refactor into multiple headers
 

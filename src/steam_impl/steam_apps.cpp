@@ -1,44 +1,20 @@
-#include <smoke_api/smoke_api.hpp>
 #include <steam_impl/steam_apps.hpp>
-
+#include <cpr/cpr.h>
 #include <koalabox/io.hpp>
 #include <koalabox/http_client.hpp>
-
-#include <cpr/cpr.h>
+#include <core/cache.hpp>
+#include <smoke_api/smoke_api.hpp>
 
 using namespace smoke_api;
 
 /// Steamworks may max GetDLCCount value at 64, depending on how much unowned DLCs the user has.
 /// Despite this limit, some games with more than 64 DLCs still keep using this method.
-/// This means we have to get extra DLC IDs from local config/remote config/cache.
+/// This means we have to get extra DLC IDs from local config, remote config, or cache.
 constexpr auto MAX_DLC = 64;
 
-Vector<AppId_t> cached_dlcs;
 // Key: App ID, Value: DLC ID
 Map<AppId_t, int> original_dlc_count_map; // NOLINT(cert-err58-cpp)
-
-// FIXME: Path in koalageddon mode
-Path get_cache_path() {
-    static const auto path = self_directory / "SmokeAPI.cache.json";
-    return path;
-}
-
-void save_cache_to_disk(const String& app_id_str) {
-    try {
-        logger->debug("Saving {} DLCs to cache", cached_dlcs.size());
-
-        // TODO: Combine this with existing cache
-        const nlohmann::json json = {
-            {app_id_str, {
-                {"dlc", cached_dlcs}
-            }}
-        };
-
-        io::write_file(get_cache_path(), json.dump(2));
-    } catch (const Exception& ex) {
-        logger->error("Error saving DLCs to cache: {}", ex.what());
-    }
-}
+Vector<AppId_t> cached_dlcs;
 
 /**
  * @param app_id
@@ -58,29 +34,6 @@ bool fetch_and_cache_dlcs(AppId_t app_id) {
 
     auto total_success = true;
     const auto app_id_str = std::to_string(app_id);
-
-    const auto read_cache_from_disk = [&]() {
-        Vector<AppId_t> dlcs;
-
-        try {
-            const auto text = io::read_file(get_cache_path());
-
-            if (text.empty()) {
-                return dlcs;
-            }
-
-            auto json = nlohmann::json::parse(text);
-
-            dlcs = json[app_id_str]["dlc"].get<decltype(cached_dlcs)>();
-
-            logger->debug("Read {} DLCs from cache", dlcs.size());
-        } catch (const Exception& ex) {
-            logger->error("Error reading DLCs from cache: {}", ex.what());
-            total_success = false;
-        }
-
-        return dlcs;
-    };
 
     const auto fetch_from_steam = [&]() {
         Vector<AppId_t> dlcs;
@@ -123,22 +76,25 @@ bool fetch_and_cache_dlcs(AppId_t app_id) {
         return dlcs;
     };
 
-    const auto cache_dlcs = read_cache_from_disk();
     const auto steam_dlcs = fetch_from_steam();
     const auto github_dlcs = fetch_from_github();
 
     // Any of the sources might fail, so we try to get optimal result
     // by combining results from all the sources into a single set.
     Set<AppId_t> combined_dlcs;
-    combined_dlcs.insert(cached_dlcs.begin(), cached_dlcs.end());
     combined_dlcs.insert(steam_dlcs.begin(), steam_dlcs.end());
     combined_dlcs.insert(github_dlcs.begin(), github_dlcs.end());
+    // There is no need to insert cached entries if both steam and GitHub requests were successful.
+    if (!total_success) {
+        const auto cache_dlcs = cache::get_dlc_ids(app_id);
+        combined_dlcs.insert(cached_dlcs.begin(), cached_dlcs.end());
+    }
 
     // We then transfer that set into a list because we need DLCs to be accessible via index.
     cached_dlcs.clear();
     cached_dlcs.insert(cached_dlcs.begin(), combined_dlcs.begin(), combined_dlcs.end());
 
-    save_cache_to_disk(app_id_str);
+    cache::save_dlc_ids(app_id, cached_dlcs);
 
     return total_success;
 }
@@ -195,7 +151,7 @@ namespace steam_apps {
                 static std::mutex mutex;
                 const std::lock_guard<std::mutex> guard(mutex);
 
-                logger->debug("Game has {} or more DLCs. Fetching DLCs from a web API.", MAX_DLC);
+                logger->debug("Game has {} or more DLCs. Fetching DLCs from remote sources.", MAX_DLC);
 
                 if (fetch_and_cache_dlcs(app_id)) {
                     cached_apps.insert(app_id);
@@ -273,7 +229,7 @@ namespace steam_apps {
             // We must have had cached DLC IDs at this point.
             // It does not matter if we begin the list with injected DLC IDs or cached ones.
             // However, we must be consistent at all times. Hence, the convention will be that
-            // cached DLC should always follow the injected DLCs as follows:
+            // injected DLCs will be followed by cached DLCs in the following manner:
             // [injected-dlc-0, injected-dlc-1, ..., cached-dlc-0, cached-dlc-1, ...]
 
             if (iDLC < 0) {

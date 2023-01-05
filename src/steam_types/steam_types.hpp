@@ -1,15 +1,12 @@
 #pragma once
 
-// results from UserHasLicenseForApp
-enum EUserHasLicenseForAppResult {
-    k_EUserHasLicenseResultHasLicense = 0,         // User has a license for specified app
-    k_EUserHasLicenseResultDoesNotHaveLicense = 1, // User does not have a license for the specified app
-    k_EUserHasLicenseResultNoAuth = 2,             // User has not been authenticated
-};
-
 typedef uint32_t SteamInventoryResult_t;
 typedef uint64_t SteamItemInstanceID_t;
 typedef uint32_t SteamItemDef_t;
+typedef uint32_t AppId_t;
+typedef uint32_t HSteamPipe;
+typedef uint32_t HSteamUser;
+typedef uint64_t CSteamID;
 
 struct SteamItemDetails_t {
     SteamItemInstanceID_t m_itemId;
@@ -18,12 +15,19 @@ struct SteamItemDetails_t {
     uint16_t m_unFlags; // see ESteamItemFlags
 };
 
+// results from UserHasLicenseForApp
+enum EUserHasLicenseForAppResult {
+    k_EUserHasLicenseResultHasLicense = 0,         // User has a license for specified app
+    k_EUserHasLicenseResultDoesNotHaveLicense = 1, // User does not have a license for the specified app
+    k_EUserHasLicenseResultNoAuth = 2,             // User has not been authenticated
+};
+
 enum EResult {
     k_EResultNone = 0,                            // no result
     k_EResultOK = 1,                            // success
     k_EResultFail = 2,                            // generic failure
     k_EResultNoConnection = 3,                    // no/failed network connection
-//	k_EResultNoConnectionRetry = 4,				// OBSOLETE - removed
+    //	k_EResultNoConnectionRetry = 4,				// OBSOLETE - removed
     k_EResultInvalidPassword = 5,                // password/ticket is invalid
     k_EResultLoggedInElsewhere = 6,                // same user logged in elsewhere
     k_EResultInvalidProtocolVer = 7,            // protocol version is incorrect

@@ -1,4 +1,5 @@
 #include <smoke_api/smoke_api.hpp>
+#include <core/paths.hpp>
 #include <steam_functions/steam_functions.hpp>
 #include <build_config.h>
 
@@ -8,6 +9,7 @@
 #include <koalabox/hook.hpp>
 #include <koalabox/loader.hpp>
 #include <koalabox/win_util.hpp>
+#include <core/globals.hpp>
 
 #ifndef _WIN64
 #include <koalageddon/koalageddon.hpp>
@@ -18,19 +20,14 @@ namespace smoke_api {
 
     HMODULE original_library = nullptr;
 
+    HMODULE self_module = nullptr;
+
     bool is_hook_mode = false;
-
-    Path self_directory;
-
-    void init_config() {
-        // TODO: Detect koalageddon mode first, and then fetch config from corresponding directory
-        config = config_parser::parse<Config>(self_directory / PROJECT_NAME".json");
-    }
 
     void init_proxy_mode() {
         logger->info("🔀 Detected proxy mode");
 
-        original_library = loader::load_original_library(self_directory, ORIGINAL_DLL);
+        original_library = loader::load_original_library(paths::get_self_path(), ORIGINAL_DLL);
     }
 
     void init_hook_mode() {
@@ -61,22 +58,22 @@ namespace smoke_api {
         // the support for it has been dropped from this project.
     }
 
-    void init(HMODULE self_module) {
+    void init(HMODULE module_handle) {
         try {
-            DisableThreadLibraryCalls(self_module);
+            DisableThreadLibraryCalls(module_handle);
+
+            globals::self_module = module_handle;
 
             koalabox::project_name = PROJECT_NAME;
 
-            self_directory = loader::get_module_dir(self_module);
-
-            init_config();
+            config = config_parser::parse<Config>(paths::get_config_path());
 
             const auto exe_path = Path(win_util::get_module_file_name_or_throw(nullptr));
             const auto exe_name = exe_path.filename().string();
             const auto exe_bitness = util::is_x64() ? 64 : 32;
 
             if (config.logging) {
-                logger = file_logger::create(self_directory / fmt::format("{}.log", PROJECT_NAME));
+                logger = file_logger::create(paths::get_log_path());
             }
 
             logger->info("🐨 {} v{}", PROJECT_NAME, PROJECT_VERSION);

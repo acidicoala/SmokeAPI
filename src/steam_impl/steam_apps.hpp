@@ -1,8 +1,7 @@
 #include <steam_functions/steam_functions.hpp>
 
-using namespace smoke_api;
-
 namespace steam_apps {
+    using namespace koalabox;
 
     bool IsDlcUnlocked(const String& function_name, AppId_t app_id, AppId_t dlc_id);
 
