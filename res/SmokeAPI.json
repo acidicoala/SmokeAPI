@@ -1,6 +1,7 @@
 {
   "$version": 2,
   "logging": true,
+  "unlock_family_sharing": true,
   "unlock_all": true,
   "override": [],
   "dlc_ids": [],

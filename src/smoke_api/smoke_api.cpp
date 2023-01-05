@@ -121,6 +121,7 @@ namespace smoke_api {
         }
     }
 
+    // FIXME: Support for app_id for koalageddon mode
     bool should_unlock(uint32_t app_id) {
         return config.unlock_all != config.override.contains(app_id);
     }
