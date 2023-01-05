@@ -1,7 +1,4 @@
-#include <smoke_api/smoke_api.hpp>
-#include <steam_functions/steam_functions.hpp>
-
-using namespace smoke_api;
+#include <steam_impl/steam_client.hpp>
 
 namespace steam_client {
 

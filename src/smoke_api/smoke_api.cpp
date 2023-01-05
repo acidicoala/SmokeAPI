@@ -42,7 +42,7 @@ namespace smoke_api {
             DETOUR_ORIGINAL(CreateInterface)
         });
 
-        // Hooking steam_api has show itself to be less desirable than steamclient
+        // Hooking steam_api has shown itself to be less desirable than steamclient
         // for the reasons outlined below:
         //
         // Calling original in flat functions will actually call the hooked functions

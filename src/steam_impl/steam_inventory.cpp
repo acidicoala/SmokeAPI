@@ -210,7 +210,7 @@ namespace steam_inventory {
         if (pItemDefIDs) { // Definitions were copied
             for (int i = 0; i < *punItemDefIDsArraySize; i++) {
                 const auto& def = pItemDefIDs[i];
-                 logger->debug("  Index: {}, ID: {}", i, def);
+                logger->debug("  Index: {}, ID: {}", i, def);
             }
         }
 

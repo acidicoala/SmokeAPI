@@ -255,6 +255,7 @@ namespace koalageddon {
             DETOUR(SteamClient_Interface_Interceptor, interface_interceptor_address)
         }
     }
+
 }
 
 /**

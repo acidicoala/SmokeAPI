@@ -70,7 +70,6 @@ DLL_EXPORT(void*) SteamUser() {
     });
 }
 
-
 DLL_EXPORT(void*) SteamInventory() {
     static auto version = get_versioned_interface(STEAM_INVENTORY, "001");
 
