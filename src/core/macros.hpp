@@ -9,7 +9,7 @@
 #define VIRTUAL(TYPE) __declspec(noinline) TYPE __fastcall
 
 #define GET_ORIGINAL_HOOKED_FUNCTION(FUNC) \
-    const auto FUNC##_o = koalabox::hook::get_original_hooked_function(globals::address_map, #FUNC, FUNC);
+    static const auto FUNC##_o = koalabox::hook::get_original_hooked_function(globals::address_map, #FUNC, FUNC);
 
 #define GET_ORIGINAL_FUNCTION_STEAMAPI(FUNC) \
     static const auto FUNC##_o = koalabox::hook::get_original_function(globals::steamapi_module, #FUNC, FUNC);
