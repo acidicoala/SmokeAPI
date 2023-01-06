@@ -2,9 +2,9 @@
 #include <build_config.h>
 #include <core/cache.hpp>
 #include <core/config.hpp>
-#include <smoke_api/smoke_api.hpp>
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/http_client.hpp>
+#include <koalabox/util.hpp>
 
 namespace koalageddon {
     KoalageddonConfig config; // NOLINT(cert-err58-cpp)
@@ -57,24 +57,24 @@ namespace koalageddon {
             logger->info("Loaded Koalageddon config from the {}", kg_config_source);
         }).detach();
 
-        dll_monitor::init({VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& library, const String& name) {
+        dll_monitor::init({VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& module_handle, const String& name) {
             try {
-                smoke_api::original_library = library;
-
-                static auto init_count = 0;
                 if (util::strings_are_equal(name, VSTDLIB_DLL)) {
                     // VStdLib DLL handles Family Sharing functions
+
+                    globals::vstdlib_module = module_handle;
+
                     if (config::instance.unlock_family_sharing) {
                         init_vstdlib_hooks();
                     }
-                    init_count++;
                 } else if (util::strings_are_equal(name, STEAMCLIENT_DLL)) {
                     // SteamClient DLL handles unlocking functions
+
+                    globals::steamclient_module = module_handle;
                     init_steamclient_hooks();
-                    init_count++;
                 }
 
-                if (init_count == 2) {
+                if (globals::vstdlib_module != nullptr && globals::steamclient_module != nullptr) {
                     dll_monitor::shutdown();
                 }
             } catch (const Exception& ex) {

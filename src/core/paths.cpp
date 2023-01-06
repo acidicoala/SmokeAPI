@@ -4,7 +4,7 @@
 
 namespace paths {
     Path get_self_path() {
-        static const auto path = loader::get_module_dir(globals::self_module);
+        static const auto path = loader::get_module_dir(globals::smokeapi_handle);
         return path;
     }
 

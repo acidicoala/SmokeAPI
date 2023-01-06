@@ -1,4 +1,9 @@
+#include <core/globals.hpp>
+
 namespace globals {
-    HMODULE self_module = nullptr;
-    // TODO: Original module (rename to proxy module?)
+    HMODULE smokeapi_handle = nullptr;
+    HMODULE steamapi_module = nullptr;
+    HMODULE vstdlib_module = nullptr;
+    HMODULE steamclient_module = nullptr;
+    Map<String, FunctionAddress> address_map;
 }

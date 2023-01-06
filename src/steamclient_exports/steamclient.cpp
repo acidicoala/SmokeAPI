@@ -5,7 +5,7 @@ using namespace smoke_api;
 
 DLL_EXPORT(void*) CreateInterface(const char* interface_string, int* out_result) {
     return steam_client::GetGenericInterface(__func__, interface_string, [&]() {
-        GET_ORIGINAL_FUNCTION(CreateInterface)
+        GET_ORIGINAL_FUNCTION_STEAMCLIENT(CreateInterface)
 
         return CreateInterface_o(interface_string, out_result);
     });

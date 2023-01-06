@@ -1,5 +1,4 @@
 #include <build_config.h>
-#include <smoke_api/smoke_api.hpp>
 #include <koalageddon/koalageddon.hpp>
 #include <koalabox/hook.hpp>
 #include <koalabox/patcher.hpp>
@@ -8,7 +7,7 @@
 #include <Zydis/Zydis.h>
 #include <Zydis/DecoderTypes.h>
 
-using namespace smoke_api;
+using namespace koalabox;
 
 #define DEMUX_DECL(INTERFACE)                                                               \
     constexpr auto INTERFACE = #INTERFACE;                                                  \
@@ -18,7 +17,6 @@ DEMUX_DECL(IClientAppManager)
 DEMUX_DECL(IClientApps)
 DEMUX_DECL(IClientInventory)
 DEMUX_DECL(IClientUser)
-
 
 DLL_EXPORT(void) SteamClient_Interface_Interceptor(const char* interface_name, const char* function_name);
 
@@ -34,30 +32,30 @@ namespace koalageddon {
     constexpr auto INTERFACE_TARGET_COUNT = 4;
 
     /*
- * We need an interface=>function ordinal map in order to hook steam interface function
- * via virtual function pointer swap. We could construct it by exploiting these code chunks:
- *
- * 8B01         | mov eax, dword ptr ds:[ecx]
- * 68 ????????  | push steamclient.function_name
- * 68 ????????  | push steamclient.interface_name
- *
- * Step 1: Find all addresses that begin with pattern
- *         8B 01 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? FF 10
- * Step 2: Extract function and interface name pointers by adding 3 and 8 respectively
- * Step 3: Starting from the found address, and until the function epilogue, scan for either instructions:
- *
- *         (1) FF50 ?? | call dword ptr ds:[eax+0x??]
- *         or
- *         (2) 8B40 ?? | mov eax, dword ptr ds:[eax+??]
- *             FFD0    | call eax
- *
- *         In the case (1), the offset is encoded in the found call instruction.
- *         In the case (2), the offset is encoded in the instruction preceding the call.
- *
- *         ROADBLOCK: There is actually a case (3) which calls a local variable (ebp-??),
- *         which itself is constructed over multiple instruction calls, making it non-deterministic.
- *         Until this roadblock is resolved, automatic detection of ordinals remains non-viable.
- */
+     * We need an interface=>function ordinal map in order to hook steam interface function
+     * via virtual function pointer swap. We could construct it by exploiting these code chunks:
+     *
+     * 8B01         | mov eax, dword ptr ds:[ecx]
+     * 68 ????????  | push steamclient.function_name
+     * 68 ????????  | push steamclient.interface_name
+     *
+     * Step 1: Find all addresses that begin with pattern
+     *         8B 01 68 ?? ?? ?? ?? 68 ?? ?? ?? ?? FF 10
+     * Step 2: Extract function and interface name pointers by adding 3 and 8 respectively
+     * Step 3: Starting from the found address, and until the function epilogue, scan for either instructions:
+     *
+     *         (1) FF50 ?? | call dword ptr ds:[eax+0x??]
+     *         or
+     *         (2) 8B40 ?? | mov eax, dword ptr ds:[eax+??]
+     *             FFD0    | call eax
+     *
+     *         In the case (1), the offset is encoded in the found call instruction.
+     *         In the case (2), the offset is encoded in the instruction preceding the call.
+     *
+     *         ROADBLOCK: There is actually a case (3) which calls a local variable (ebp-??),
+     *         which itself is constructed over multiple instruction calls, making it non-deterministic.
+     *         Until this roadblock is resolved, automatic detection of ordinals remains non-viable.
+     */
     [[maybe_unused]] Map<String, uint32_t> construct_interface_function_ordinal_map() {
         auto* const steamclient_handle = win_util::get_module_handle_or_throw(STEAMCLIENT_DLL);
         const auto steamclient_module_info = win_util::get_module_info_or_throw(steamclient_handle);
@@ -170,7 +168,10 @@ namespace koalageddon {
         const auto start_address = reinterpret_cast<FunctionAddress>(module_info.lpBaseOfDll);
         auto* terminal_address = (uint8_t*) (start_address + module_info.SizeOfImage);
 
-        // First, find the interface demux
+        // TODO: There may actually be a way to find this address from "first principles"
+        // SteamClient.Steam_CreateSteamPipe begins with a call to fun_alpha()
+        // fun_alpha() calls fun_beta()
+        // ordinal 18
         const auto* interface_demux_address = patcher::find_pattern_address(
             module_info,
             "interface demux",
@@ -212,13 +213,13 @@ namespace koalageddon {
                         // Finally, hook the demux functions of interest
 
                         if (IClientAppManager == interface_name) {
-                            DETOUR(IClientAppManager_Demux, function_demux_address)
+                            DETOUR_ADDRESS(IClientAppManager_Demux, function_demux_address)
                         } else if (IClientApps == interface_name) {
-                            DETOUR(IClientApps_Demux, function_demux_address)
+                            DETOUR_ADDRESS(IClientApps_Demux, function_demux_address)
                         } else if (IClientInventory == interface_name) {
-                            DETOUR(IClientInventory_Demux, function_demux_address)
+                            DETOUR_ADDRESS(IClientInventory_Demux, function_demux_address)
                         } else if (IClientUser == interface_name) {
-                            DETOUR(IClientUser_Demux, function_demux_address)
+                            DETOUR_ADDRESS(IClientUser_Demux, function_demux_address)
                         }
 
                         // Update the terminal address to limit the search scope only to relevant portion of the code
@@ -252,7 +253,7 @@ namespace koalageddon {
         );
 
         if (interface_interceptor_address) {
-            DETOUR(SteamClient_Interface_Interceptor, interface_interceptor_address)
+            DETOUR_ADDRESS(SteamClient_Interface_Interceptor, interface_interceptor_address)
         }
     }
 
@@ -290,6 +291,7 @@ DLL_EXPORT(void) SteamClient_Interface_Interceptor(const char* interface_name, c
             };
 
 #define HOOK_INTERFACE(FUNC) hook::swap_virtual_func_or_throw( \
+    globals::address_map,                                      \
     (void*) interface_address,                                 \
     #FUNC,                                                     \
     koalageddon::config.FUNC##_ordinal,                        \
@@ -321,7 +323,7 @@ DLL_EXPORT(void) SteamClient_Interface_Interceptor(const char* interface_name, c
             });
         }
 
-        GET_ORIGINAL_FUNCTION(SteamClient_Interface_Interceptor)
+        GET_ORIGINAL_VIRTUAL_FUNCTION(SteamClient_Interface_Interceptor)
         SteamClient_Interface_Interceptor_o(interface_name, function_name);
     } catch (const Exception& ex) {
         logger->error("{} -> Error: {}", __func__, ex.what());
@@ -344,7 +346,7 @@ DLL_EXPORT(void) INTERFACE##_Demux(                                         \
         const std::lock_guard<std::mutex> guard(koalageddon::map_mutex);    \
         koalageddon::interface_name_pointer_map[INTERFACE] = arg1;          \
     }                                                                       \
-    GET_ORIGINAL_FUNCTION(INTERFACE##_Demux)                                \
+    GET_ORIGINAL_VIRTUAL_FUNCTION(INTERFACE##_Demux)                                \
     INTERFACE##_Demux_o(arg1, arg2, arg3, arg4);                            \
 }
 

@@ -1,8 +1,8 @@
-#include <smoke_api/smoke_api.hpp>
+#include <koalabox/koalabox.hpp>
 #include <steam_functions/steam_functions.hpp>
 
 namespace steam_client {
-    using namespace smoke_api;
+    using namespace koalabox;
 
     void* GetGenericInterface(
         const String& function_name,

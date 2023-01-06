@@ -121,7 +121,8 @@ namespace steam_functions {
 
 #define HOOK(MAP, FUNC) \
     hook::swap_virtual_func( \
-        interface, \
+        globals::address_map, \
+        interface,      \
         #FUNC, \
         get_ordinal(MAP, #FUNC, version_number), \
         (FunctionAddress) (FUNC) \
@@ -202,7 +203,7 @@ namespace steam_functions {
     }
 
     HSteamPipe get_steam_pipe_or_throw() {
-        const auto& steam_api_module = win_util::get_module_handle_or_throw(ORIGINAL_DLL);
+        const auto& steam_api_module = win_util::get_module_handle_or_throw(STEAMAPI_DLL);
         void* GetHSteamPipe_address;
         try {
             GetHSteamPipe_address = (void*) win_util::get_proc_address_or_throw(

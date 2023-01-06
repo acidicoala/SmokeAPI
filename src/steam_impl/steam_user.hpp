@@ -1,9 +1,8 @@
-#include <smoke_api/smoke_api.hpp>
+#include <koalabox/koalabox.hpp>
 #include <steam_functions/steam_functions.hpp>
 
-using namespace smoke_api;
-
 namespace steam_user {
+    using namespace koalabox;
 
     EUserHasLicenseForAppResult UserHasLicenseForApp(
         const String& function_name,

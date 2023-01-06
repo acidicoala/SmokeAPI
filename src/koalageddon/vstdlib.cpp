@@ -1,17 +1,17 @@
-#include <smoke_api/smoke_api.hpp>
-#include <steam_functions/steam_functions.hpp>
+#include <core/macros.hpp>
 #include <koalageddon/koalageddon.hpp>
-
+#include <steam_functions/steam_functions.hpp>
 #include <koalabox/hook.hpp>
 
-using namespace smoke_api;
+using namespace koalageddon;
+using namespace koalabox;
 
 typedef uint32_t HCoroutine;
 DLL_EXPORT(HCoroutine) Coroutine_Create(void* callback_address, struct CoroutineData* data);
 
 namespace koalageddon {
     void init_vstdlib_hooks() {
-        DETOUR_ORIGINAL(Coroutine_Create)
+        DETOUR_VSTDLIB(Coroutine_Create)
     }
 }
 
@@ -46,13 +46,14 @@ struct CoroutineData {
 };
 
 VIRTUAL(void) VStdLib_Callback_Interceptor(PARAMS(const char** p_name)) {
-    GET_ORIGINAL_FUNCTION(VStdLib_Callback_Interceptor)
+    GET_ORIGINAL_FUNCTION_VSTDLIB(VStdLib_Callback_Interceptor)
 
     VStdLib_Callback_Interceptor_o(ARGS(p_name));
 
-    static auto hooked_functions = 0;
+    static auto lock_status_hooked = false;
+    static auto stop_playing_hooked = false;
 
-    if (hooked_functions == 2) {
+    if (lock_status_hooked && stop_playing_hooked) {
         return;
     }
 
@@ -62,18 +63,13 @@ VIRTUAL(void) VStdLib_Callback_Interceptor(PARAMS(const char** p_name)) {
         const auto name = String(data->get_callback_name());
         // logger->trace("{} -> instance: {}, name: '{}'", __func__, fmt::ptr(THIS), name);
 
-        if (name == "SharedLicensesLockStatus") {
-            static std::once_flag flag;
-            std::call_once(flag, [&]() {
-                DETOUR(SharedLicensesLockStatus, data->get_callback_data()->get_callback_address())
-                hooked_functions++;
-            });
-        } else if (name == "SharedLibraryStopPlaying") {
-            static std::once_flag flag;
-            std::call_once(flag, [&]() {
-                DETOUR(SharedLibraryStopPlaying, data->get_callback_data()->get_callback_address())
-                hooked_functions++;
-            });
+
+        if (name == "SharedLicensesLockStatus" && !lock_status_hooked) {
+            DETOUR_ADDRESS(SharedLicensesLockStatus, data->get_callback_data()->get_callback_address())
+            lock_status_hooked = true;
+        } else if (name == "SharedLibraryStopPlaying" && !stop_playing_hooked) {
+            DETOUR_ADDRESS(SharedLibraryStopPlaying, data->get_callback_data()->get_callback_address())
+            stop_playing_hooked = true;
         }
     }
 }
@@ -83,7 +79,7 @@ VIRTUAL(void) VStdLib_Callback_Interceptor(PARAMS(const char** p_name)) {
  * hence we must hook an interface method that sets the callback name.
  */
 DLL_EXPORT(HCoroutine) Coroutine_Create(void* callback_address, CoroutineData* data) {
-    GET_ORIGINAL_FUNCTION(Coroutine_Create)
+    GET_ORIGINAL_FUNCTION_VSTDLIB(Coroutine_Create)
 
     const auto result = Coroutine_Create_o(callback_address, data);
 
@@ -92,7 +88,7 @@ DLL_EXPORT(HCoroutine) Coroutine_Create(void* callback_address, CoroutineData* d
     std::call_once(flag, [&]() {
         logger->debug("Coroutine_Create -> callback: {}, data: {}", callback_address, fmt::ptr(data));
 
-        DETOUR(VStdLib_Callback_Interceptor, data->get_callback_data()->get_callback_intercept_address())
+        DETOUR_ADDRESS(VStdLib_Callback_Interceptor, data->get_callback_data()->get_callback_intercept_address())
     });
 
     return result;

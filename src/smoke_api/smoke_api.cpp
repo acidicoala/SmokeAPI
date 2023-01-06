@@ -11,30 +11,29 @@
 #include <koalabox/loader.hpp>
 #include <koalabox/win_util.hpp>
 
+// TODO: Define COMPILE_KOALAGEDDON in CMake
 #ifndef _WIN64
 #include <koalageddon/koalageddon.hpp>
 #endif
 
 namespace smoke_api {
-    HMODULE original_library = nullptr;
-
-    HMODULE self_module = nullptr;
-
-    bool is_hook_mode = false;
+    using namespace koalabox;
 
     void init_proxy_mode() {
         logger->info("🔀 Detected proxy mode");
 
-        original_library = loader::load_original_library(paths::get_self_path(), ORIGINAL_DLL);
+        globals::steamapi_module = loader::load_original_library(paths::get_self_path(), STEAMAPI_DLL);
     }
 
     void init_hook_mode() {
         logger->info("🪝 Detected hook mode");
 
         dll_monitor::init(STEAMCLIENT_DLL, [](const HMODULE& library) {
-            original_library = library;
+            globals::steamclient_module = library;
 
-            DETOUR_ORIGINAL(CreateInterface)
+            DETOUR_STEAMCLIENT(CreateInterface)
+
+            dll_monitor::shutdown();
         });
 
         // Hooking steam_api has shown itself to be less desirable than steamclient
@@ -79,7 +78,7 @@ namespace smoke_api {
         try {
             DisableThreadLibraryCalls(module_handle);
 
-            globals::self_module = module_handle;
+            globals::smokeapi_handle = module_handle;
 
             koalabox::project_name = PROJECT_NAME;
 
@@ -97,9 +96,7 @@ namespace smoke_api {
 
             logger->debug(R"(Process name: "{}" [{}-bit])", exe_name, exe_bitness);
 
-            is_hook_mode = hook::is_hook_mode(self_module, ORIGINAL_DLL);
-
-            if (is_hook_mode) {
+            if (hook::is_hook_mode(globals::smokeapi_handle, STEAMAPI_DLL)) {
                 hook::init(true);
 
 #ifdef _WIN64
@@ -125,10 +122,8 @@ namespace smoke_api {
 
     void shutdown() {
         try {
-            if (is_hook_mode) {
-                dll_monitor::shutdown();
-            } else {
-                win_util::free_library(original_library);
+            if (globals::steamapi_module != nullptr) {
+                win_util::free_library(globals::steamapi_module);
             }
 
             logger->info("💀 Shutdown complete");

@@ -17,7 +17,7 @@ String get_versioned_interface(const String& version_prefix, const String& fallb
 
     if (not version_map.contains(version_prefix)) {
         try {
-            const String rdata = win_util::get_pe_section_data_or_throw(original_library, ".rdata");
+            const String rdata = win_util::get_pe_section_data_or_throw(globals::steamapi_module, ".rdata");
 
             const std::regex regex(version_prefix + "\\d{3}");
             std::smatch match;
@@ -44,7 +44,7 @@ DLL_EXPORT(void*) SteamClient() {
     static auto version = get_versioned_interface(STEAM_CLIENT, "006");
 
     return steam_client::GetGenericInterface(__func__, version, [&]() {
-        GET_ORIGINAL_FUNCTION(SteamClient)
+        GET_ORIGINAL_FUNCTION_STEAMAPI(SteamClient)
 
         return SteamClient_o();
     });
@@ -54,7 +54,7 @@ DLL_EXPORT(void*) SteamApps() {
     static auto version = get_versioned_interface(STEAM_APPS, "002");
 
     return steam_client::GetGenericInterface(__func__, version, [&]() {
-        GET_ORIGINAL_FUNCTION(SteamApps)
+        GET_ORIGINAL_FUNCTION_STEAMAPI(SteamApps)
 
         return SteamApps_o();
     });
@@ -64,7 +64,7 @@ DLL_EXPORT(void*) SteamUser() {
     static auto version = get_versioned_interface(STEAM_USER, "012");
 
     return steam_client::GetGenericInterface(__func__, version, [&]() {
-        GET_ORIGINAL_FUNCTION(SteamUser)
+        GET_ORIGINAL_FUNCTION_STEAMAPI(SteamUser)
 
         return SteamUser_o();
     });
@@ -74,7 +74,7 @@ DLL_EXPORT(void*) SteamInventory() {
     static auto version = get_versioned_interface(STEAM_INVENTORY, "001");
 
     return steam_client::GetGenericInterface(__func__, version, [&]() {
-        GET_ORIGINAL_FUNCTION(SteamInventory)
+        GET_ORIGINAL_FUNCTION_STEAMAPI(SteamInventory)
 
         return SteamInventory_o();
     });

@@ -5,6 +5,7 @@
 namespace config {
     Config instance; // NOLINT(cert-err58-cpp)
 
+    // TODO: Reloading via export
     void init() {
         instance = config_parser::parse<Config>(paths::get_config_path());
     }

@@ -108,7 +108,8 @@ namespace steam_apps {
 
     bool IsDlcUnlocked(
         const String& function_name,
-        AppId_t app_id, AppId_t dlc_id,
+        AppId_t app_id,
+        AppId_t dlc_id,
         const std::function<bool()>& original_function
     ) {
         try {

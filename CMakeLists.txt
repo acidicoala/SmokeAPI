@@ -6,7 +6,7 @@ include(KoalaBox/cmake/KoalaBox.cmake)
 
 add_subdirectory(KoalaBox EXCLUDE_FROM_ALL)
 
-set_32_and_64(ORIGINAL_DLL steam_api)
+set_32_and_64(STEAMAPI_DLL steam_api)
 set_32_and_64(STEAMCLIENT_DLL steamclient)
 set_32_and_64(VSTDLIB_DLL vstdlib_s)
 
@@ -25,7 +25,7 @@ set(
 )
 
 configure_linker_exports(
-    FORWARDED_DLL "${ORIGINAL_DLL}_o"
+    FORWARDED_DLL "${STEAMAPI_DLL}_o"
     INPUT_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/steam_api_exports"
     INPUT_DLLS "${DLL_INPUT}"
     DEP_SOURCES "${STEAM_API_EXPORTS}"
@@ -86,7 +86,7 @@ endif ()
 
 add_library(SmokeAPI SHARED ${SMOKE_API_SOURCES} ${VERSION_RESOURCE})
 
-configure_output_name(${ORIGINAL_DLL})
+configure_output_name(${STEAMAPI_DLL})
 
 configure_include_directories()
 
