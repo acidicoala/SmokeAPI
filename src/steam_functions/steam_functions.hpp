@@ -42,7 +42,6 @@ class ISteamApps;
 class ISteamUser;
 class ISteamInventory;
 
-
 // TODO: Refactor into multiple headers
 
 // ISteamClient
@@ -128,6 +127,9 @@ VIRTUAL(bool) IClientInventory_GetItemsByID(PARAMS(SteamInventoryResult_t*, cons
 VIRTUAL(bool) IClientInventory_SerializeResult(PARAMS(SteamInventoryResult_t, void*, uint32_t, uint32_t *));
 VIRTUAL(bool) IClientInventory_GetItemDefinitionIDs(PARAMS(SteamItemDef_t*, uint32_t, uint32_t *));
 
+typedef uint32_t HCoroutine;
+DLL_EXPORT(HCoroutine) Coroutine_Create(void* callback_address, struct CoroutineData* data);
+
 namespace steam_functions {
     using namespace koalabox;
 
@@ -135,6 +137,7 @@ namespace steam_functions {
     const String STEAM_CLIENT = "SteamClient"; // NOLINT(cert-err58-cpp)
     const String STEAM_USER = "SteamUser"; // NOLINT(cert-err58-cpp)
     const String STEAM_INVENTORY = "STEAMINVENTORY_INTERFACE_V"; // NOLINT(cert-err58-cpp)
+    const String CLIENT_ENGINE = "CLIENTENGINE_INTERFACE_VERSION"; // NOLINT(cert-err58-cpp)
 
     void hook_virtuals(void* interface, const String& version_string);
     uint32_t get_app_id_or_throw();

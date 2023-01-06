@@ -9,14 +9,14 @@
 
 using namespace koalabox;
 
-#define DEMUX_DECL(INTERFACE)                                                               \
+#define SELECTOR_DECL(INTERFACE)                                                               \
     constexpr auto INTERFACE = #INTERFACE;                                                  \
-    DLL_EXPORT(void) INTERFACE##_Demux(const void*, const void*, const void*, const void*); \
+    DLL_EXPORT(void) INTERFACE##_Selector(const void*, const void*, const void*, const void*); \
 
-DEMUX_DECL(IClientAppManager)
-DEMUX_DECL(IClientApps)
-DEMUX_DECL(IClientInventory)
-DEMUX_DECL(IClientUser)
+SELECTOR_DECL(IClientAppManager)
+SELECTOR_DECL(IClientApps)
+SELECTOR_DECL(IClientInventory)
+SELECTOR_DECL(IClientUser)
 
 DLL_EXPORT(void) SteamClient_Interface_Interceptor(const char* interface_name, const char* function_name);
 
@@ -134,8 +134,8 @@ namespace koalageddon {
         return (FunctionAddress) op.imm.value.u;
     }
 
-    const char* find_interface_name(FunctionAddress demux_address) {
-        auto* instruction_pointer = (uint8_t*) demux_address;
+    const char* find_interface_name(FunctionAddress selector_address) {
+        auto* instruction_pointer = (uint8_t*) selector_address;
         ZydisDecodedInstruction instruction{};
         while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, instruction_pointer, 1024, &instruction))) {
             if (instruction.mnemonic == ZYDIS_MNEMONIC_PUSH) {
@@ -159,7 +159,7 @@ namespace koalageddon {
         return nullptr;
     }
 
-    void init_steamclient_hooks() {
+    void init_steamclient_hooks(const void* interface_selector_address) {
         ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LEGACY_32, ZYDIS_ADDRESS_WIDTH_32);
 
         const HMODULE module_handle = win_util::get_module_handle_or_throw(STEAMCLIENT_DLL);
@@ -168,58 +168,48 @@ namespace koalageddon {
         const auto start_address = reinterpret_cast<FunctionAddress>(module_info.lpBaseOfDll);
         auto* terminal_address = (uint8_t*) (start_address + module_info.SizeOfImage);
 
-        // TODO: There may actually be a way to find this address from "first principles"
-        // SteamClient.Steam_CreateSteamPipe begins with a call to fun_alpha()
-        // fun_alpha() calls fun_beta()
-        // ordinal 18
-        const auto* interface_demux_address = patcher::find_pattern_address(
-            module_info,
-            "interface demux",
-            config.steamclient_interface_demux_pattern
-        );
+        // Then iterate over each function selector call
 
-        // Then iterate over each function demux call
-
-        auto* instruction_pointer = (uint8_t*) interface_demux_address;
+        auto* instruction_pointer = (uint8_t*) interface_selector_address;
         ZydisDecodedInstruction previous_instruction{};
         ZydisDecodedInstruction instruction{};
         while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, instruction_pointer, 10, &instruction))) {
             if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP && previous_instruction.mnemonic == ZYDIS_MNEMONIC_CALL) {
 
-                // For every such call, extract a function demux address
-                const auto call_demux_address = (FunctionAddress) (
+                // For every such call, extract a function selector address
+                const auto call_selector_address = (FunctionAddress) (
                     instruction_pointer - previous_instruction.length
                 );
-                const auto function_demux_address = get_absolute_address(
-                    previous_instruction, call_demux_address
+                const auto function_selector_address = get_absolute_address(
+                    previous_instruction, call_selector_address
                 );
 
-                if (function_demux_address == 0) {
-                    logger->warn("Failed to extract absolute address of call at {}", (void*) call_demux_address);
+                if (function_selector_address == 0) {
+                    logger->warn("Failed to extract absolute address of call at {}", (void*) call_selector_address);
                 } else {
                     // Then use this address to extract the interface name
-                    const char* interface_name_address = find_interface_name(function_demux_address);
+                    const char* interface_name_address = find_interface_name(function_selector_address);
 
                     if (interface_name_address == nullptr) {
                         logger->warn(
                             "Failed to extract interface name address of function demux at {}",
-                            (void*) function_demux_address
+                            (void*) function_selector_address
                         );
                     } else {
                         const String interface_name((char*) interface_name_address);
 
                         logger->debug("Detected interface: '{}'", interface_name);
 
-                        // Finally, hook the demux functions of interest
+                        // Finally, hook the selector functions of interest
 
                         if (IClientAppManager == interface_name) {
-                            DETOUR_ADDRESS(IClientAppManager_Demux, function_demux_address)
+                            DETOUR_ADDRESS(IClientAppManager_Selector, function_selector_address)
                         } else if (IClientApps == interface_name) {
-                            DETOUR_ADDRESS(IClientApps_Demux, function_demux_address)
+                            DETOUR_ADDRESS(IClientApps_Selector, function_selector_address)
                         } else if (IClientInventory == interface_name) {
-                            DETOUR_ADDRESS(IClientInventory_Demux, function_demux_address)
+                            DETOUR_ADDRESS(IClientInventory_Selector, function_selector_address)
                         } else if (IClientUser == interface_name) {
-                            DETOUR_ADDRESS(IClientUser_Demux, function_demux_address)
+                            DETOUR_ADDRESS(IClientUser_Selector, function_selector_address)
                         }
 
                         // Update the terminal address to limit the search scope only to relevant portion of the code
@@ -256,13 +246,12 @@ namespace koalageddon {
             DETOUR_ADDRESS(SteamClient_Interface_Interceptor, interface_interceptor_address)
         }
     }
-
 }
 
 /**
  * This function intercepts interface name and function names, which we need to determine which functions to hook.
  * Unfortunately we can't reliably get interface pointer in this function, hence we need to hook corresponding
- * parent demux functions which will contain the interface pointer as the first parameter.
+ * parent selector functions which will contain the interface pointer as the first parameter.
  */
 DLL_EXPORT(void) SteamClient_Interface_Interceptor(const char* interface_name, const char* function_name) {
     try {
@@ -323,7 +312,7 @@ DLL_EXPORT(void) SteamClient_Interface_Interceptor(const char* interface_name, c
             });
         }
 
-        GET_ORIGINAL_VIRTUAL_FUNCTION(SteamClient_Interface_Interceptor)
+        GET_ORIGINAL_HOOKED_FUNCTION(SteamClient_Interface_Interceptor)
         SteamClient_Interface_Interceptor_o(interface_name, function_name);
     } catch (const Exception& ex) {
         logger->error("{} -> Error: {}", __func__, ex.what());
@@ -332,11 +321,11 @@ DLL_EXPORT(void) SteamClient_Interface_Interceptor(const char* interface_name, c
 
 
 /**
- * This macro will generate a definition of a demux function,
+ * This macro will generate a definition of a selector function,
  * which will cache the interface pointer in the local map.
  */
-#define DEMUX_IMPL(INTERFACE)                                               \
-DLL_EXPORT(void) INTERFACE##_Demux(                                         \
+#define SELECTOR_IMPL(INTERFACE)                                            \
+DLL_EXPORT(void) INTERFACE##_Selector(                                      \
     const void* arg1,                                                       \
     const void* arg2,                                                       \
     const void* arg3,                                                       \
@@ -346,11 +335,11 @@ DLL_EXPORT(void) INTERFACE##_Demux(                                         \
         const std::lock_guard<std::mutex> guard(koalageddon::map_mutex);    \
         koalageddon::interface_name_pointer_map[INTERFACE] = arg1;          \
     }                                                                       \
-    GET_ORIGINAL_VIRTUAL_FUNCTION(INTERFACE##_Demux)                                \
-    INTERFACE##_Demux_o(arg1, arg2, arg3, arg4);                            \
+    GET_ORIGINAL_HOOKED_FUNCTION(INTERFACE##_Selector)                      \
+    INTERFACE##_Selector_o(arg1, arg2, arg3, arg4);                         \
 }
 
-DEMUX_IMPL(IClientAppManager)
-DEMUX_IMPL(IClientApps)
-DEMUX_IMPL(IClientInventory)
-DEMUX_IMPL(IClientUser)
+SELECTOR_IMPL(IClientAppManager)
+SELECTOR_IMPL(IClientApps)
+SELECTOR_IMPL(IClientInventory)
+SELECTOR_IMPL(IClientUser)

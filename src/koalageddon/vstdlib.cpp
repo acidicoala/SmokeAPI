@@ -6,15 +6,6 @@
 using namespace koalageddon;
 using namespace koalabox;
 
-typedef uint32_t HCoroutine;
-DLL_EXPORT(HCoroutine) Coroutine_Create(void* callback_address, struct CoroutineData* data);
-
-namespace koalageddon {
-    void init_vstdlib_hooks() {
-        DETOUR_VSTDLIB(Coroutine_Create)
-    }
-}
-
 VIRTUAL(bool) SharedLicensesLockStatus(PARAMS(void* arg)) { // NOLINT(misc-unused-parameters)
     logger->debug("{} -> instance: {}, arg: {}", __func__, fmt::ptr(THIS), fmt::ptr(arg));
     return true;
@@ -46,7 +37,7 @@ struct CoroutineData {
 };
 
 VIRTUAL(void) VStdLib_Callback_Interceptor(PARAMS(const char** p_name)) {
-    GET_ORIGINAL_FUNCTION_VSTDLIB(VStdLib_Callback_Interceptor)
+    GET_ORIGINAL_HOOKED_FUNCTION(VStdLib_Callback_Interceptor)
 
     VStdLib_Callback_Interceptor_o(ARGS(p_name));
 
@@ -79,7 +70,7 @@ VIRTUAL(void) VStdLib_Callback_Interceptor(PARAMS(const char** p_name)) {
  * hence we must hook an interface method that sets the callback name.
  */
 DLL_EXPORT(HCoroutine) Coroutine_Create(void* callback_address, CoroutineData* data) {
-    GET_ORIGINAL_FUNCTION_VSTDLIB(Coroutine_Create)
+    GET_ORIGINAL_HOOKED_FUNCTION(Coroutine_Create)
 
     const auto result = Coroutine_Create_o(callback_address, data);
 

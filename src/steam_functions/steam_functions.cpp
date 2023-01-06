@@ -1,9 +1,8 @@
 #include <steam_functions/steam_functions.hpp>
 #include <build_config.h>
-
 #include <koalabox/hook.hpp>
+#include <koalageddon/koalageddon.hpp>
 #include <koalabox/win_util.hpp>
-
 #include <polyhook2/Misc.hpp>
 
 namespace steam_functions {
@@ -195,6 +194,19 @@ namespace steam_functions {
             if (version_number >= 2) {
                 HOOK_STEAM_INVENTORY(ISteamInventory_GetResultItemProperty)
             }
+        } else if (version_string.starts_with(CLIENT_ENGINE)) {
+            // Koalageddon mode
+
+            const auto* steam_client_internal = ((const void****) interface)[
+                koalageddon::config.client_engine_steam_client_internal_ordinal
+            ];
+            const auto* interface_selector_address = (*steam_client_internal)[
+                koalageddon::config.steam_client_internal_interface_selector_ordinal
+            ];
+
+            logger->debug("Found interface selector at: {}", interface_selector_address);
+
+            koalageddon::init_steamclient_hooks(interface_selector_address);
         } else {
             return;
         }

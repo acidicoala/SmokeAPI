@@ -17,7 +17,7 @@ VIRTUAL(bool) ISteamApps_BIsDlcInstalled(PARAMS(AppId_t appID)) { // NOLINT(misc
 }
 
 VIRTUAL(int) ISteamApps_GetDLCCount(PARAMS()) {
-    GET_ORIGINAL_VIRTUAL_FUNCTION(ISteamApps_GetDLCCount)
+    GET_ORIGINAL_HOOKED_FUNCTION(ISteamApps_GetDLCCount)
 
     return steam_apps::GetDLCCount(__func__, 0, [&]() {
 
@@ -35,7 +35,7 @@ VIRTUAL(bool) ISteamApps_BGetDLCDataByIndex(
     )
 ) {
     return steam_apps::GetDLCDataByIndex(__func__, 0, iDLC, pAppID, pbAvailable, pchName, cchNameBufferSize, [&]() {
-        GET_ORIGINAL_VIRTUAL_FUNCTION(ISteamApps_BGetDLCDataByIndex)
+        GET_ORIGINAL_HOOKED_FUNCTION(ISteamApps_BGetDLCDataByIndex)
 
         return ISteamApps_BGetDLCDataByIndex_o(
             ARGS(iDLC, pAppID, pbAvailable, pchName, cchNameBufferSize)

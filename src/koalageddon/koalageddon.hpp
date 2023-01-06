@@ -15,8 +15,9 @@ namespace koalageddon {
         uint32_t vstdlib_callback_data_offset = 0;
         uint32_t vstdlib_callback_name_offset = 4;
 
+        uint32_t client_engine_steam_client_internal_ordinal = 12;
+        uint32_t steam_client_internal_interface_selector_ordinal = 18;
         String steamclient_interface_interceptor_pattern = "55 8B EC 8B ?? ?? ?? ?? ?? 81 EC ?? ?? ?? ?? 53 FF 15";
-        String steamclient_interface_demux_pattern = "55 8B EC 83 EC ?? ?? ?? ?? 8B ?? ?? B8 ?? ?? ?? ?? 8B D9";
 
         uint32_t IClientAppManager_IsAppDlcInstalled_ordinal = 8;
         uint32_t IClientApps_GetDLCCount_ordinal = 8;
@@ -40,8 +41,9 @@ namespace koalageddon {
             vstdlib_callback_data_offset,
             vstdlib_callback_name_offset,
 
+            client_engine_steam_client_internal_ordinal,
+            steam_client_internal_interface_selector_ordinal,
             steamclient_interface_interceptor_pattern,
-            steamclient_interface_demux_pattern,
 
             IClientAppManager_IsAppDlcInstalled_ordinal,
             IClientApps_GetDLCCount_ordinal,
@@ -62,6 +64,6 @@ namespace koalageddon {
 
     void init();
 
-    void init_steamclient_hooks();
-    void init_vstdlib_hooks();
+    void init_steamclient_hooks(const void* interface_selector_address);
+    void init_steamclient_hooks2();
 }

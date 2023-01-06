@@ -5,6 +5,7 @@
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/http_client.hpp>
 #include <koalabox/util.hpp>
+#include <steam_functions/steam_functions.hpp>
 
 namespace koalageddon {
     KoalageddonConfig config; // NOLINT(cert-err58-cpp)
@@ -65,13 +66,14 @@ namespace koalageddon {
                     globals::vstdlib_module = module_handle;
 
                     if (config::instance.unlock_family_sharing) {
-                        init_vstdlib_hooks();
+                        DETOUR_VSTDLIB(Coroutine_Create)
                     }
                 } else if (util::strings_are_equal(name, STEAMCLIENT_DLL)) {
                     // SteamClient DLL handles unlocking functions
 
                     globals::steamclient_module = module_handle;
-                    init_steamclient_hooks();
+
+                    DETOUR_STEAMCLIENT(CreateInterface)
                 }
 
                 if (globals::vstdlib_module != nullptr && globals::steamclient_module != nullptr) {
