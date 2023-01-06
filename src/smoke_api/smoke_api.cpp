@@ -65,13 +65,13 @@ namespace smoke_api {
 
         // Verify that it's steam from valve, and not some other executable coincidentally named steam
 
-        if (!manifest.has_value()) {
+        if (!manifest) {
             // Steam.exe is expected to have a manifest
             return false;
         }
 
         // Steam.exe manifest is expected to contain this string
-        return manifest.value().find("valvesoftware.steam.steam") != String::npos;
+        return manifest->find("valvesoftware.steam.steam") != String::npos;
     }
 
     void init(HMODULE module_handle) {

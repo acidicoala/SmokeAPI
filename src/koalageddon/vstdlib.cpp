@@ -52,7 +52,7 @@ VIRTUAL(void) VStdLib_Callback_Interceptor(PARAMS(const char** p_name)) {
 
     if (data && data->get_callback_name()) {
         const auto name = String(data->get_callback_name());
-        // logger->trace("{} -> instance: {}, name: '{}'", __func__, fmt::ptr(THIS), name);
+        TRACE("{} -> instance: {}, name: '{}'", __func__, fmt::ptr(THIS), name)
 
 
         if (name == "SharedLicensesLockStatus" && !lock_status_hooked) {
@@ -76,11 +76,13 @@ DLL_EXPORT(HCoroutine) Coroutine_Create(void* callback_address, CoroutineData* d
 
     // Coroutine callback appears to be always the same
     static std::once_flag flag;
-    std::call_once(flag, [&]() {
-        logger->debug("Coroutine_Create -> callback: {}, data: {}", callback_address, fmt::ptr(data));
+    std::call_once(
+        flag, [&]() {
+            logger->debug("Coroutine_Create -> callback: {}, data: {}", callback_address, fmt::ptr(data));
 
-        DETOUR_ADDRESS(VStdLib_Callback_Interceptor, data->get_callback_data()->get_callback_intercept_address())
-    });
+            DETOUR_ADDRESS(VStdLib_Callback_Interceptor, data->get_callback_data()->get_callback_intercept_address())
+        }
+    );
 
     return result;
 }

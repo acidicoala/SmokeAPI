@@ -48,8 +48,7 @@ namespace cache {
             return std::nullopt;
         }
 
-        const auto config = cache.koalageddon_config.get<koalageddon::KoalageddonConfig>();
-        return std::optional{config};
+        return cache.koalageddon_config.get<koalageddon::KoalageddonConfig>();
     }
 
     void save_dlc_ids(AppId_t app_id, const Vector<AppId_t>& dlc_ids) {

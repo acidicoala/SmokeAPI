@@ -39,8 +39,8 @@ namespace koalageddon {
 
         try {
             // Then try to get a cached copy of a previously fetched config.
-            // We expect call to value() to throw if no koalageddon config is present
-            config = cache::get_koalageddon_config().value();
+            // We expect this unboxing to throw exception if no koalageddon config is present.
+            config = *cache::get_koalageddon_config();
 
             return "disk cache";
         } catch (const Exception& ex) {

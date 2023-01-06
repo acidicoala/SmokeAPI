@@ -197,16 +197,16 @@ namespace steam_functions {
         } else if (version_string.starts_with(CLIENT_ENGINE)) {
             // Koalageddon mode
 
-            const auto* steam_client_internal = ((const void****) interface)[
+            const auto* steam_client_internal = ((uintptr_t***) interface)[
                 koalageddon::config.client_engine_steam_client_internal_ordinal
             ];
-            const auto* interface_selector_address = (*steam_client_internal)[
+            const auto interface_selector_address = (*steam_client_internal)[
                 koalageddon::config.steam_client_internal_interface_selector_ordinal
             ];
 
-            logger->debug("Found interface selector at: {}", interface_selector_address);
+            logger->debug("Found interface selector at: {}", (void*) interface_selector_address);
 
-            koalageddon::init_steamclient_hooks(interface_selector_address);
+            koalageddon::steamclient::init(interface_selector_address);
         } else {
             return;
         }

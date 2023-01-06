@@ -1,23 +1,28 @@
-#include <build_config.h>
-#include <koalageddon/koalageddon.hpp>
 #include <koalabox/hook.hpp>
 #include <koalabox/patcher.hpp>
-#include <koalabox/win_util.hpp>
 #include <steam_functions/steam_functions.hpp>
 #include <Zydis/Zydis.h>
 #include <Zydis/DecoderTypes.h>
 
-namespace koalageddon {
+namespace koalageddon::steamclient {
     using namespace koalabox;
 
-    ZydisDecoder decoder = {};
+    // map<interface name, map<function name, function ordinal>>
+    Map<String, Map<String, uint32_t>> ordinal_map; // NOLINT(cert-err58-cpp)
 
-#define HOOK_FUNCTION(FUNC) hook::swap_virtual_func_or_throw(  \
-    globals::address_map,                                       \
-    interface,                                                  \
-    #FUNC,                                                      \
-    koalageddon::config.FUNC##_ordinal,                         \
-    (FunctionAddress) FUNC                                      \
+    const auto MAX_INSTRUCTION_SIZE = 15;
+
+
+    // TODO: Refactor into Koalabox
+    ZydisDecoder decoder = {};
+    ZydisFormatter formatter = {};
+
+#define HOOK_FUNCTION(INTERFACE, FUNC) hook::swap_virtual_func_or_throw(    \
+    globals::address_map,                                                   \
+    interface,                                                              \
+    #INTERFACE"_"#FUNC,                                                     \
+    ordinal_map[#INTERFACE][#FUNC],                                         \
+    reinterpret_cast<uintptr_t>(INTERFACE##_##FUNC)                         \
 );
 
     DLL_EXPORT(void) IClientAppManager_Selector(
@@ -27,9 +32,11 @@ namespace koalageddon {
         const void* arg4
     ) {
         static std::once_flag flag;
-        std::call_once(flag, [&]() {
-            HOOK_FUNCTION(IClientAppManager_IsAppDlcInstalled)
-        });
+        std::call_once(
+            flag, [&]() {
+                HOOK_FUNCTION(IClientAppManager, IsAppDlcInstalled)
+            }
+        );
 
         GET_ORIGINAL_HOOKED_FUNCTION(IClientAppManager_Selector)
         IClientAppManager_Selector_o(interface, arg2, arg3, arg4);
@@ -42,10 +49,12 @@ namespace koalageddon {
         const void* arg4
     ) {
         static std::once_flag flag;
-        std::call_once(flag, [&]() {
-            HOOK_FUNCTION(IClientApps_GetDLCCount)
-            HOOK_FUNCTION(IClientApps_BGetDLCDataByIndex)
-        });
+        std::call_once(
+            flag, [&]() {
+                HOOK_FUNCTION(IClientApps, GetDLCCount)
+                HOOK_FUNCTION(IClientApps, BGetDLCDataByIndex)
+            }
+        );
 
         GET_ORIGINAL_HOOKED_FUNCTION(IClientApps_Selector)
         IClientApps_Selector_o(interface, arg2, arg3, arg4);
@@ -58,16 +67,18 @@ namespace koalageddon {
         const void* arg4
     ) {
         static std::once_flag flag;
-        std::call_once(flag, [&]() {
-            HOOK_FUNCTION(IClientInventory_GetResultStatus)
-            HOOK_FUNCTION(IClientInventory_GetResultItems)
-            HOOK_FUNCTION(IClientInventory_GetResultItemProperty)
-            HOOK_FUNCTION(IClientInventory_CheckResultSteamID)
-            HOOK_FUNCTION(IClientInventory_GetAllItems)
-            HOOK_FUNCTION(IClientInventory_GetItemsByID)
-            HOOK_FUNCTION(IClientInventory_SerializeResult)
-            HOOK_FUNCTION(IClientInventory_GetItemDefinitionIDs)
-        });
+        std::call_once(
+            flag, [&]() {
+                HOOK_FUNCTION(IClientInventory, GetResultStatus)
+                HOOK_FUNCTION(IClientInventory, GetResultItems)
+                HOOK_FUNCTION(IClientInventory, GetResultItemProperty)
+                HOOK_FUNCTION(IClientInventory, CheckResultSteamID)
+                HOOK_FUNCTION(IClientInventory, GetAllItems)
+                HOOK_FUNCTION(IClientInventory, GetItemsByID)
+                HOOK_FUNCTION(IClientInventory, SerializeResult)
+                HOOK_FUNCTION(IClientInventory, GetItemDefinitionIDs)
+            }
+        );
 
         GET_ORIGINAL_HOOKED_FUNCTION(IClientInventory_Selector)
         IClientInventory_Selector_o(interface, arg2, arg3, arg4);
@@ -80,16 +91,17 @@ namespace koalageddon {
         const void* arg4
     ) {
         static std::once_flag flag;
-        std::call_once(flag, [&]() {
-            HOOK_FUNCTION(IClientUser_BIsSubscribedApp)
-        });
+        std::call_once(
+            flag, [&]() {
+                HOOK_FUNCTION(IClientUser, BIsSubscribedApp)
+            }
+        );
 
         GET_ORIGINAL_HOOKED_FUNCTION(IClientUser_Selector)
         IClientUser_Selector_o(interface, arg2, arg3, arg4);
     }
 
-
-    FunctionAddress get_absolute_address(ZydisDecodedInstruction instruction, FunctionAddress address) {
+    uintptr_t get_absolute_address(ZydisDecodedInstruction instruction, uintptr_t address) {
         const auto op = instruction.operands[0];
 
         if (op.imm.is_relative) {
@@ -99,109 +111,363 @@ namespace koalageddon {
             return absolute_address;
         }
 
-        return (FunctionAddress) op.imm.value.u;
+        return (uintptr_t) op.imm.value.u;
     }
 
-    const char* find_interface_name(FunctionAddress selector_address) {
-        auto* instruction_pointer = (uint8_t*) selector_address;
-        ZydisDecodedInstruction instruction{};
-        while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, instruction_pointer, 1024, &instruction))) {
-            if (instruction.mnemonic == ZYDIS_MNEMONIC_PUSH) {
-                const auto op = instruction.operands[0];
+    bool is_push_immediate(const ZydisDecodedInstruction& instruction) {
+        const auto& operand = instruction.operands[0];
 
-                if (
-                    op.type == ZYDIS_OPERAND_TYPE_IMMEDIATE &&
-                    op.visibility == ZYDIS_OPERAND_VISIBILITY_EXPLICIT &&
-                    op.encoding == ZYDIS_OPERAND_ENCODING_SIMM16_32_32
-                    ) {
-                    const auto* name_address = reinterpret_cast<char*>(op.imm.value.u);
-                    const auto is_valid = util::is_valid_pointer(name_address);
-                    if (is_valid && String(name_address).starts_with("IClient")) {
-                        return name_address;
-                    }
-                }
-            }
-            instruction_pointer += instruction.length;
+        return instruction.mnemonic == ZYDIS_MNEMONIC_PUSH &&
+               operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE &&
+               operand.visibility == ZYDIS_OPERAND_VISIBILITY_EXPLICIT &&
+               operand.encoding == ZYDIS_OPERAND_ENCODING_SIMM16_32_32;
+    }
+
+    std::optional<String> get_string_argument(const ZydisDecodedInstruction& instruction) {
+        const auto* name_address = reinterpret_cast<char*>(instruction.operands[0].imm.value.u);
+        if (util::is_valid_pointer(name_address)) {
+            return name_address;
+        }
+        return std::nullopt;
+    }
+
+    std::optional<String> get_instruction_string(
+        const ZydisDecodedInstruction& instruction,
+        const uintptr_t address
+    ) {
+        const auto buffer_size = 64;
+        char buffer[buffer_size] = {};
+
+        if (ZYAN_SUCCESS(
+            ZydisFormatterFormatInstruction(
+                &formatter,
+                &instruction,
+                buffer,
+                buffer_size,
+                address
+            )
+        )) {
+            return buffer;
         }
 
-        return nullptr;
+        return std::nullopt;
     }
 
-    void init_steamclient_hooks(const void* interface_selector_address) {
-        ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LEGACY_32, ZYDIS_ADDRESS_WIDTH_32);
+    struct InstructionContext {
+        std::optional<ZydisRegister> base_register;
+        std::optional<String> function_name;
+    };
 
-        const HMODULE module_handle = win_util::get_module_handle_or_throw(STEAMCLIENT_DLL);
-        const auto module_info = win_util::get_module_info_or_throw(module_handle);
+    void construct_ordinal_map( // NOLINT(misc-no-recursion)
+        const String& target_interface,
+        Map<String, uint32_t>& map,
+        uintptr_t start_address,
+        Set<uintptr_t>& visited_addresses,
+        InstructionContext context
+    ) {
+        if (visited_addresses.contains(start_address)) {
+            // Avoid infinite recursion
+            return;
+        }
 
-        const auto start_address = reinterpret_cast<FunctionAddress>(module_info.lpBaseOfDll);
-        auto* terminal_address = (uint8_t*) (start_address + module_info.SizeOfImage);
+        visited_addresses.insert(start_address);
 
-        // Then iterate over each function selector call
+        if (context.function_name && map.contains(*context.function_name)) {
+            // Avoid duplicate work
+            return;
+        }
 
-        auto* instruction_pointer = (uint8_t*) interface_selector_address;
-        ZydisDecodedInstruction previous_instruction{};
+        const auto is_mov_base_esp = [](const ZydisDecodedInstruction& instruction) {
+            return instruction.mnemonic == ZYDIS_MNEMONIC_MOV &&
+                   instruction.operand_count == 2 &&
+                   instruction.operands[0].type == ZYDIS_OPERAND_TYPE_REGISTER &&
+                   instruction.operands[1].reg.value == ZYDIS_REGISTER_ESP;
+        };
+
+        // Initialize with a dummy previous instruction
+        std::list instruction_list{ZydisDecodedInstruction{}};
+
+        auto current_address = (uintptr_t) start_address;
         ZydisDecodedInstruction instruction{};
-        while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(&decoder, instruction_pointer, 10, &instruction))) {
-            if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP && previous_instruction.mnemonic == ZYDIS_MNEMONIC_CALL) {
+        while (ZYAN_SUCCESS(
+            ZydisDecoderDecodeBuffer(
+                &decoder,
+                (void*) current_address,
+                MAX_INSTRUCTION_SIZE,
+                &instruction
+            )
+        )) {
+            TRACE(
+                "{} -> Visiting {} | {}",
+                __func__, (void*) current_address, *get_instruction_string(instruction, current_address)
+            )
 
-                // For every such call, extract a function selector address
-                const auto call_selector_address = (FunctionAddress) (
-                    instruction_pointer - previous_instruction.length
-                );
-                const auto function_selector_address = get_absolute_address(
-                    previous_instruction, call_selector_address
-                );
+            const auto& last_instruction = instruction_list.front();
 
-                if (function_selector_address == 0) {
-                    logger->warn("Failed to extract absolute address of call at {}", (void*) call_selector_address);
-                } else {
-                    // Then use this address to extract the interface name
-                    const char* interface_name_address = find_interface_name(function_selector_address);
+            if (!context.base_register && is_mov_base_esp(instruction)) {
+                // Save base register
+                context.base_register = instruction.operands[0].reg.value;
+            } else if (is_push_immediate(last_instruction) &&
+                       is_push_immediate(instruction) &&
+                       !context.function_name) {
+                // The very first 2 consecutive pushes indicate interface and function names.
+                // However, subsequent pushes may contain irrelevant strings.
+                const auto push_string_1 = get_string_argument(last_instruction);
+                const auto push_string_2 = get_string_argument(instruction);
 
-                    if (interface_name_address == nullptr) {
-                        logger->warn(
-                            "Failed to extract interface name address of function demux at {}",
-                            (void*) function_selector_address
-                        );
-                    } else {
-                        const String interface_name((char*) interface_name_address);
+                if (push_string_1 && push_string_2) {
+                    if (*push_string_1 == target_interface) {
+                        context.function_name = push_string_2;
+                    } else if (*push_string_2 == target_interface) {
+                        context.function_name = push_string_1;
+                    }
 
-                        logger->debug("Detected interface: '{}'", interface_name);
-
-                        // Finally, hook the selector functions of interest
-
-                        if ("IClientAppManager" == interface_name) {
-                            DETOUR_ADDRESS(IClientAppManager_Selector, function_selector_address)
-                        } else if ("IClientApps" == interface_name) {
-                            DETOUR_ADDRESS(IClientApps_Selector, function_selector_address)
-                        } else if ("IClientInventory" == interface_name) {
-                            DETOUR_ADDRESS(IClientInventory_Selector, function_selector_address)
-                        } else if ("IClientUser" == interface_name) {
-                            DETOUR_ADDRESS(IClientUser_Selector, function_selector_address)
-                        }
-
-                        // Update the terminal address to limit the search scope only to relevant portion of the code
-                        auto* function_epilogue = (uint8_t*) get_absolute_address(
-                            instruction, (FunctionAddress) instruction_pointer
-                        );
-
-                        if (function_epilogue == nullptr) {
-                            logger->warn(
-                                "Failed to extract absolute address of jmp at {}",
-                                (void*) instruction_pointer
-                            );
-                        } else {
-                            terminal_address = function_epilogue;
-                        }
+                    if (map.contains(*context.function_name)) {
+                        // Bail early to avoid duplicate work
+                        return;
                     }
                 }
+            } else if (instruction.meta.category == ZYDIS_CATEGORY_COND_BR) {
+                // On conditional jump we should recurse
+                const auto jump_taken_destination = get_absolute_address(instruction, current_address);
+                const auto jump_not_taken_destination = current_address + instruction.length;
+
+                construct_ordinal_map(target_interface, map, jump_taken_destination, visited_addresses, context);
+                construct_ordinal_map(target_interface, map, jump_not_taken_destination, visited_addresses, context);
+
+                // But not continue forward, in order to avoid duplicate processing
+                return;
+            } else if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
+                       instruction.operands[0].type == ZYDIS_OPERAND_TYPE_IMMEDIATE) {
+                // On unconditional jump we should recurse as well
+                const auto jump_destination = get_absolute_address(instruction, current_address);
+
+                construct_ordinal_map(target_interface, map, jump_destination, visited_addresses, context);
+                return;
+            } else if (instruction.mnemonic == ZYDIS_MNEMONIC_CALL) {
+                // On call instructions we should extract the ordinal
+
+                if (context.base_register && context.function_name) {
+                    std::optional<uint32_t> offset;
+
+                    const auto operand = instruction.operands[0];
+
+                    auto last_destination_reg = ZYDIS_REGISTER_NONE;
+                    bool is_derived_from_base_reg = false;
+
+                    // Sometimes the offset is present in the call instruction itself,
+                    // hence we can immediately obtain it.
+                    if (operand.type == ZYDIS_OPERAND_TYPE_MEMORY && operand.mem.base != ZYDIS_REGISTER_NONE) {
+                        offset = static_cast<uint32_t>(operand.mem.disp.value);
+                        last_destination_reg = operand.mem.base;
+                    } else if (operand.type == ZYDIS_OPERAND_TYPE_REGISTER) {
+                        last_destination_reg = operand.reg.value;
+                    }
+
+                    for (const auto& previous_instruction: instruction_list) {
+                        const auto& destination_operand = previous_instruction.operands[0];
+                        const auto& source_operand = previous_instruction.operands[1];
+
+                        // Extract offset if necessary
+                        if (previous_instruction.mnemonic == ZYDIS_MNEMONIC_MOV &&
+                            previous_instruction.operand_count == 2 &&
+                            destination_operand.reg.value == last_destination_reg &&
+                            source_operand.type == ZYDIS_OPERAND_TYPE_MEMORY) {
+
+                            const auto source_mem = source_operand.mem;
+                            if (source_mem.base == *context.base_register &&
+                                source_mem.disp.has_displacement &&
+                                source_mem.disp.value == 8) {
+                                // We have verified that the chain eventually leads up to the base register.
+                                // Hence, we can conclude that the offset is valid.
+                                is_derived_from_base_reg = true;
+                                break;
+                            }
+
+                            // Otherwise, keep going through the chain
+                            last_destination_reg = source_mem.base;
+
+                            if (!offset) {
+                                offset = static_cast<uint32_t>(source_mem.disp.value);
+                            }
+                        }
+                    }
+
+                    if (offset && is_derived_from_base_reg) {
+                        const auto ordinal = *offset / sizeof(uintptr_t);
+
+                        logger->debug(
+                            "{} -> Found function ordinal {}::{}@{}",
+                            __func__, target_interface, *context.function_name, ordinal
+                        );
+
+                        map[*context.function_name] = ordinal;
+                        break;
+                    }
+                }
+            } else if (instruction.mnemonic == ZYDIS_MNEMONIC_RET) {
+                // Finish parsing on return
+                return;
             }
 
-            previous_instruction = instruction;
-            instruction_pointer += instruction.length;
-            if (instruction_pointer >= terminal_address) {
+            // We push items to the front so that it becomes easy to iterate over instructions
+            // in reverse order of addition.
+            instruction_list.push_front(instruction);
+            current_address += instruction.length;
+        }
+    }
+
+    std::optional<String> find_interface_name(uintptr_t selector_address) {
+        auto current_address = selector_address;
+        ZydisDecodedInstruction instruction{};
+        while (ZYAN_SUCCESS(
+            ZydisDecoderDecodeBuffer(
+                &decoder,
+                (void*) current_address,
+                MAX_INSTRUCTION_SIZE,
+                &instruction
+            )
+        )) {
+            const auto debug_str = get_instruction_string(instruction, current_address);
+
+            if (is_push_immediate(instruction)) {
+                auto string_opt = get_string_argument(instruction);
+
+                if (string_opt && string_opt->starts_with("IClient")) {
+                    return string_opt;
+                }
+            } else if (instruction.mnemonic == ZYDIS_MNEMONIC_RET) {
                 break;
             }
+
+            current_address += instruction.length;
         }
+
+        // logger->warn("Failed to find any interface names at {}", (void*) selector_address);
+
+        return std::nullopt;
+    }
+
+#define CONSTRUCT_ORDINAL_MAP(INTERFACE)        \
+    Set<uintptr_t> nested_visited_addresses;    \
+    construct_ordinal_map(                      \
+        #INTERFACE,                             \
+        ordinal_map[#INTERFACE],                \
+        function_selector_address,              \
+        nested_visited_addresses,               \
+        {}                                      \
+    );
+
+#define DETOUR_SELECTOR(INTERFACE)                                      \
+    if(interface_name == #INTERFACE){                                   \
+        CONSTRUCT_ORDINAL_MAP(INTERFACE)                                \
+        DETOUR_ADDRESS(INTERFACE##_Selector, function_selector_address) \
+    }
+
+    void process_interface_selector( // NOLINT(misc-no-recursion)
+        const uintptr_t start_address,
+        Set<uintptr_t>& visited_addresses
+    ) {
+        TRACE("{} -> start_address: {}", __func__, (void*) start_address)
+
+        if (visited_addresses.contains(start_address)) {
+            TRACE("{} -> Breaking recursion due to visited address", __func__)
+            return;
+        }
+
+        auto current_address = start_address;
+
+        ZydisDecodedInstruction instruction{};
+        while (ZYAN_SUCCESS(
+            ZydisDecoderDecodeBuffer(
+                &decoder,
+                (void*) current_address,
+                MAX_INSTRUCTION_SIZE,
+                &instruction
+            )
+        )) {
+            visited_addresses.insert(current_address);
+            TRACE(
+                "{} -> Visiting {} | {}",
+                __func__, (void*) current_address, *get_instruction_string(instruction, current_address)
+            )
+
+            const auto operand = instruction.operands[0];
+
+            if (instruction.mnemonic == ZYDIS_MNEMONIC_CALL &&
+                operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE
+                ) {
+                TRACE("{} -> Found call instruction at {}", __func__, (void*) current_address)
+
+                const auto function_selector_address = get_absolute_address(instruction, current_address);
+
+                const auto interface_name_opt = find_interface_name(function_selector_address);
+
+                if (interface_name_opt) {
+                    const auto& interface_name = *interface_name_opt;
+
+                    logger->debug("Detected interface: '{}'", interface_name);
+
+                    DETOUR_SELECTOR(IClientAppManager)
+                    DETOUR_SELECTOR(IClientApps)
+                    DETOUR_SELECTOR(IClientInventory)
+                    DETOUR_SELECTOR(IClientUser)
+                }
+            } else if (instruction.meta.category == ZYDIS_CATEGORY_COND_BR) {
+                const auto jump_taken_destination = get_absolute_address(instruction, current_address);
+                const auto jump_not_taken_destination = current_address + instruction.length;
+
+                process_interface_selector(jump_taken_destination, visited_addresses);
+                process_interface_selector(jump_not_taken_destination, visited_addresses);
+
+                TRACE("breaking recursion due to conditional branch")
+                return;
+            } else if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
+                       operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE
+                ) {
+                const auto jump_destination = get_absolute_address(instruction, current_address);
+
+                process_interface_selector(jump_destination, visited_addresses);
+
+                TRACE("breaking recursion due to unconditional branch")
+                return;
+            } else if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
+                       operand.type == ZYDIS_OPERAND_TYPE_MEMORY &&
+                       operand.mem.scale == sizeof(uintptr_t) &&
+                       operand.mem.disp.has_displacement
+                ) {
+                // Special handling for jump tables. Guaranteed to be present in the interface selector.
+                const auto* table = (uintptr_t*) operand.mem.disp.value;
+
+                const auto* table_entry = table;
+                while (util::is_valid_pointer((void*) *table_entry)) {
+                    process_interface_selector(*table_entry, visited_addresses);
+
+                    table_entry++;
+                }
+
+                return;
+            } else if (instruction.mnemonic == ZYDIS_MNEMONIC_RET) {
+                TRACE("{} -> Breaking recursion due to return instruction", __func__)
+                return;
+            }
+
+            current_address += instruction.length;
+        }
+    }
+
+    void init(const uintptr_t interface_selector_address) {
+        if (ZYAN_FAILED(ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LEGACY_32, ZYDIS_ADDRESS_WIDTH_32))) {
+            logger->error("Failed to initialize zydis decoder");
+            return;
+        }
+
+        if (ZYAN_FAILED(ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL))) {
+            logger->error("Failed to initialize zydis formatter");
+            return;
+        }
+
+        Set<uintptr_t> visited_addresses;
+        process_interface_selector(interface_selector_address, visited_addresses);
     }
 }
