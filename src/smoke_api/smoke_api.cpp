@@ -1,23 +1,21 @@
 #include <smoke_api/smoke_api.hpp>
+#include <build_config.h>
+#include <core/config.hpp>
+#include <core/globals.hpp>
 #include <core/paths.hpp>
 #include <steam_functions/steam_functions.hpp>
-#include <build_config.h>
-
 #include <koalabox/config_parser.hpp>
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/file_logger.hpp>
 #include <koalabox/hook.hpp>
 #include <koalabox/loader.hpp>
 #include <koalabox/win_util.hpp>
-#include <core/globals.hpp>
 
 #ifndef _WIN64
 #include <koalageddon/koalageddon.hpp>
 #endif
 
 namespace smoke_api {
-    Config config = {}; // NOLINT(cert-err58-cpp)
-
     HMODULE original_library = nullptr;
 
     HMODULE self_module = nullptr;
@@ -85,13 +83,13 @@ namespace smoke_api {
 
             koalabox::project_name = PROJECT_NAME;
 
-            config = config_parser::parse<Config>(paths::get_config_path());
+            config::init();
 
             const auto exe_path = Path(win_util::get_module_file_name_or_throw(nullptr));
             const auto exe_name = exe_path.filename().string();
             const auto exe_bitness = util::is_x64() ? 64 : 32;
 
-            if (config.logging) {
+            if (config::instance.logging) {
                 logger = file_logger::create(paths::get_log_path());
             }
 
@@ -138,10 +136,4 @@ namespace smoke_api {
             logger->error("Shutdown error: {}", ex.what());
         }
     }
-
-    // FIXME: Support for app_id for koalageddon mode
-    bool should_unlock(uint32_t app_id) {
-        return config.unlock_all != config.override.contains(app_id);
-    }
-
 }

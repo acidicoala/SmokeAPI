@@ -4,11 +4,19 @@
 using namespace smoke_api;
 
 VIRTUAL(bool) ISteamApps_BIsSubscribedApp(PARAMS(AppId_t appID)) { // NOLINT(misc-unused-parameters)
-    return steam_apps::IsDlcUnlocked(__func__, 0, appID);
+    return steam_apps::IsDlcUnlocked(__func__, 0, appID, [&]() {
+        GET_ORIGINAL_FUNCTION(ISteamApps_BIsSubscribedApp)
+
+        return ISteamApps_BIsSubscribedApp_o(ARGS(appID));
+    });
 }
 
 VIRTUAL(bool) ISteamApps_BIsDlcInstalled(PARAMS(AppId_t appID)) { // NOLINT(misc-unused-parameters)
-    return steam_apps::IsDlcUnlocked(__func__, 0, appID);
+    return steam_apps::IsDlcUnlocked(__func__, 0, appID, [&]() {
+        GET_ORIGINAL_FUNCTION(ISteamApps_BIsDlcInstalled)
+
+        return ISteamApps_BIsDlcInstalled_o(ARGS(appID));
+    });
 }
 
 VIRTUAL(int) ISteamApps_GetDLCCount(PARAMS()) {

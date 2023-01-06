@@ -24,34 +24,6 @@
 namespace smoke_api {
     using namespace koalabox;
 
-    struct Config {
-        uint32_t $version = 2;
-        bool logging = false;
-        bool unlock_family_sharing = true;
-        bool unlock_all = true;
-        Set<uint32_t> override;
-        Vector<uint32_t> dlc_ids;
-        bool auto_inject_inventory = true;
-        Vector<uint32_t> inventory_items;
-
-        // Have to use general json type here since library doesn't support std::optional
-        nlohmann::json koalageddon_config;
-
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(
-            Config, $version, // NOLINT(misc-const-correctness)
-            logging,
-            unlock_family_sharing,
-            unlock_all,
-            override,
-            dlc_ids,
-            auto_inject_inventory,
-            inventory_items,
-            koalageddon_config
-        )
-    };
-
-    extern Config config;
-
     extern HMODULE self_module;
 
     extern HMODULE original_library;
@@ -61,7 +33,5 @@ namespace smoke_api {
     void init(HMODULE module_handle);
 
     void shutdown();
-
-    bool should_unlock(uint32_t app_id);
 
 }

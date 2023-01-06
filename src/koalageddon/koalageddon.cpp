@@ -1,6 +1,7 @@
-#include <build_config.h>
 #include <koalageddon/koalageddon.hpp>
+#include <build_config.h>
 #include <core/cache.hpp>
+#include <core/config.hpp>
 #include <smoke_api/smoke_api.hpp>
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/http_client.hpp>
@@ -12,10 +13,10 @@ namespace koalageddon {
     * @return A string representing the source of the config.
     */
     String init_koalageddon_config() {
-        if (!smoke_api::config.koalageddon_config.is_null()) {
+        if (!config::instance.koalageddon_config.is_null()) {
             try {
                 // First try to read a local config override
-                config = smoke_api::config.koalageddon_config.get<decltype(config)>();
+                config = config::instance.koalageddon_config.get<decltype(config)>();
 
                 return "local config override";
             } catch (const Exception& ex) {
@@ -63,7 +64,7 @@ namespace koalageddon {
                 static auto init_count = 0;
                 if (util::strings_are_equal(name, VSTDLIB_DLL)) {
                     // VStdLib DLL handles Family Sharing functions
-                    if (smoke_api::config.unlock_family_sharing) {
+                    if (config::instance.unlock_family_sharing) {
                         init_vstdlib_hooks();
                     }
                     init_count++;

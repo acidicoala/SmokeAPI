@@ -1,5 +1,5 @@
 #include <steam_impl/steam_user.hpp>
-#include <smoke_api/smoke_api.hpp>
+#include <core/config.hpp>
 
 namespace steam_user {
 
@@ -15,7 +15,9 @@ namespace steam_user {
             return result;
         }
 
-        const auto has_license = smoke_api::should_unlock(appID);
+        const auto has_license = config::is_dlc_unlocked(0, appID, [&]() {
+            return result == k_EUserHasLicenseResultHasLicense;
+        });
 
         logger->info("{} -> App ID: {}, HasLicense: {}", function_name, appID, has_license);
 

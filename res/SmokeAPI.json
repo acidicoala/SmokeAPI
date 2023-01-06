@@ -2,10 +2,12 @@
   "$version": 2,
   "logging": true,
   "unlock_family_sharing": true,
-  "unlock_all": true,
-  "override": [],
-  "dlc_ids": [],
+  "default_app_status": "unlocked",
+  "default_dlc_status": "unlocked",
+  "override_app_status": {},
+  "override_dlc_status": {},
+  "extra_dlc_ids": [],
   "auto_inject_inventory": true,
-  "inventory_items": [],
+  "extra_inventory_items": [],
   "koalageddon_config": null
 }

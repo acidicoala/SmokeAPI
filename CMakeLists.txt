@@ -37,6 +37,8 @@ set(
     SMOKE_API_SOURCES
     src/core/cache.cpp
     src/core/cache.hpp
+    src/core/config.cpp
+    src/core/config.hpp
     src/core/globals.cpp
     src/core/globals.hpp
     src/core/macros.hpp

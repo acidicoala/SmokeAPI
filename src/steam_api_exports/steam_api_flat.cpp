@@ -8,12 +8,20 @@ using namespace smoke_api;
 
 // ISteamApps
 
-DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsSubscribedApp(ISteamApps*, AppId_t appID) {
-    return steam_apps::IsDlcUnlocked(__func__, 0, appID);
+DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsSubscribedApp(ISteamApps* self, AppId_t appID) {
+    return steam_apps::IsDlcUnlocked(__func__, 0, appID, [&]() {
+        GET_ORIGINAL_FUNCTION(SteamAPI_ISteamApps_BIsSubscribedApp)
+
+        return SteamAPI_ISteamApps_BIsSubscribedApp_o(self, appID);
+    });
 }
 
-DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsDlcInstalled(ISteamApps*, AppId_t appID) {
-    return steam_apps::IsDlcUnlocked(__func__, 0, appID);
+DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsDlcInstalled(ISteamApps* self, AppId_t appID) {
+    return steam_apps::IsDlcUnlocked(__func__, 0, appID, [&]() {
+        GET_ORIGINAL_FUNCTION(SteamAPI_ISteamApps_BIsDlcInstalled)
+
+        return SteamAPI_ISteamApps_BIsDlcInstalled_o(self, appID);
+    });
 }
 
 DLL_EXPORT(int) SteamAPI_ISteamApps_GetDLCCount(ISteamApps* self) {
