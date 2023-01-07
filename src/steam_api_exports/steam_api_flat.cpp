@@ -1,5 +1,5 @@
 #include <core/macros.hpp>
-#include <core/steam_types.hpp>
+#include <core/types.hpp>
 #include <steam_impl/steam_apps.hpp>
 #include <steam_impl/steam_client.hpp>
 #include <steam_impl/steam_inventory.hpp>

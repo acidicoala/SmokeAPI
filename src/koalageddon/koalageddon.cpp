@@ -1,19 +1,15 @@
 #include <koalageddon/koalageddon.hpp>
 #include <koalageddon/vstdlib.hpp>
+#include <koalageddon/cache.hpp>
 #include <build_config.h>
-#include <core/cache.hpp>
 #include <core/config.hpp>
 #include <steam_functions/steam_functions.hpp>
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/http_client.hpp>
 #include <koalabox/util.hpp>
 #include <koalabox/logger.hpp>
-#include <koalabox/patcher.hpp>
-#include <koalabox/win_util.hpp>
 
 namespace koalageddon {
-    using namespace koalabox;
-
     KoalageddonConfig config; // NOLINT(cert-err58-cpp)
 
     /**
@@ -34,7 +30,7 @@ namespace koalageddon {
         try {
             // Then try to fetch config from GitHub
             const String url = "https://raw.githubusercontent.com/acidicoala/public-entitlements/main/koalageddon/v2/steam.json";
-            config = http_client::fetch_json(url).get<decltype(config)>();
+            config = koalabox::http_client::fetch_json(url).get<decltype(config)>();
 
             cache::save_koalageddon_config(config);
 
@@ -46,7 +42,7 @@ namespace koalageddon {
         try {
             // Then try to get a cached copy of a previously fetched config.
             // We expect this unboxing to throw exception if no koalageddon config is present.
-            config = *cache::get_koalageddon_config();
+            config = cache::get_koalageddon_config().value();
 
             return "disk cache";
         } catch (const Exception& ex) {
@@ -66,10 +62,10 @@ namespace koalageddon {
             }
         ).detach();
 
-        dll_monitor::init(
+        koalabox::dll_monitor::init_listener(
             {VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& module_handle, const String& name) {
                 try {
-                    if (util::strings_are_equal(name, VSTDLIB_DLL)) {
+                    if (koalabox::util::strings_are_equal(name, VSTDLIB_DLL)) {
                         // VStdLib DLL handles Family Sharing functions
 
                         globals::vstdlib_module = module_handle;
@@ -77,7 +73,7 @@ namespace koalageddon {
                         if (config::instance.unlock_family_sharing) {
                             DETOUR_VSTDLIB(Coroutine_Create)
                         }
-                    } else if (util::strings_are_equal(name, STEAMCLIENT_DLL)) {
+                    } else if (koalabox::util::strings_are_equal(name, STEAMCLIENT_DLL)) {
                         // SteamClient DLL handles unlocking functions
 
                         globals::steamclient_module = module_handle;
@@ -86,7 +82,7 @@ namespace koalageddon {
                     }
 
                     if (globals::vstdlib_module != nullptr && globals::steamclient_module != nullptr) {
-                        dll_monitor::shutdown();
+                        koalabox::dll_monitor::shutdown_listener();
                     }
                 } catch (const Exception& ex) {
                     LOG_ERROR(

@@ -1,5 +1,7 @@
-#include <core/steam_types.hpp>
-#include <koalabox/types.hpp>
+#pragma once
+
+#include <core/types.hpp>
+#include <koalabox/core.hpp>
 
 namespace steam_user {
 

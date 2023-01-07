@@ -1,5 +1,4 @@
 #include <core/macros.hpp>
-#include <koalabox/types.hpp>
 #include <koalageddon/koalageddon.hpp>
 
 namespace koalageddon::vstdlib {

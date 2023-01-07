@@ -1,4 +1,4 @@
-#include <koalabox/types.hpp>
+#pragma once
 
 namespace koalageddon::steamclient {
 

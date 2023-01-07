@@ -1,16 +1,13 @@
 #include <steam_impl/steam_apps.hpp>
-#include <koalabox/io.hpp>
 #include <koalabox/http_client.hpp>
-#include <core/cache.hpp>
+#include <smoke_api/app_cache.hpp>
 #include <core/config.hpp>
 #include <koalabox/logger.hpp>
 #include <koalabox/util.hpp>
 #include <steam_functions/steam_functions.hpp>
-#include <core/steam_types.hpp>
+#include <core/types.hpp>
 
 namespace steam_apps {
-    using namespace koalabox;
-
     /// Steamworks may max GetDLCCount value at 64, depending on how much unowned DLCs the user has.
     /// Despite this limit, some games with more than 64 DLCs still keep using this method.
     /// This means we have to get extra DLC IDs from local config, remote config, or cache.
@@ -45,10 +42,10 @@ namespace steam_apps {
             try {
                 // TODO: Refactor into api namespace
                 const auto url = fmt::format("https://store.steampowered.com/dlc/{}/ajaxgetdlclist", app_id_str);
-                const auto json = http_client::fetch_json(url);
+                const auto json = koalabox::http_client::fetch_json(url);
 
                 if (json["success"] != 1) {
-                    throw util::exception("Web API responded with 'success' != 1");
+                    throw koalabox::util::exception("Web API responded with 'success' != 1");
                 }
 
                 for (const auto& dlc: json["dlcs"]) {
@@ -68,7 +65,7 @@ namespace steam_apps {
 
             try {
                 const String url = "https://raw.githubusercontent.com/acidicoala/public-entitlements/main/steam/v1/dlc.json";
-                const auto json = http_client::fetch_json(url);
+                const auto json = koalabox::http_client::fetch_json(url);
 
                 if (json.contains(app_id_str)) {
                     dlcs = json[app_id_str].get<decltype(dlcs)>();
@@ -91,7 +88,7 @@ namespace steam_apps {
         combined_dlcs.insert(github_dlcs.begin(), github_dlcs.end());
         // There is no need to insert cached entries if both steam and GitHub requests were successful.
         if (!total_success) {
-            const auto cache_dlcs = cache::get_dlc_ids(app_id);
+            const auto cache_dlcs = smoke_api::app_cache::get_dlc_ids(app_id);
             combined_dlcs.insert(cached_dlcs.begin(), cached_dlcs.end());
         }
 
@@ -99,7 +96,7 @@ namespace steam_apps {
         cached_dlcs.clear();
         cached_dlcs.insert(cached_dlcs.begin(), combined_dlcs.begin(), combined_dlcs.end());
 
-        cache::save_dlc_ids(app_id, cached_dlcs);
+        smoke_api::app_cache::save_dlc_ids(app_id, cached_dlcs);
 
         return total_success;
     }

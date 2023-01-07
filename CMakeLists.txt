@@ -35,8 +35,6 @@ configure_build_config(extra_build_config)
 
 set(
     SMOKE_API_SOURCES
-    src/core/cache.cpp
-    src/core/cache.hpp
     src/core/config.cpp
     src/core/config.hpp
     src/core/globals.cpp
@@ -44,9 +42,11 @@ set(
     src/core/macros.hpp
     src/core/paths.cpp
     src/core/paths.hpp
-    src/core/steam_types.hpp
+    src/core/types.hpp
     src/smoke_api/smoke_api.cpp
     src/smoke_api/smoke_api.hpp
+    src/smoke_api/app_cache.cpp
+    src/smoke_api/app_cache.hpp
     src/steam_api_exports/steam_api_flat.cpp
     src/steam_api_exports/steam_api_internal.cpp
     src/steam_api_exports/steam_api_unversioned.cpp
@@ -73,12 +73,15 @@ set(
 if (CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(
         SMOKE_API_SOURCES ${SMOKE_API_SOURCES}
+        src/koalageddon/cache.hpp
+        src/koalageddon/cache.cpp
         src/koalageddon/koalageddon.hpp
         src/koalageddon/koalageddon.cpp
-        src/koalageddon/vstdlib.cpp
-        src/koalageddon/vstdlib.hpp
         src/koalageddon/steamclient.cpp
         src/koalageddon/steamclient.hpp
+        src/koalageddon/types.hpp
+        src/koalageddon/vstdlib.cpp
+        src/koalageddon/vstdlib.hpp
         src/steamclient_virtuals/client_app_manager.cpp
         src/steamclient_virtuals/client_apps.cpp
         src/steamclient_virtuals/client_inventory.cpp

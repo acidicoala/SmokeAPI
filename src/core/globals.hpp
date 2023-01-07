@@ -1,5 +1,6 @@
 #pragma once
-#include <koalabox/types.hpp>
+
+#include <koalabox/core.hpp>
 
 namespace globals {
 

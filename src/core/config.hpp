@@ -1,6 +1,6 @@
 #pragma once
-#include <nlohmann/json.hpp>
-#include <koalabox/types.hpp>
+
+#include <koalabox/core.hpp>
 
 namespace config {
     enum class AppStatus {
@@ -41,7 +41,7 @@ namespace config {
         bool auto_inject_inventory = true;
         Vector<uint32_t> extra_inventory_items;
         // We have to use general json type here since the library doesn't support std::optional
-        nlohmann::json koalageddon_config;
+        Json koalageddon_config;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(
             Config, $version, // NOLINT(misc-const-correctness)
@@ -63,6 +63,8 @@ namespace config {
     void init();
 
     AppStatus get_app_status(uint32_t app_id);
+
     DlcStatus get_dlc_status(uint32_t dlc_id);
+
     bool is_dlc_unlocked(uint32_t app_id, uint32_t dlc_id, const Function<bool()>& original_function);
 }

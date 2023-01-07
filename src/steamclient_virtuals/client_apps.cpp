@@ -1,5 +1,5 @@
 #include <core/macros.hpp>
-#include <core/steam_types.hpp>
+#include <core/types.hpp>
 #include <steam_impl/steam_apps.hpp>
 
 VIRTUAL(int) IClientApps_GetDLCCount(PARAMS(AppId_t appId)) {

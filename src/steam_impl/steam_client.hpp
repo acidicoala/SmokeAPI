@@ -1,4 +1,6 @@
-#include <koalabox/types.hpp>
+#pragma once
+
+#include <koalabox/core.hpp>
 
 namespace steam_client {
 

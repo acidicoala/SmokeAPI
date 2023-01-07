@@ -1,6 +1,8 @@
 #pragma once
 
-#include <cstdint>
+#include <koalabox/core.hpp>
+
+#define COMPILE_KOALAGEDDON _WIN64
 
 using AppId_t = uint32_t;
 using SteamInventoryResult_t = uint32_t;

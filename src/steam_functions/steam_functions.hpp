@@ -1,8 +1,7 @@
 #pragma once
 
 #include <core/macros.hpp>
-#include <core/steam_types.hpp>
-#include <koalabox/types.hpp>
+#include <core/types.hpp>
 
 
 // TODO: Refactor into multiple headers
