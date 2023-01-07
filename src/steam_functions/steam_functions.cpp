@@ -196,7 +196,9 @@ namespace steam_functions {
             }
         } else if (version_string.starts_with(CLIENT_ENGINE)) {
             // Koalageddon mode
+#ifndef _WIN64
             koalageddon::steamclient::process_client_engine(reinterpret_cast<uintptr_t>(interface));
+#endif
         } else {
             return;
         }
