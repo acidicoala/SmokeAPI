@@ -6,7 +6,7 @@
 #include <steam_functions/steam_functions.hpp>
 #include <koalabox/config_parser.hpp>
 #include <koalabox/dll_monitor.hpp>
-#include <koalabox/file_logger.hpp>
+#include <koalabox/logger.hpp>
 #include <koalabox/hook.hpp>
 #include <koalabox/loader.hpp>
 #include <koalabox/win_util.hpp>
@@ -20,21 +20,23 @@ namespace smoke_api {
     using namespace koalabox;
 
     void init_proxy_mode() {
-        logger->info("🔀 Detected proxy mode");
+        LOG_INFO("🔀 Detected proxy mode")
 
         globals::steamapi_module = loader::load_original_library(paths::get_self_path(), STEAMAPI_DLL);
     }
 
     void init_hook_mode() {
-        logger->info("🪝 Detected hook mode");
+        LOG_INFO("🪝 Detected hook mode")
 
-        dll_monitor::init(STEAMCLIENT_DLL, [](const HMODULE& library) {
-            globals::steamclient_module = library;
+        dll_monitor::init(
+            STEAMCLIENT_DLL, [](const HMODULE& library) {
+                globals::steamclient_module = library;
 
-            DETOUR_STEAMCLIENT(CreateInterface)
+                DETOUR_STEAMCLIENT(CreateInterface)
 
-            dll_monitor::shutdown();
-        });
+                dll_monitor::shutdown();
+            }
+        );
 
         // Hooking steam_api has shown itself to be less desirable than steamclient
         // for the reasons outlined below:
@@ -80,41 +82,35 @@ namespace smoke_api {
 
             globals::smokeapi_handle = module_handle;
 
-            koalabox::project_name = PROJECT_NAME;
-
             config::init();
+
+            if (config::instance.logging) {
+                logger::init_file_logger(paths::get_log_path());
+            }
+
+            LOG_INFO("🐨 {} v{}", PROJECT_NAME, PROJECT_VERSION)
 
             const auto exe_path = Path(win_util::get_module_file_name_or_throw(nullptr));
             const auto exe_name = exe_path.filename().string();
             const auto exe_bitness = util::is_x64() ? 64 : 32;
 
-            if (config::instance.logging) {
-                logger = file_logger::create(paths::get_log_path());
-            }
-
-            logger->info("🐨 {} v{}", PROJECT_NAME, PROJECT_VERSION);
-
-            logger->debug(R"(Process name: "{}" [{}-bit])", exe_name, exe_bitness);
+            LOG_DEBUG(R"(Process name: "{}" [{}-bit])", exe_name, exe_bitness)
 
             if (hook::is_hook_mode(globals::smokeapi_handle, STEAMAPI_DLL)) {
                 hook::init(true);
 
-#ifdef _WIN64
-                init_hook_mode();
-#else
-                // TODO: Check if it's steam from valve
                 if (is_valve_steam(exe_name)) {
-                    logger->info("🐨💥 Detected Koalageddon mode");
-
+#ifndef _WIN64
+                    LOG_INFO("🐨💥 Detected Koalageddon mode")
                     koalageddon::init();
+#endif
                 } else {
                     init_hook_mode();
                 }
-#endif
             } else {
                 init_proxy_mode();
             }
-            logger->info("🚀 Initialization complete");
+            LOG_INFO("🚀 Initialization complete")
         } catch (const Exception& ex) {
             util::panic(fmt::format("Initialization error: {}", ex.what()));
         }
@@ -126,9 +122,9 @@ namespace smoke_api {
                 win_util::free_library(globals::steamapi_module);
             }
 
-            logger->info("💀 Shutdown complete");
+            LOG_INFO("💀 Shutdown complete")
         } catch (const Exception& ex) {
-            logger->error("Shutdown error: {}", ex.what());
+            LOG_ERROR("Shutdown error: {}", ex.what())
         }
     }
 }

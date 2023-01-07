@@ -1,19 +1,19 @@
-#include <steam_functions/steam_functions.hpp>
+#include <core/steam_types.hpp>
+#include <koalabox/types.hpp>
 
 namespace steam_apps {
-    using namespace koalabox;
 
     bool IsDlcUnlocked(
         const String& function_name,
         AppId_t app_id,
         AppId_t dlc_id,
-        const std::function<bool()>& original_function
+        const Function<bool()>& original_function
     );
 
     int GetDLCCount(
         const String& function_name,
         AppId_t app_id,
-        const std::function<int()>& original_function
+        const Function<int()>& original_function
     );
 
     bool GetDLCDataByIndex(
@@ -24,7 +24,7 @@ namespace steam_apps {
         bool* pbAvailable,
         char* pchName,
         int cchNameBufferSize,
-        const std::function<bool()>& original_function
+        const Function<bool()>& original_function
     );
 
 }

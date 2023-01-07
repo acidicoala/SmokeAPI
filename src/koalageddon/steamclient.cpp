@@ -1,117 +1,83 @@
-#include <koalabox/hook.hpp>
-#include <koalabox/patcher.hpp>
+#include <koalageddon/koalageddon.hpp>
 #include <steam_functions/steam_functions.hpp>
+#include <koalabox/hook.hpp>
+#include <koalabox/logger.hpp>
+#include <koalabox/util.hpp>
 #include <Zydis/Zydis.h>
 #include <Zydis/DecoderTypes.h>
 
 namespace koalageddon::steamclient {
     using namespace koalabox;
 
+    struct InstructionContext {
+        std::optional<ZydisRegister> base_register;
+        std::optional<String> function_name;
+    };
+
     // map<interface name, map<function name, function ordinal>>
     Map<String, Map<String, uint32_t>> ordinal_map; // NOLINT(cert-err58-cpp)
 
     const auto MAX_INSTRUCTION_SIZE = 15;
 
-
     // TODO: Refactor into Koalabox
     ZydisDecoder decoder = {};
     ZydisFormatter formatter = {};
 
-#define HOOK_FUNCTION(INTERFACE, FUNC) hook::swap_virtual_func_or_throw(    \
-    globals::address_map,                                                   \
-    interface,                                                              \
-    #INTERFACE"_"#FUNC,                                                     \
-    ordinal_map[#INTERFACE][#FUNC],                                         \
-    reinterpret_cast<uintptr_t>(INTERFACE##_##FUNC)                         \
+#define HOOK_FUNCTION(INTERFACE, FUNC) hook::swap_virtual_func_or_throw( \
+    globals::address_map, \
+    interface, \
+    #INTERFACE"_"#FUNC, \
+    ordinal_map[#INTERFACE][#FUNC], \
+    reinterpret_cast<uintptr_t>(INTERFACE##_##FUNC) \
 );
 
-    DLL_EXPORT(void) IClientAppManager_Selector(
-        const void* interface,
-        const void* arg2,
-        const void* arg3,
-        const void* arg4
-    ) {
-        static std::once_flag flag;
-        std::call_once(
-            flag, [&]() {
-                HOOK_FUNCTION(IClientAppManager, IsAppDlcInstalled)
-            }
-        );
-
-        GET_ORIGINAL_HOOKED_FUNCTION(IClientAppManager_Selector)
-        IClientAppManager_Selector_o(interface, arg2, arg3, arg4);
+#define SELECTOR_IMPLEMENTATION(INTERFACE, FUNC_BODY) \
+    DLL_EXPORT(void) INTERFACE##_Selector( \
+        const void* interface, \
+        const void* arg2, \
+        const void* arg3, \
+        const void* arg4 \
+    ) { \
+        CALL_ONCE(FUNC_BODY) \
+        GET_ORIGINAL_HOOKED_FUNCTION(INTERFACE##_Selector) \
+        INTERFACE##_Selector_o(interface, arg2, arg3, arg4); \
     }
 
-    DLL_EXPORT(void) IClientApps_Selector(
-        const void* interface,
-        const void* arg2,
-        const void* arg3,
-        const void* arg4
-    ) {
-        static std::once_flag flag;
-        std::call_once(
-            flag, [&]() {
-                HOOK_FUNCTION(IClientApps, GetDLCCount)
-                HOOK_FUNCTION(IClientApps, BGetDLCDataByIndex)
-            }
-        );
+    SELECTOR_IMPLEMENTATION(IClientAppManager, {
+        HOOK_FUNCTION(IClientAppManager, IsAppDlcInstalled)
+    })
 
-        GET_ORIGINAL_HOOKED_FUNCTION(IClientApps_Selector)
-        IClientApps_Selector_o(interface, arg2, arg3, arg4);
-    }
+    SELECTOR_IMPLEMENTATION(IClientApps, {
+        HOOK_FUNCTION(IClientApps, GetDLCCount)
+        HOOK_FUNCTION(IClientApps, BGetDLCDataByIndex)
+    })
 
-    DLL_EXPORT(void) IClientInventory_Selector(
-        const void* interface,
-        const void* arg2,
-        const void* arg3,
-        const void* arg4
-    ) {
-        static std::once_flag flag;
-        std::call_once(
-            flag, [&]() {
-                HOOK_FUNCTION(IClientInventory, GetResultStatus)
-                HOOK_FUNCTION(IClientInventory, GetResultItems)
-                HOOK_FUNCTION(IClientInventory, GetResultItemProperty)
-                HOOK_FUNCTION(IClientInventory, CheckResultSteamID)
-                HOOK_FUNCTION(IClientInventory, GetAllItems)
-                HOOK_FUNCTION(IClientInventory, GetItemsByID)
-                HOOK_FUNCTION(IClientInventory, SerializeResult)
-                HOOK_FUNCTION(IClientInventory, GetItemDefinitionIDs)
-            }
-        );
+    SELECTOR_IMPLEMENTATION(IClientInventory, {
+        HOOK_FUNCTION(IClientInventory, GetResultStatus)
+        HOOK_FUNCTION(IClientInventory, GetResultItems)
+        HOOK_FUNCTION(IClientInventory, GetResultItemProperty)
+        HOOK_FUNCTION(IClientInventory, CheckResultSteamID)
+        HOOK_FUNCTION(IClientInventory, GetAllItems)
+        HOOK_FUNCTION(IClientInventory, GetItemsByID)
+        HOOK_FUNCTION(IClientInventory, SerializeResult)
+        HOOK_FUNCTION(IClientInventory, GetItemDefinitionIDs)
+    })
 
-        GET_ORIGINAL_HOOKED_FUNCTION(IClientInventory_Selector)
-        IClientInventory_Selector_o(interface, arg2, arg3, arg4);
-    }
-
-    DLL_EXPORT(void) IClientUser_Selector(
-        const void* interface,
-        const void* arg2,
-        const void* arg3,
-        const void* arg4
-    ) {
-        static std::once_flag flag;
-        std::call_once(
-            flag, [&]() {
-                HOOK_FUNCTION(IClientUser, BIsSubscribedApp)
-            }
-        );
-
-        GET_ORIGINAL_HOOKED_FUNCTION(IClientUser_Selector)
-        IClientUser_Selector_o(interface, arg2, arg3, arg4);
-    }
+    SELECTOR_IMPLEMENTATION(IClientUser, {
+        HOOK_FUNCTION(IClientUser, BIsSubscribedApp)
+    })
 
     uintptr_t get_absolute_address(ZydisDecodedInstruction instruction, uintptr_t address) {
-        const auto op = instruction.operands[0];
+        const auto operand = instruction.operands[0];
 
-        if (op.imm.is_relative) {
+        if (operand.imm.is_relative) {
             ZyanU64 absolute_address;
-            ZydisCalcAbsoluteAddress(&instruction, &op, address, &absolute_address);
+            ZydisCalcAbsoluteAddress(&instruction, &operand, address, &absolute_address);
 
             return absolute_address;
         }
 
-        return (uintptr_t) op.imm.value.u;
+        return (uintptr_t) operand.imm.value.u;
     }
 
     bool is_push_immediate(const ZydisDecodedInstruction& instruction) {
@@ -153,11 +119,6 @@ namespace koalageddon::steamclient {
         return std::nullopt;
     }
 
-    struct InstructionContext {
-        std::optional<ZydisRegister> base_register;
-        std::optional<String> function_name;
-    };
-
     void construct_ordinal_map( // NOLINT(misc-no-recursion)
         const String& target_interface,
         Map<String, uint32_t>& map,
@@ -189,15 +150,13 @@ namespace koalageddon::steamclient {
 
         auto current_address = (uintptr_t) start_address;
         ZydisDecodedInstruction instruction{};
-        while (ZYAN_SUCCESS(
-            ZydisDecoderDecodeBuffer(
-                &decoder,
-                (void*) current_address,
-                MAX_INSTRUCTION_SIZE,
-                &instruction
-            )
-        )) {
-            TRACE(
+        while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(
+            &decoder,
+            (void*) current_address,
+            MAX_INSTRUCTION_SIZE,
+            &instruction
+        ))) {
+            LOG_TRACE(
                 "{} -> Visiting {} | {}",
                 __func__, (void*) current_address, *get_instruction_string(instruction, current_address)
             )
@@ -296,10 +255,10 @@ namespace koalageddon::steamclient {
                     if (offset && is_derived_from_base_reg) {
                         const auto ordinal = *offset / sizeof(uintptr_t);
 
-                        logger->debug(
+                        LOG_DEBUG(
                             "{} -> Found function ordinal {}::{}@{}",
                             __func__, target_interface, *context.function_name, ordinal
-                        );
+                        )
 
                         map[*context.function_name] = ordinal;
                         break;
@@ -320,14 +279,12 @@ namespace koalageddon::steamclient {
     std::optional<String> find_interface_name(uintptr_t selector_address) {
         auto current_address = selector_address;
         ZydisDecodedInstruction instruction{};
-        while (ZYAN_SUCCESS(
-            ZydisDecoderDecodeBuffer(
-                &decoder,
-                (void*) current_address,
-                MAX_INSTRUCTION_SIZE,
-                &instruction
-            )
-        )) {
+        while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(
+            &decoder,
+            (void*) current_address,
+            MAX_INSTRUCTION_SIZE,
+            &instruction
+        ))) {
             const auto debug_str = get_instruction_string(instruction, current_address);
 
             if (is_push_immediate(instruction)) {
@@ -343,7 +300,7 @@ namespace koalageddon::steamclient {
             current_address += instruction.length;
         }
 
-        // logger->warn("Failed to find any interface names at {}", (void*) selector_address);
+        // LOG_WARN("Failed to find any interface names at {}", (void*) selector_address);
 
         return std::nullopt;
     }
@@ -368,26 +325,24 @@ namespace koalageddon::steamclient {
         const uintptr_t start_address,
         Set<uintptr_t>& visited_addresses
     ) {
-        TRACE("{} -> start_address: {}", __func__, (void*) start_address)
+        LOG_TRACE("{} -> start_address: {}", __func__, (void*) start_address)
 
         if (visited_addresses.contains(start_address)) {
-            TRACE("{} -> Breaking recursion due to visited address", __func__)
+            LOG_TRACE("{} -> Breaking recursion due to visited address", __func__)
             return;
         }
 
         auto current_address = start_address;
 
         ZydisDecodedInstruction instruction{};
-        while (ZYAN_SUCCESS(
-            ZydisDecoderDecodeBuffer(
-                &decoder,
-                (void*) current_address,
-                MAX_INSTRUCTION_SIZE,
-                &instruction
-            )
-        )) {
+        while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(
+            &decoder,
+            (void*) current_address,
+            MAX_INSTRUCTION_SIZE,
+            &instruction
+        ))) {
             visited_addresses.insert(current_address);
-            TRACE(
+            LOG_TRACE(
                 "{} -> Visiting {} | {}",
                 __func__, (void*) current_address, *get_instruction_string(instruction, current_address)
             )
@@ -397,7 +352,7 @@ namespace koalageddon::steamclient {
             if (instruction.mnemonic == ZYDIS_MNEMONIC_CALL &&
                 operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE
                 ) {
-                TRACE("{} -> Found call instruction at {}", __func__, (void*) current_address)
+                LOG_TRACE("{} -> Found call instruction at {}", __func__, (void*) current_address)
 
                 const auto function_selector_address = get_absolute_address(instruction, current_address);
 
@@ -406,7 +361,7 @@ namespace koalageddon::steamclient {
                 if (interface_name_opt) {
                     const auto& interface_name = *interface_name_opt;
 
-                    logger->debug("Detected interface: '{}'", interface_name);
+                    LOG_DEBUG("Detected interface: '{}'", interface_name)
 
                     DETOUR_SELECTOR(IClientAppManager)
                     DETOUR_SELECTOR(IClientApps)
@@ -420,7 +375,7 @@ namespace koalageddon::steamclient {
                 process_interface_selector(jump_taken_destination, visited_addresses);
                 process_interface_selector(jump_not_taken_destination, visited_addresses);
 
-                TRACE("breaking recursion due to conditional branch")
+                LOG_TRACE("breaking recursion due to conditional branch")
                 return;
             } else if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
                        operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE
@@ -429,7 +384,7 @@ namespace koalageddon::steamclient {
 
                 process_interface_selector(jump_destination, visited_addresses);
 
-                TRACE("breaking recursion due to unconditional branch")
+                LOG_TRACE("breaking recursion due to unconditional branch")
                 return;
             } else if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
                        operand.type == ZYDIS_OPERAND_TYPE_MEMORY &&
@@ -448,7 +403,7 @@ namespace koalageddon::steamclient {
 
                 return;
             } else if (instruction.mnemonic == ZYDIS_MNEMONIC_RET) {
-                TRACE("{} -> Breaking recursion due to return instruction", __func__)
+                LOG_TRACE("{} -> Breaking recursion due to return instruction", __func__)
                 return;
             }
 
@@ -456,14 +411,23 @@ namespace koalageddon::steamclient {
         }
     }
 
-    void init(const uintptr_t interface_selector_address) {
+    void process_client_engine(uintptr_t interface) {
+        const auto* steam_client_internal = ((uintptr_t***) interface)[
+            koalageddon::config.client_engine_steam_client_internal_ordinal
+        ];
+        const auto interface_selector_address = (*steam_client_internal)[
+            koalageddon::config.steam_client_internal_interface_selector_ordinal
+        ];
+
+        LOG_DEBUG("Found interface selector at: {}", (void*) interface_selector_address);
+
         if (ZYAN_FAILED(ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LEGACY_32, ZYDIS_ADDRESS_WIDTH_32))) {
-            logger->error("Failed to initialize zydis decoder");
+            LOG_ERROR("Failed to initialize zydis decoder")
             return;
         }
 
         if (ZYAN_FAILED(ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL))) {
-            logger->error("Failed to initialize zydis formatter");
+            LOG_ERROR("Failed to initialize zydis formatter")
             return;
         }
 

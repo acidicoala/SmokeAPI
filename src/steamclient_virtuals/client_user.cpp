@@ -1,7 +1,5 @@
-#include <smoke_api/smoke_api.hpp>
+#include <core/macros.hpp>
 #include <steam_impl/steam_apps.hpp>
-
-using namespace smoke_api;
 
 VIRTUAL(bool) IClientUser_BIsSubscribedApp(PARAMS(AppId_t app_id)) {
     return steam_apps::IsDlcUnlocked(__func__, 0, app_id, [&]() {

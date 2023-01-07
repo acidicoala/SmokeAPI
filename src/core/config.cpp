@@ -7,7 +7,7 @@ namespace config {
 
     // TODO: Reloading via export
     void init() {
-        instance = config_parser::parse<Config>(paths::get_config_path());
+        instance = koalabox::config_parser::parse<Config>(paths::get_config_path());
     }
 
     AppStatus get_app_status(uint32_t app_id) {
@@ -36,7 +36,7 @@ namespace config {
         return instance.default_dlc_status;
     }
 
-    bool is_dlc_unlocked(uint32_t app_id, uint32_t dlc_id, const std::function<bool()>& original_function) {
+    bool is_dlc_unlocked(uint32_t app_id, uint32_t dlc_id, const Function<bool()>& original_function) {
         const auto app_status = config::get_app_status(app_id);
         const auto dlc_status = config::get_dlc_status(dlc_id);
 

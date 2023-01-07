@@ -1,16 +1,15 @@
 #pragma once
 
-#include <koalabox/koalabox.hpp>
+#include <koalabox/types.hpp>
 #include <nlohmann/json.hpp>
 #include <koalageddon/koalageddon.hpp>
-#include <steam_types/steam_types.hpp>
+#include <core/steam_types.hpp>
 
 /**
  * This namespace contains utility functions for reading from and writing to cache file on disk.
  * All functions are intended to be safe to call, i.e. they should not throw exceptions.
  */
 namespace cache {
-    using namespace koalabox;
 
     struct App {
         Vector<AppId_t> dlc_ids;

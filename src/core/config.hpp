@@ -1,11 +1,8 @@
 #pragma once
-#include <cstdint>
 #include <nlohmann/json.hpp>
-#include <koalabox/koalabox.hpp>
+#include <koalabox/types.hpp>
 
 namespace config {
-    using namespace koalabox;
-
     enum class AppStatus {
         LOCKED,
         UNLOCKED,
@@ -67,5 +64,5 @@ namespace config {
 
     AppStatus get_app_status(uint32_t app_id);
     DlcStatus get_dlc_status(uint32_t dlc_id);
-    bool is_dlc_unlocked(uint32_t app_id, uint32_t dlc_id, const std::function<bool()>& original_function);
+    bool is_dlc_unlocked(uint32_t app_id, uint32_t dlc_id, const Function<bool()>& original_function);
 }

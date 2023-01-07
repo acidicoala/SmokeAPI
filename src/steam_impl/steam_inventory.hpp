@@ -1,13 +1,12 @@
-#include <koalabox/koalabox.hpp>
-#include <steam_functions/steam_functions.hpp>
+#include <core/steam_types.hpp>
+#include <koalabox/types.hpp>
 
 namespace steam_inventory {
-    using namespace koalabox;
 
     EResult GetResultStatus(
         const String& function_name,
         SteamInventoryResult_t resultHandle,
-        const std::function<EResult()>& original_function
+        const Function<EResult()>& original_function
     );
 
     bool GetResultItems(
@@ -15,8 +14,8 @@ namespace steam_inventory {
         SteamInventoryResult_t resultHandle,
         SteamItemDetails_t* pOutItemsArray,
         uint32_t* punOutItemsArraySize,
-        const std::function<bool()>& original_function,
-        const std::function<bool(SteamItemDef_t*, uint32_t*)>& get_item_definition_ids
+        const Function<bool()>& original_function,
+        const Function<bool(SteamItemDef_t*, uint32_t*)>& get_item_definition_ids
     );
 
     bool GetResultItemProperty(
@@ -26,13 +25,13 @@ namespace steam_inventory {
         const char* pchPropertyName,
         char* pchValueBuffer,
         const uint32_t* punValueBufferSizeOut,
-        const std::function<bool()>& original_function
+        const Function<bool()>& original_function
     );
 
     bool GetAllItems(
         const String& function_name,
         const SteamInventoryResult_t* pResultHandle,
-        const std::function<bool()>& original_function
+        const Function<bool()>& original_function
     );
 
     bool GetItemsByID(
@@ -40,7 +39,7 @@ namespace steam_inventory {
         SteamInventoryResult_t* pResultHandle,
         const SteamItemInstanceID_t* pInstanceIDs,
         uint32_t unCountInstanceIDs,
-        const std::function<bool()>& original_function
+        const Function<bool()>& original_function
     );
 
     bool SerializeResult(
@@ -48,14 +47,14 @@ namespace steam_inventory {
         SteamInventoryResult_t resultHandle,
         void* pOutBuffer,
         uint32_t* punOutBufferSize,
-        const std::function<bool()>& original_function
+        const Function<bool()>& original_function
     );
 
     bool GetItemDefinitionIDs(
         const String& function_name,
         const SteamItemDef_t* pItemDefIDs,
         uint32_t* punItemDefIDsArraySize,
-        const std::function<bool()>& original_function
+        const Function<bool()>& original_function
     );
 
 
@@ -63,6 +62,6 @@ namespace steam_inventory {
         const String& function_name,
         SteamInventoryResult_t resultHandle,
         CSteamID steamIDExpected,
-        const std::function<bool()>& original_function
+        const Function<bool()>& original_function
     );
 }

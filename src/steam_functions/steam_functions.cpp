@@ -1,8 +1,10 @@
 #include <steam_functions/steam_functions.hpp>
+#include <koalageddon/steamclient.hpp>
 #include <build_config.h>
 #include <koalabox/hook.hpp>
-#include <koalageddon/koalageddon.hpp>
 #include <koalabox/win_util.hpp>
+#include <koalabox/logger.hpp>
+#include <koalabox/util.hpp>
 #include <polyhook2/Misc.hpp>
 
 namespace steam_functions {
@@ -82,20 +84,20 @@ namespace steam_functions {
         int min_version,
         int max_version
     ) {
-        logger->debug("Hooking interface '{}'", version_string);
+        LOG_DEBUG("Hooking interface '{}'", version_string)
 
         try {
             const auto version_number = stoi(version_string.substr(prefix.length()));
 
             if (version_number < min_version) {
-                logger->warn("Legacy version of {}: {}", version_string, version_number);
+                LOG_WARN("Legacy version of {}: {}", version_string, version_number)
             }
 
             if (version_number > max_version) {
-                logger->warn(
+                LOG_WARN(
                     "Unsupported new version of {}: {}. Fallback version {} will be used",
                     version_string, version_number, max_version
-                );
+                )
             }
 
             return version_number;
@@ -118,19 +120,19 @@ namespace steam_functions {
         util::panic("Invalid interface version ({}) for function {}", interface_version, function_name);
     }
 
-#define HOOK(MAP, FUNC) \
+#define HOOK_VIRTUALS(MAP, FUNC) \
     hook::swap_virtual_func( \
         globals::address_map, \
         interface,      \
         #FUNC, \
         get_ordinal(MAP, #FUNC, version_number), \
-        (FunctionAddress) (FUNC) \
+        reinterpret_cast<uintptr_t>(FUNC) \
     );
 
-#define HOOK_STEAM_CLIENT(FUNC)     HOOK(steam_client_ordinal_map, FUNC)
-#define HOOK_STEAM_APPS(FUNC)       HOOK(steam_apps_ordinal_map, FUNC)
-#define HOOK_STEAM_USER(FUNC)       HOOK(steam_user_ordinal_map, FUNC)
-#define HOOK_STEAM_INVENTORY(FUNC)  HOOK(steam_inventory_ordinal_map, FUNC)
+#define HOOK_STEAM_CLIENT(FUNC)     HOOK_VIRTUALS(steam_client_ordinal_map, FUNC)
+#define HOOK_STEAM_APPS(FUNC)       HOOK_VIRTUALS(steam_apps_ordinal_map, FUNC)
+#define HOOK_STEAM_USER(FUNC)       HOOK_VIRTUALS(steam_user_ordinal_map, FUNC)
+#define HOOK_STEAM_INVENTORY(FUNC)  HOOK_VIRTUALS(steam_inventory_ordinal_map, FUNC)
 
     void hook_virtuals(void* interface, const String& version_string) {
         if (interface == nullptr) {
@@ -138,17 +140,15 @@ namespace steam_functions {
             return;
         }
 
-        static Set<std::pair<void*, String>> hooked_interfaces;
+        static Set<void*> hooked_interfaces;
 
-        const auto interface_pair = std::pair{interface, version_string};
-
-        if (hooked_interfaces.contains(interface_pair)) {
+        if (hooked_interfaces.contains(interface)) {
             // This interface is already hooked. Skipping it.
             return;
         }
 
-        static std::mutex section;
-        const std::lock_guard<std::mutex> guard(section);
+        static Mutex section;
+        const MutexLockGuard guard(section);
 
         if (version_string.starts_with(STEAM_CLIENT)) {
             const auto version_number = extract_version_number(version_string, STEAM_CLIENT, 6, 20);
@@ -196,22 +196,12 @@ namespace steam_functions {
             }
         } else if (version_string.starts_with(CLIENT_ENGINE)) {
             // Koalageddon mode
-
-            const auto* steam_client_internal = ((uintptr_t***) interface)[
-                koalageddon::config.client_engine_steam_client_internal_ordinal
-            ];
-            const auto interface_selector_address = (*steam_client_internal)[
-                koalageddon::config.steam_client_internal_interface_selector_ordinal
-            ];
-
-            logger->debug("Found interface selector at: {}", (void*) interface_selector_address);
-
-            koalageddon::steamclient::init(interface_selector_address);
+            koalageddon::steamclient::process_client_engine(reinterpret_cast<uintptr_t>(interface));
         } else {
             return;
         }
 
-        hooked_interfaces.insert(interface_pair);
+        hooked_interfaces.insert(interface);
     }
 
     HSteamPipe get_steam_pipe_or_throw() {
@@ -249,7 +239,7 @@ namespace steam_functions {
         return function(ARGS(args...));
     }
 
-    uint32_t get_app_id_or_throw() {
+    AppId_t get_app_id_or_throw() {
         // Get CreateInterface
         const auto& steam_client_module = win_util::get_module_handle_or_throw(STEAMCLIENT_DLL);
         auto* CreateInterface_address = (void*) win_util::get_proc_address_or_throw(

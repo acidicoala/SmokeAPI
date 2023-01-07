@@ -1,12 +1,15 @@
 #pragma once
 
-typedef uint32_t SteamInventoryResult_t;
-typedef uint64_t SteamItemInstanceID_t;
-typedef uint32_t SteamItemDef_t;
-typedef uint32_t AppId_t;
-typedef uint32_t HSteamPipe;
-typedef uint32_t HSteamUser;
-typedef uint64_t CSteamID;
+#include <cstdint>
+
+using AppId_t = uint32_t;
+using SteamInventoryResult_t = uint32_t;
+using SteamItemInstanceID_t = uint64_t;
+using SteamItemDef_t = uint32_t;
+using HSteamPipe = uint32_t;
+using HSteamUser = uint32_t;
+using CSteamID = uint64_t;
+using EResult = uint32_t;
 
 struct SteamItemDetails_t {
     SteamItemInstanceID_t m_itemId;
@@ -22,4 +25,10 @@ enum EUserHasLicenseForAppResult {
     k_EUserHasLicenseResultNoAuth = 2,             // User has not been authenticated
 };
 
-typedef uint32_t EResult;
+class ISteamClient;
+
+class ISteamApps;
+
+class ISteamUser;
+
+class ISteamInventory;

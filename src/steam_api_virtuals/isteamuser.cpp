@@ -1,12 +1,12 @@
-#include <smoke_api/smoke_api.hpp>
 #include <steam_impl/steam_user.hpp>
-
-using namespace smoke_api;
+#include <steam_functions/steam_functions.hpp>
 
 VIRTUAL(EUserHasLicenseForAppResult) ISteamUser_UserHasLicenseForApp(PARAMS(CSteamID steamID, AppId_t appID)) {
-    return steam_user::UserHasLicenseForApp(__func__, appID, [&]() {
-        GET_ORIGINAL_HOOKED_FUNCTION(ISteamUser_UserHasLicenseForApp)
+    return steam_user::UserHasLicenseForApp(
+        __func__, appID, [&]() {
+            GET_ORIGINAL_HOOKED_FUNCTION(ISteamUser_UserHasLicenseForApp)
 
-        return ISteamUser_UserHasLicenseForApp_o(ARGS(steamID, appID));
-    });
+            return ISteamUser_UserHasLicenseForApp_o(ARGS(steamID, appID));
+        }
+    );
 }

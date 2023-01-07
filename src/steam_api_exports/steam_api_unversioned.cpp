@@ -1,12 +1,12 @@
-#include <smoke_api/smoke_api.hpp>
 #include <steam_impl/steam_client.hpp>
-
+#include <core/macros.hpp>
+#include <koalabox/logger.hpp>
 #include <koalabox/win_util.hpp>
-
+#include <koalabox/util.hpp>
+#include <steam_functions/steam_functions.hpp>
 #include <regex>
 
-using namespace smoke_api;
-using namespace steam_functions;
+using namespace koalabox;
 
 /**
  * Searches the `.rdata` section of the original dll for the full interface version string
@@ -28,10 +28,10 @@ String get_versioned_interface(const String& version_prefix, const String& fallb
 
             throw util::exception("No match found for '{}'", version_prefix);
         } catch (const Exception& ex) {
-            logger->error(
+            LOG_ERROR(
                 "Failed to get versioned interface: {}."
                 "Falling back to version {}", ex.what(), fallback
-            );
+            )
 
             version_map[version_prefix] = version_prefix + fallback;
         }
@@ -41,41 +41,49 @@ String get_versioned_interface(const String& version_prefix, const String& fallb
 }
 
 DLL_EXPORT(void*) SteamClient() {
-    static auto version = get_versioned_interface(STEAM_CLIENT, "006");
+    static auto version = get_versioned_interface(steam_functions::STEAM_CLIENT, "006");
 
-    return steam_client::GetGenericInterface(__func__, version, [&]() {
-        GET_ORIGINAL_FUNCTION_STEAMAPI(SteamClient)
+    return steam_client::GetGenericInterface(
+        __func__, version, [&]() {
+            GET_ORIGINAL_FUNCTION_STEAMAPI(SteamClient)
 
-        return SteamClient_o();
-    });
+            return SteamClient_o();
+        }
+    );
 }
 
 DLL_EXPORT(void*) SteamApps() {
-    static auto version = get_versioned_interface(STEAM_APPS, "002");
+    static auto version = get_versioned_interface(steam_functions::STEAM_APPS, "002");
 
-    return steam_client::GetGenericInterface(__func__, version, [&]() {
-        GET_ORIGINAL_FUNCTION_STEAMAPI(SteamApps)
+    return steam_client::GetGenericInterface(
+        __func__, version, [&]() {
+            GET_ORIGINAL_FUNCTION_STEAMAPI(SteamApps)
 
-        return SteamApps_o();
-    });
+            return SteamApps_o();
+        }
+    );
 }
 
 DLL_EXPORT(void*) SteamUser() {
-    static auto version = get_versioned_interface(STEAM_USER, "012");
+    static auto version = get_versioned_interface(steam_functions::STEAM_USER, "012");
 
-    return steam_client::GetGenericInterface(__func__, version, [&]() {
-        GET_ORIGINAL_FUNCTION_STEAMAPI(SteamUser)
+    return steam_client::GetGenericInterface(
+        __func__, version, [&]() {
+            GET_ORIGINAL_FUNCTION_STEAMAPI(SteamUser)
 
-        return SteamUser_o();
-    });
+            return SteamUser_o();
+        }
+    );
 }
 
 DLL_EXPORT(void*) SteamInventory() {
-    static auto version = get_versioned_interface(STEAM_INVENTORY, "001");
+    static auto version = get_versioned_interface(steam_functions::STEAM_INVENTORY, "001");
 
-    return steam_client::GetGenericInterface(__func__, version, [&]() {
-        GET_ORIGINAL_FUNCTION_STEAMAPI(SteamInventory)
+    return steam_client::GetGenericInterface(
+        __func__, version, [&]() {
+            GET_ORIGINAL_FUNCTION_STEAMAPI(SteamInventory)
 
-        return SteamInventory_o();
-    });
+            return SteamInventory_o();
+        }
+    );
 }

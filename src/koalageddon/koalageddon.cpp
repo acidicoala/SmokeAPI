@@ -1,13 +1,19 @@
 #include <koalageddon/koalageddon.hpp>
+#include <koalageddon/vstdlib.hpp>
 #include <build_config.h>
 #include <core/cache.hpp>
 #include <core/config.hpp>
+#include <steam_functions/steam_functions.hpp>
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/http_client.hpp>
 #include <koalabox/util.hpp>
-#include <steam_functions/steam_functions.hpp>
+#include <koalabox/logger.hpp>
+#include <koalabox/patcher.hpp>
+#include <koalabox/win_util.hpp>
 
 namespace koalageddon {
+    using namespace koalabox;
+
     KoalageddonConfig config; // NOLINT(cert-err58-cpp)
 
     /**
@@ -21,7 +27,7 @@ namespace koalageddon {
 
                 return "local config override";
             } catch (const Exception& ex) {
-                logger->error("Failed to get local koalageddon config: {}", ex.what());
+                LOG_ERROR("Failed to get local koalageddon config: {}", ex.what())
             }
         }
 
@@ -34,7 +40,7 @@ namespace koalageddon {
 
             return "GitHub repository";
         } catch (const Exception& ex) {
-            logger->error("Failed to get remote koalageddon config: {}", ex.what());
+            LOG_ERROR("Failed to get remote koalageddon config: {}", ex.what())
         }
 
         try {
@@ -44,7 +50,7 @@ namespace koalageddon {
 
             return "disk cache";
         } catch (const Exception& ex) {
-            logger->error("Failed to get cached koalageddon config: {}", ex.what());
+            LOG_ERROR("Failed to get cached koalageddon config: {}", ex.what())
         }
 
         // Finally, fallback on the default config
@@ -53,35 +59,41 @@ namespace koalageddon {
     }
 
     void init() {
-        std::thread([]() {
-            const auto kg_config_source = init_koalageddon_config();
-            logger->info("Loaded Koalageddon config from the {}", kg_config_source);
-        }).detach();
-
-        dll_monitor::init({VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& module_handle, const String& name) {
-            try {
-                if (util::strings_are_equal(name, VSTDLIB_DLL)) {
-                    // VStdLib DLL handles Family Sharing functions
-
-                    globals::vstdlib_module = module_handle;
-
-                    if (config::instance.unlock_family_sharing) {
-                        DETOUR_VSTDLIB(Coroutine_Create)
-                    }
-                } else if (util::strings_are_equal(name, STEAMCLIENT_DLL)) {
-                    // SteamClient DLL handles unlocking functions
-
-                    globals::steamclient_module = module_handle;
-
-                    DETOUR_STEAMCLIENT(CreateInterface)
-                }
-
-                if (globals::vstdlib_module != nullptr && globals::steamclient_module != nullptr) {
-                    dll_monitor::shutdown();
-                }
-            } catch (const Exception& ex) {
-                logger->error("Koalageddon mode dll monitor init error. Module: '{}', Message: {}", name, ex.what());
+        std::thread(
+            []() {
+                const auto kg_config_source = init_koalageddon_config();
+                LOG_INFO("Loaded Koalageddon config from the {}", kg_config_source)
             }
-        });
+        ).detach();
+
+        dll_monitor::init(
+            {VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& module_handle, const String& name) {
+                try {
+                    if (util::strings_are_equal(name, VSTDLIB_DLL)) {
+                        // VStdLib DLL handles Family Sharing functions
+
+                        globals::vstdlib_module = module_handle;
+
+                        if (config::instance.unlock_family_sharing) {
+                            DETOUR_VSTDLIB(Coroutine_Create)
+                        }
+                    } else if (util::strings_are_equal(name, STEAMCLIENT_DLL)) {
+                        // SteamClient DLL handles unlocking functions
+
+                        globals::steamclient_module = module_handle;
+
+                        DETOUR_STEAMCLIENT(CreateInterface)
+                    }
+
+                    if (globals::vstdlib_module != nullptr && globals::steamclient_module != nullptr) {
+                        dll_monitor::shutdown();
+                    }
+                } catch (const Exception& ex) {
+                    LOG_ERROR(
+                        "Koalageddon mode dll monitor process_interface_selector error. Module: '{}', Message: {}",
+                        name, ex.what())
+                }
+            }
+        );
     }
 }

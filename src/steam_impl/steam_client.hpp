@@ -1,13 +1,11 @@
-#include <koalabox/koalabox.hpp>
-#include <steam_functions/steam_functions.hpp>
+#include <koalabox/types.hpp>
 
 namespace steam_client {
-    using namespace koalabox;
 
     void* GetGenericInterface(
         const String& function_name,
         const String& interface_version,
-        const std::function<void*()>& original_function
+        const Function<void*()>& original_function
     );
 
 }

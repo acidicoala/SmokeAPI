@@ -1,14 +1,14 @@
-#include <smoke_api/smoke_api.hpp>
 #include <steam_impl/steam_inventory.hpp>
-
-using namespace smoke_api;
+#include <steam_functions/steam_functions.hpp>
 
 VIRTUAL(EResult) ISteamInventory_GetResultStatus(PARAMS(SteamInventoryResult_t resultHandle)) {
-    return steam_inventory::GetResultStatus(__func__, resultHandle, [&]() {
-        GET_ORIGINAL_HOOKED_FUNCTION(ISteamInventory_GetResultStatus)
+    return steam_inventory::GetResultStatus(
+        __func__, resultHandle, [&]() {
+            GET_ORIGINAL_HOOKED_FUNCTION(ISteamInventory_GetResultStatus)
 
-        return ISteamInventory_GetResultStatus_o(ARGS(resultHandle));
-    });
+            return ISteamInventory_GetResultStatus_o(ARGS(resultHandle));
+        }
+    );
 }
 
 VIRTUAL(bool) ISteamInventory_GetResultItems(
@@ -18,7 +18,6 @@ VIRTUAL(bool) ISteamInventory_GetResultItems(
         uint32_t * punOutItemsArraySize
     )
 ) {
-
     return steam_inventory::GetResultItems(
         __func__, resultHandle, pOutItemsArray, punOutItemsArraySize,
         [&]() {
@@ -60,19 +59,23 @@ VIRTUAL(bool) ISteamInventory_CheckResultSteamID(
         CSteamID steamIDExpected
     )
 ) {
-    return steam_inventory::CheckResultSteamID(__func__, resultHandle, steamIDExpected, [&]() {
-        GET_ORIGINAL_HOOKED_FUNCTION(ISteamInventory_CheckResultSteamID)
+    return steam_inventory::CheckResultSteamID(
+        __func__, resultHandle, steamIDExpected, [&]() {
+            GET_ORIGINAL_HOOKED_FUNCTION(ISteamInventory_CheckResultSteamID)
 
-        return ISteamInventory_CheckResultSteamID_o(ARGS(resultHandle, steamIDExpected));
-    });
+            return ISteamInventory_CheckResultSteamID_o(ARGS(resultHandle, steamIDExpected));
+        }
+    );
 }
 
 VIRTUAL(bool) ISteamInventory_GetAllItems(PARAMS(SteamInventoryResult_t* pResultHandle)) {
-    return steam_inventory::GetAllItems(__func__, pResultHandle, [&]() {
-        GET_ORIGINAL_HOOKED_FUNCTION(ISteamInventory_GetAllItems)
+    return steam_inventory::GetAllItems(
+        __func__, pResultHandle, [&]() {
+            GET_ORIGINAL_HOOKED_FUNCTION(ISteamInventory_GetAllItems)
 
-        return ISteamInventory_GetAllItems_o(ARGS(pResultHandle));
-    });
+            return ISteamInventory_GetAllItems_o(ARGS(pResultHandle));
+        }
+    );
 }
 
 VIRTUAL(bool) ISteamInventory_GetItemsByID(
@@ -82,11 +85,13 @@ VIRTUAL(bool) ISteamInventory_GetItemsByID(
         uint32_t unCountInstanceIDs
     )
 ) {
-    return steam_inventory::GetItemsByID(__func__, pResultHandle, pInstanceIDs, unCountInstanceIDs, [&]() {
-        GET_ORIGINAL_HOOKED_FUNCTION(ISteamInventory_GetItemsByID)
+    return steam_inventory::GetItemsByID(
+        __func__, pResultHandle, pInstanceIDs, unCountInstanceIDs, [&]() {
+            GET_ORIGINAL_HOOKED_FUNCTION(ISteamInventory_GetItemsByID)
 
-        return ISteamInventory_GetItemsByID_o(ARGS(pResultHandle, pInstanceIDs, unCountInstanceIDs));
-    });
+            return ISteamInventory_GetItemsByID_o(ARGS(pResultHandle, pInstanceIDs, unCountInstanceIDs));
+        }
+    );
 }
 
 VIRTUAL(bool) ISteamInventory_SerializeResult(
@@ -96,11 +101,13 @@ VIRTUAL(bool) ISteamInventory_SerializeResult(
         uint32_t * punOutBufferSize
     )
 ) {
-    return steam_inventory::SerializeResult(__func__, resultHandle, pOutBuffer, punOutBufferSize, [&]() {
-        GET_ORIGINAL_HOOKED_FUNCTION(ISteamInventory_SerializeResult)
+    return steam_inventory::SerializeResult(
+        __func__, resultHandle, pOutBuffer, punOutBufferSize, [&]() {
+            GET_ORIGINAL_HOOKED_FUNCTION(ISteamInventory_SerializeResult)
 
-        return ISteamInventory_SerializeResult_o(ARGS(resultHandle, pOutBuffer, punOutBufferSize));
-    });
+            return ISteamInventory_SerializeResult_o(ARGS(resultHandle, pOutBuffer, punOutBufferSize));
+        }
+    );
 }
 
 VIRTUAL(bool) ISteamInventory_GetItemDefinitionIDs(
@@ -109,9 +116,11 @@ VIRTUAL(bool) ISteamInventory_GetItemDefinitionIDs(
         uint32_t * punItemDefIDsArraySize
     )
 ) {
-    return steam_inventory::GetItemDefinitionIDs(__func__, pItemDefIDs, punItemDefIDsArraySize, [&]() {
-        GET_ORIGINAL_HOOKED_FUNCTION(ISteamInventory_GetItemDefinitionIDs)
+    return steam_inventory::GetItemDefinitionIDs(
+        __func__, pItemDefIDs, punItemDefIDsArraySize, [&]() {
+            GET_ORIGINAL_HOOKED_FUNCTION(ISteamInventory_GetItemDefinitionIDs)
 
-        return ISteamInventory_GetItemDefinitionIDs_o(ARGS(pItemDefIDs, punItemDefIDsArraySize));
-    });
+            return ISteamInventory_GetItemDefinitionIDs_o(ARGS(pItemDefIDs, punItemDefIDsArraySize));
+        }
+    );
 }

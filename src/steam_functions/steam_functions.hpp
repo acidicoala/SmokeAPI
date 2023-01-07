@@ -1,46 +1,9 @@
 #pragma once
 
-#include <koalabox/koalabox.hpp>
-#include <steam_types/steam_types.hpp>
 #include <core/macros.hpp>
+#include <core/steam_types.hpp>
+#include <koalabox/types.hpp>
 
-/**
- * By default, virtual functions are declared with __thiscall
- * convention, which is normal since they are class members.
- * But it presents an issue for us, since we cannot pass *this
- * pointer as a function argument. This is because *this
- * pointer is passed via register ECX in __thiscall
- * convention. Hence, to resolve this issue we declare our
- * hooked functions with __fastcall convention, to trick
- * the compiler into reading ECX & EDX registers as 1st
- * and 2nd function arguments respectively. Similarly, __fastcall
- * makes the compiler push the first argument into the ECX register,
- * which mimics the __thiscall calling convention. Register EDX
- * is not used anywhere in this case, but we still pass it along
- * to conform to the __fastcall convention. This all applies
- * to the x86 architecture.
- *
- * In x86-64 however, there is only one calling convention,
- * so __fastcall is simply ignored. However, RDX in this case
- * will store the 1st actual argument to the function, so we
- * have to omit it from the function signature.
- *
- * The macros below implement the above-mentioned considerations.
- */
-#ifdef _WIN64
-#define PARAMS(...) void* RCX, ##__VA_ARGS__
-#define ARGS(...) RCX, ##__VA_ARGS__
-#define THIS RCX
-#else
-#define PARAMS(...) void* ECX, void* EDX, ##__VA_ARGS__
-#define ARGS(...) ECX, EDX, ##__VA_ARGS__
-#define THIS ECX
-#endif
-
-class ISteamClient;
-class ISteamApps;
-class ISteamUser;
-class ISteamInventory;
 
 // TODO: Refactor into multiple headers
 
@@ -60,7 +23,7 @@ VIRTUAL(bool) ISteamApps_BGetDLCDataByIndex(PARAMS(int, AppId_t*, bool*, char*, 
 VIRTUAL(EUserHasLicenseForAppResult) ISteamUser_UserHasLicenseForApp(PARAMS(CSteamID, AppId_t));
 
 // ISteamInventory
-VIRTUAL(EResult) ISteamInventory_GetResultStatus(PARAMS(uint32_t));
+VIRTUAL(EResult) ISteamInventory_GetResultStatus(PARAMS(SteamInventoryResult_t));
 VIRTUAL(bool) ISteamInventory_GetResultItems(PARAMS(SteamInventoryResult_t, SteamItemDetails_t*, uint32_t*));
 VIRTUAL(bool) ISteamInventory_GetResultItemProperty(
     PARAMS(SteamInventoryResult_t, uint32_t, const char*, char*, uint32_t*)
@@ -126,9 +89,6 @@ VIRTUAL(bool) IClientInventory_GetAllItems(PARAMS(SteamInventoryResult_t*));
 VIRTUAL(bool) IClientInventory_GetItemsByID(PARAMS(SteamInventoryResult_t*, const SteamItemInstanceID_t*, uint32_t));
 VIRTUAL(bool) IClientInventory_SerializeResult(PARAMS(SteamInventoryResult_t, void*, uint32_t, uint32_t *));
 VIRTUAL(bool) IClientInventory_GetItemDefinitionIDs(PARAMS(SteamItemDef_t*, uint32_t, uint32_t *));
-
-typedef uint32_t HCoroutine;
-DLL_EXPORT(HCoroutine) Coroutine_Create(void* callback_address, struct CoroutineData* data);
 
 namespace steam_functions {
     using namespace koalabox;

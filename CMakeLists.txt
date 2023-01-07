@@ -44,6 +44,7 @@ set(
     src/core/macros.hpp
     src/core/paths.cpp
     src/core/paths.hpp
+    src/core/steam_types.hpp
     src/smoke_api/smoke_api.cpp
     src/smoke_api/smoke_api.hpp
     src/steam_api_exports/steam_api_flat.cpp
@@ -63,7 +64,6 @@ set(
     src/steam_impl/steam_user.hpp
     src/steam_functions/steam_functions.cpp
     src/steam_functions/steam_functions.hpp
-    src/steam_types/steam_types.hpp
     src/steamclient_exports/steamclient.cpp
     src/main.cpp
     ${GENERATED_LINKER_EXPORTS}
@@ -76,7 +76,9 @@ if (CMAKE_SIZEOF_VOID_P EQUAL 4)
         src/koalageddon/koalageddon.hpp
         src/koalageddon/koalageddon.cpp
         src/koalageddon/vstdlib.cpp
+        src/koalageddon/vstdlib.hpp
         src/koalageddon/steamclient.cpp
+        src/koalageddon/steamclient.hpp
         src/steamclient_virtuals/client_app_manager.cpp
         src/steamclient_virtuals/client_apps.cpp
         src/steamclient_virtuals/client_inventory.cpp

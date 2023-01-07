@@ -1,14 +1,16 @@
-#include <smoke_api/smoke_api.hpp>
+#include <core/macros.hpp>
+#include <core/steam_types.hpp>
 #include <steam_impl/steam_inventory.hpp>
-
-using namespace smoke_api;
+#include <steam_functions/steam_functions.hpp>
 
 VIRTUAL(EResult) IClientInventory_GetResultStatus(PARAMS(SteamInventoryResult_t resultHandle)) {
-    return steam_inventory::GetResultStatus(__func__, resultHandle, [&]() {
-        GET_ORIGINAL_HOOKED_FUNCTION(IClientInventory_GetResultStatus)
+    return steam_inventory::GetResultStatus(
+        __func__, resultHandle, [&]() {
+            GET_ORIGINAL_HOOKED_FUNCTION(IClientInventory_GetResultStatus)
 
-        return IClientInventory_GetResultStatus_o(ARGS(resultHandle));
-    });
+            return IClientInventory_GetResultStatus_o(ARGS(resultHandle));
+        }
+    );
 }
 
 VIRTUAL(bool) IClientInventory_GetResultItems(

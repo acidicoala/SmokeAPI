@@ -5,5 +5,5 @@ namespace globals {
     HMODULE steamapi_module = nullptr;
     HMODULE vstdlib_module = nullptr;
     HMODULE steamclient_module = nullptr;
-    Map<String, FunctionAddress> address_map;
+    Map<String, uintptr_t> address_map; // NOLINT(cert-err58-cpp)
 }

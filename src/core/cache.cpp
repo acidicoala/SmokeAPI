@@ -1,11 +1,14 @@
 #include <core/cache.hpp>
 #include <core/paths.hpp>
 #include <koalabox/io.hpp>
+#include <koalabox/logger.hpp>
 
 namespace cache {
+
+
     Cache read_cache_from_disk() {
         try {
-            const auto cache_string = io::read_file(paths::get_cache_path());
+            const auto cache_string = koalabox::io::read_file(paths::get_cache_path());
 
             if (cache_string.empty()) {
                 return {};
@@ -13,7 +16,7 @@ namespace cache {
 
             return nlohmann::json::parse(cache_string).get<Cache>();
         } catch (const Exception& e) {
-            logger->warn("{} -> Failed to read cache from disk: {}", __func__, e.what());
+            LOG_WARN("{} -> Failed to read cache from disk: {}", __func__, e.what())
 
             return {};
         }
@@ -23,9 +26,9 @@ namespace cache {
         try {
             const auto cache_string = nlohmann::json(cache).dump(2);
 
-            io::write_file(paths::get_cache_path(), cache_string);
+            koalabox::io::write_file(paths::get_cache_path(), cache_string);
         } catch (const Exception& e) {
-            logger->error("{} -> Failed to write cache to disk: {}", __func__, e.what());
+            LOG_ERROR("{} -> Failed to write cache to disk: {}", __func__, e.what())
         }
     }
 
@@ -52,7 +55,7 @@ namespace cache {
     }
 
     void save_dlc_ids(AppId_t app_id, const Vector<AppId_t>& dlc_ids) {
-        logger->debug("{} -> Caching DLC IDs for the app: {}", __func__, app_id);
+        LOG_DEBUG("{} -> Caching DLC IDs for the app: {}", __func__, app_id)
 
         auto cache = read_cache_from_disk();
 
@@ -68,7 +71,7 @@ namespace cache {
     }
 
     void save_koalageddon_config(const koalageddon::KoalageddonConfig& config) {
-        logger->debug("{} -> Caching koalageddon config", __func__);
+        LOG_DEBUG("{} -> Caching koalageddon config", __func__)
 
         auto cache = read_cache_from_disk();
 

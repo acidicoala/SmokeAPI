@@ -1,10 +1,11 @@
-#include <koalabox/loader.hpp>
 #include <core/paths.hpp>
 #include <core/globals.hpp>
+#include <koalabox/loader.hpp>
 
 namespace paths {
+
     Path get_self_path() {
-        static const auto path = loader::get_module_dir(globals::smokeapi_handle);
+        static const auto path = koalabox::loader::get_module_dir(globals::smokeapi_handle);
         return path;
     }
 
@@ -22,4 +23,5 @@ namespace paths {
         static const auto path = get_self_path() / "SmokeAPI.log.log";
         return path;
     }
+
 }

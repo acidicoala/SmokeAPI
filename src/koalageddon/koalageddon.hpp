@@ -1,12 +1,9 @@
 #pragma once
 
-#include <koalabox/koalabox.hpp>
-#include <core/macros.hpp>
+#include <koalabox/types.hpp>
 #include <nlohmann/json.hpp>
 
 namespace koalageddon {
-    using namespace koalabox;
-
     // Offset values are interpreted according to pointer arithmetic rules, i.e.
     // 1 unit offset represents 4 and 8 bytes in 32-bit and 64-bit architectures respectively.
     struct KoalageddonConfig {
@@ -37,7 +34,4 @@ namespace koalageddon {
 
     void init();
 
-    namespace steamclient {
-        void init(uintptr_t interface_selector_address);
-    }
 }
