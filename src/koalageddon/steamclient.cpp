@@ -157,8 +157,8 @@ namespace koalageddon::steamclient {
             &instruction
         ))) {
             LOG_TRACE(
-                "{} -> Visiting {} | {}",
-                __func__, (void*) current_address, *get_instruction_string(instruction, current_address)
+                "{} visiting {} | {}", __func__,
+                (void*) current_address, *get_instruction_string(instruction, current_address)
             )
 
             const auto& last_instruction = instruction_list.front();
@@ -255,10 +255,7 @@ namespace koalageddon::steamclient {
                     if (offset && is_derived_from_base_reg) {
                         const auto ordinal = *offset / sizeof(uintptr_t);
 
-                        LOG_DEBUG(
-                            "{} -> Found function ordinal {}::{}@{}",
-                            __func__, target_interface, *context.function_name, ordinal
-                        )
+                        LOG_DEBUG("Found function ordinal {}::{}@{}", target_interface, *context.function_name, ordinal)
 
                         map[*context.function_name] = ordinal;
                         break;
@@ -325,10 +322,10 @@ namespace koalageddon::steamclient {
         const uintptr_t start_address,
         Set<uintptr_t>& visited_addresses
     ) {
-        LOG_TRACE("{} -> start_address: {}", __func__, (void*) start_address)
+        LOG_TRACE("start_address: {}", (void*) start_address)
 
         if (visited_addresses.contains(start_address)) {
-            LOG_TRACE("{} -> Breaking recursion due to visited address", __func__)
+            LOG_TRACE("Breaking recursion due to visited address")
             return;
         }
 
@@ -343,8 +340,8 @@ namespace koalageddon::steamclient {
         ))) {
             visited_addresses.insert(current_address);
             LOG_TRACE(
-                "{} -> Visiting {} | {}",
-                __func__, (void*) current_address, *get_instruction_string(instruction, current_address)
+                "{} visiting {} | {}", __func__,
+                (void*) current_address, *get_instruction_string(instruction, current_address)
             )
 
             const auto operand = instruction.operands[0];
@@ -352,7 +349,7 @@ namespace koalageddon::steamclient {
             if (instruction.mnemonic == ZYDIS_MNEMONIC_CALL &&
                 operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE
                 ) {
-                LOG_TRACE("{} -> Found call instruction at {}", __func__, (void*) current_address)
+                LOG_TRACE("Found call instruction at {}", (void*) current_address)
 
                 const auto function_selector_address = get_absolute_address(instruction, current_address);
 
@@ -375,7 +372,7 @@ namespace koalageddon::steamclient {
                 process_interface_selector(jump_taken_destination, visited_addresses);
                 process_interface_selector(jump_not_taken_destination, visited_addresses);
 
-                LOG_TRACE("breaking recursion due to conditional branch")
+                LOG_TRACE("Breaking recursion due to conditional branch")
                 return;
             } else if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
                        operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE
@@ -384,7 +381,7 @@ namespace koalageddon::steamclient {
 
                 process_interface_selector(jump_destination, visited_addresses);
 
-                LOG_TRACE("breaking recursion due to unconditional branch")
+                LOG_TRACE("Breaking recursion due to unconditional branch")
                 return;
             } else if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
                        operand.type == ZYDIS_OPERAND_TYPE_MEMORY &&
@@ -403,7 +400,7 @@ namespace koalageddon::steamclient {
 
                 return;
             } else if (instruction.mnemonic == ZYDIS_MNEMONIC_RET) {
-                LOG_TRACE("{} -> Breaking recursion due to return instruction", __func__)
+                LOG_TRACE("Breaking recursion due to return instruction")
                 return;
             }
 
@@ -419,7 +416,7 @@ namespace koalageddon::steamclient {
             koalageddon::config.steam_client_internal_interface_selector_ordinal
         ];
 
-        LOG_DEBUG("Found interface selector at: {}", (void*) interface_selector_address);
+        LOG_DEBUG("Found interface selector at: {}", (void*) interface_selector_address)
 
         if (ZYAN_FAILED(ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LEGACY_32, ZYDIS_ADDRESS_WIDTH_32))) {
             LOG_ERROR("Failed to initialize zydis decoder")

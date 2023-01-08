@@ -6,7 +6,6 @@
 #include <steam_functions/steam_functions.hpp>
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/http_client.hpp>
-#include <koalabox/util.hpp>
 #include <koalabox/logger.hpp>
 
 namespace koalageddon {
@@ -56,16 +55,16 @@ namespace koalageddon {
 
     void init() {
         std::thread(
-            []() {
-                const auto kg_config_source = init_koalageddon_config();
-                LOG_INFO("Loaded Koalageddon config from the {}", kg_config_source)
-            }
+        []() {
+            const auto kg_config_source = init_koalageddon_config();
+            LOG_INFO("Loaded Koalageddon config from the {}", kg_config_source)
+        }
         ).detach();
 
         koalabox::dll_monitor::init_listener(
             {VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& module_handle, const String& name) {
                 try {
-                    if (koalabox::util::strings_are_equal(name, VSTDLIB_DLL)) {
+                    if (name < equals > VSTDLIB_DLL) {
                         // VStdLib DLL handles Family Sharing functions
 
                         globals::vstdlib_module = module_handle;
@@ -73,7 +72,7 @@ namespace koalageddon {
                         if (config::instance.unlock_family_sharing) {
                             DETOUR_VSTDLIB(Coroutine_Create)
                         }
-                    } else if (koalabox::util::strings_are_equal(name, STEAMCLIENT_DLL)) {
+                    } else if (name < equals > STEAMCLIENT_DLL) {
                         // SteamClient DLL handles unlocking functions
 
                         globals::steamclient_module = module_handle;

@@ -12,7 +12,7 @@ namespace steam_user {
         const auto result = original_function();
 
         if (result == k_EUserHasLicenseResultNoAuth) {
-            LOG_WARN("{} -> App ID: {}, Result: NoAuth", function_name, appID)
+            LOG_WARN("{} -> App ID: {:>8}, Result: NoAuth", function_name, appID)
             return result;
         }
 
@@ -22,7 +22,7 @@ namespace steam_user {
             }
         );
 
-        LOG_INFO("{} -> App ID: {}, HasLicense: {}", function_name, appID, has_license)
+        LOG_INFO("{} -> App ID: {:>8}, HasLicense: {}", function_name, appID, has_license)
 
         return has_license
                ? k_EUserHasLicenseResultHasLicense

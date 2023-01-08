@@ -8,32 +8,43 @@ using namespace koalageddon;
 namespace koalageddon::vstdlib {
     using namespace koalabox;
 
-    VIRTUAL(bool) SharedLicensesLockStatus(PARAMS(void* arg)) {
-        LOG_DEBUG("{} -> ecx: {}, edx: {}, arg: {}", __func__, ARGS(arg))
-        return true;
-    }
+    VIRTUAL(bool) SharedLicensesLockStatus(PARAMS(void* arg)
+    ) {
+    LOG_DEBUG("{}(this={}, arg={})", __func__, THIS, arg)
+    ARGS();
+    return true;
+}
 
-    VIRTUAL(bool) SharedLibraryStopPlaying(PARAMS(void* arg)) {
-        LOG_DEBUG("{} -> ecx: {}, edx: {}, arg: {}", __func__, ARGS(arg))
-        return true;
-    }
+VIRTUAL(bool) SharedLibraryStopPlaying(PARAMS(void* arg)
+) {
+LOG_DEBUG("{}(this={}, arg={})", __func__, THIS, arg)
+ARGS();
+return true;
+}
 
-    VIRTUAL(void) VStdLib_Callback_Interceptor(PARAMS(const char** name_ptr)) {
-        GET_ORIGINAL_HOOKED_FUNCTION(VStdLib_Callback_Interceptor)
-        VStdLib_Callback_Interceptor_o(ARGS(name_ptr));
+VIRTUAL(void) VStdLib_Callback_Interceptor(PARAMS(const char** name_ptr)
+) {
+GET_ORIGINAL_HOOKED_FUNCTION(VStdLib_Callback_Interceptor)
+VStdLib_Callback_Interceptor_o(ARGS(name_ptr));
 
-        static auto lock_status_hooked = false;
-        static auto stop_playing_hooked = false;
+static auto lock_status_hooked = false;
+static auto stop_playing_hooked = false;
 
-        if (lock_status_hooked && stop_playing_hooked) {
-            return;
-        }
+if (
+lock_status_hooked&& stop_playing_hooked
+) {
+return;
+}
 
-        auto* const data = (CoroutineData*) THIS;
+auto* const data = (CoroutineData*) THIS;
 
-        if (data && data->get_callback_name()) {
-            const auto name = String(data->get_callback_name());
-            LOG_TRACE("{} -> instance: {}, name: '{}'", __func__, fmt::ptr(THIS), name)
+if (
+data&& data
+->
+get_callback_name()
+) {
+const auto name = String(data->get_callback_name());
+LOG_TRACE("{}(ecx={}, edx={}, name={})", __func__, ARGS(), name)
 
             if (name == "SharedLicensesLockStatus" && !lock_status_hooked) {
                 DETOUR_ADDRESS(SharedLicensesLockStatus, data->get_callback_data()->get_callback_address())

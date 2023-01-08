@@ -1,11 +1,14 @@
 #include <steam_functions/steam_functions.hpp>
-#include <koalageddon/steamclient.hpp>
 #include <build_config.h>
 #include <koalabox/hook.hpp>
 #include <koalabox/win_util.hpp>
 #include <koalabox/logger.hpp>
 #include <koalabox/util.hpp>
 #include <polyhook2/Misc.hpp>
+
+#if COMPILE_KOALAGEDDON
+#include <koalageddon/steamclient.hpp>
+#endif
 
 namespace steam_functions {
 
@@ -195,8 +198,7 @@ namespace steam_functions {
                 HOOK_STEAM_INVENTORY(ISteamInventory_GetResultItemProperty)
             }
         } else if (version_string.starts_with(CLIENT_ENGINE)) {
-            // Koalageddon mode
-#ifndef _WIN64
+#if COMPILE_KOALAGEDDON
             koalageddon::steamclient::process_client_engine(reinterpret_cast<uintptr_t>(interface));
 #endif
         } else {

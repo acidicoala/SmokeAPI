@@ -4,16 +4,15 @@
 #include <core/globals.hpp>
 #include <core/paths.hpp>
 #include <steam_functions/steam_functions.hpp>
-#include <koalabox/config_parser.hpp>
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/logger.hpp>
 #include <koalabox/hook.hpp>
 #include <koalabox/cache.hpp>
 #include <koalabox/loader.hpp>
 #include <koalabox/win_util.hpp>
+#include <koalabox/util.hpp>
 
-// TODO: Define COMPILE_KOALAGEDDON in CMake
-#ifndef _WIN64
+#if COMPILE_KOALAGEDDON
 #include <koalageddon/koalageddon.hpp>
 #endif
 
@@ -56,7 +55,7 @@ void init_hook_mode() {
 }
 
 bool is_valve_steam(const String& exe_name) {
-    if (not koalabox::util::strings_are_equal(exe_name, "steam.exe")) {
+    if (exe_name < not_equals > "steam.exe") {
         return false;
     }
 
@@ -71,7 +70,7 @@ bool is_valve_steam(const String& exe_name) {
     }
 
     // Steam.exe manifest is expected to contain this string
-    return manifest->find("valvesoftware.steam.steam") != String::npos;
+    return *manifest < contains > "valvesoftware.steam.steam";
 }
 
 namespace smoke_api {
@@ -90,18 +89,18 @@ namespace smoke_api {
                 koalabox::logger::init_file_logger(paths::get_log_path());
             }
 
-            LOG_INFO("🐨 {} v{}", PROJECT_NAME, PROJECT_VERSION)
+            LOG_INFO("🐨 {} v{} | Compiled at '{}'", PROJECT_NAME, PROJECT_VERSION, __TIMESTAMP__)
 
             const auto exe_path = Path(koalabox::win_util::get_module_file_name_or_throw(nullptr));
             const auto exe_name = exe_path.filename().string();
 
-            LOG_DEBUG(R"(Process name: "{}" [{}-bit])", exe_name, BITNESS)
+            LOG_DEBUG("Process name: '{}' [{}-bit]", exe_name, BITNESS)
 
             if (koalabox::hook::is_hook_mode(globals::smokeapi_handle, STEAMAPI_DLL)) {
                 koalabox::hook::init(true);
 
                 if (is_valve_steam(exe_name)) {
-#ifndef _WIN64
+#if COMPILE_KOALAGEDDON
                     LOG_INFO("🐨💥 Detected Koalageddon mode")
                     koalageddon::init();
 #endif

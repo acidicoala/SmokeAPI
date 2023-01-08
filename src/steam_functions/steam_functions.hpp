@@ -3,7 +3,6 @@
 #include <core/macros.hpp>
 #include <core/types.hpp>
 
-
 // TODO: Refactor into multiple headers
 
 // ISteamClient

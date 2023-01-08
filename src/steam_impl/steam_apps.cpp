@@ -8,6 +8,27 @@
 #include <core/types.hpp>
 
 namespace steam_apps {
+    // TODO: Needs to go to API
+
+    class DLC {
+    private:
+        String appid;
+    public:
+        String name;
+        uint32_t app_id = std::stoi(appid);
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(DLC, appid, name)
+    };
+
+    struct SteamResponse {
+        uint32_t success = 0;
+        Vector<DLC> dlcs;
+
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(SteamResponse, success, dlcs)
+    };
+
+    using GitHubResponse = Map<String, Vector<uint32_t>>;
+
     /// Steamworks may max GetDLCCount value at 64, depending on how much unowned DLCs the user has.
     /// Despite this limit, some games with more than 64 DLCs still keep using this method.
     /// This means we have to get extra DLC IDs from local config, remote config, or cache.
@@ -43,14 +64,14 @@ namespace steam_apps {
                 // TODO: Refactor into api namespace
                 const auto url = fmt::format("https://store.steampowered.com/dlc/{}/ajaxgetdlclist", app_id_str);
                 const auto json = koalabox::http_client::fetch_json(url);
+                const auto response = json.get<SteamResponse>();
 
-                if (json["success"] != 1) {
-                    throw koalabox::util::exception("Web API responded with 'success' != 1");
+                if (response.success != 1) {
+                    throw std::runtime_error("Web API responded with 'success' != 1");
                 }
 
-                for (const auto& dlc: json["dlcs"]) {
-                    const auto app_id = dlc["appid"].get<String>();
-                    dlcs.emplace_back(std::stoi(app_id));
+                for (const auto& dlc: response.dlcs) {
+                    dlcs.emplace_back(dlc.app_id);
                 }
             } catch (const Exception& e) {
                 LOG_ERROR("Failed to fetch dlc list from steam api: {}", e.what())
@@ -66,9 +87,10 @@ namespace steam_apps {
             try {
                 const String url = "https://raw.githubusercontent.com/acidicoala/public-entitlements/main/steam/v1/dlc.json";
                 const auto json = koalabox::http_client::fetch_json(url);
+                const auto response = json.get<GitHubResponse>();
 
-                if (json.contains(app_id_str)) {
-                    dlcs = json[app_id_str].get<decltype(dlcs)>();
+                if (response.contains(app_id_str)) {
+                    dlcs = response.at(app_id_str);
                 }
             } catch (const Exception& e) {
                 LOG_ERROR("Failed to fetch extra dlc list from github api: {}", e.what())
@@ -102,7 +124,7 @@ namespace steam_apps {
     }
 
     String get_app_id_log(const AppId_t app_id) {
-        return app_id ? fmt::format("App ID: {}, ", app_id) : "";
+        return app_id ? fmt::format("App ID: {:>8}, ", app_id) : "";
     }
 
     bool IsDlcUnlocked(
@@ -114,11 +136,11 @@ namespace steam_apps {
         try {
             const auto unlocked = config::is_dlc_unlocked(app_id, dlc_id, original_function);
 
-            LOG_INFO("{} -> {}DLC ID: {}, Unlocked: {}", function_name, get_app_id_log(app_id), dlc_id, unlocked)
+            LOG_INFO("{} -> {}DLC ID: {:>8}, Unlocked: {}", function_name, get_app_id_log(app_id), dlc_id, unlocked)
 
             return unlocked;
         } catch (const Exception& e) {
-            LOG_ERROR("{} -> Uncaught exception: {}", function_name, e.what())
+            LOG_ERROR("Uncaught exception: {}", e.what())
             return false;
         }
     }
@@ -165,7 +187,7 @@ namespace steam_apps {
 
             return total_count(injected_count + cached_count);
         } catch (const Exception& e) {
-            LOG_ERROR("{} -> Uncaught exception: {}", function_name, e.what())
+            LOG_ERROR(" Uncaught exception: {}", function_name, e.what())
             return 0;
         }
     }
@@ -183,7 +205,7 @@ namespace steam_apps {
         try {
             const auto print_dlc_info = [&](const String& tag) {
                 LOG_INFO(
-                    "{} -> [{}] {}index: {}, DLC ID: {}, available: {}, name: '{}'",
+                    "{} -> [{:12}] {}index: {:>3}, DLC ID: {:>8}, available: {:5}, name: '{}'",
                     function_name, tag, get_app_id_log(app_id), iDLC, *pDlcId, *pbAvailable, pchName
                 )
             };

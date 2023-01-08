@@ -1,13 +1,22 @@
 #include <core/config.hpp>
 #include <core/paths.hpp>
-#include <koalabox/config_parser.hpp>
+#include <koalabox/json.hpp>
+#include <koalabox/util.hpp>
 
 namespace config {
     Config instance; // NOLINT(cert-err58-cpp)
 
     // TODO: Reloading via export
     void init() {
-        instance = koalabox::config_parser::parse<Config>(paths::get_config_path());
+        const auto path = paths::get_config_path();
+
+        if (exists(path)) {
+            try {
+                instance = Json(path).get<Config>();
+            } catch (const Exception& e) {
+                koalabox::util::panic("Error parsing config: {}", e.what());
+            }
+        }
     }
 
     AppStatus get_app_status(uint32_t app_id) {

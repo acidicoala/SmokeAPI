@@ -2,7 +2,11 @@
 
 #include <koalabox/core.hpp>
 
-#define COMPILE_KOALAGEDDON _WIN64
+#ifdef _WIN64
+#define COMPILE_KOALAGEDDON 0
+#else
+#define COMPILE_KOALAGEDDON 1
+#endif
 
 using AppId_t = uint32_t;
 using SteamInventoryResult_t = uint32_t;

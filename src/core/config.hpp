@@ -1,6 +1,7 @@
 #pragma once
 
 #include <koalabox/core.hpp>
+#include <koalabox/json.hpp>
 
 namespace config {
     enum class AppStatus {
@@ -44,7 +45,8 @@ namespace config {
         Json koalageddon_config;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(
-            Config, $version, // NOLINT(misc-const-correctness)
+            Config, // NOLINT(misc-const-correctness)
+            $version,
             logging,
             unlock_family_sharing,
             default_app_status,

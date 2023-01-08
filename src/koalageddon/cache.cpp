@@ -8,11 +8,11 @@ namespace koalageddon::cache {
 
     std::optional<KoalageddonConfig> get_koalageddon_config() {
         try {
-            const auto cache = koalabox::cache::read_from_cache(KEY_KG_CONFIG).value();
+            const auto cache = koalabox::cache::read_from_cache(KEY_KG_CONFIG);
 
-            return cache.at(KEY_KG_CONFIG).get<KoalageddonConfig>();
+            return cache[KEY_KG_CONFIG].get<KoalageddonConfig>();
         } catch (const Exception& e) {
-            LOG_ERROR("{} -> Failed to get cached koalageddon config: {}", __func__, e.what())
+            LOG_ERROR("Failed to get cached koalageddon config: {}", e.what())
 
             return std::nullopt;
         }
@@ -20,11 +20,11 @@ namespace koalageddon::cache {
 
     bool save_koalageddon_config(const KoalageddonConfig& config) {
         try {
-            LOG_DEBUG("{} -> Caching koalageddon config", __func__)
+            LOG_DEBUG("Caching koalageddon config")
 
-            return koalabox::cache::save_to_cache(KEY_KG_CONFIG, config);
+            return koalabox::cache::save_to_cache(KEY_KG_CONFIG, Json(config));
         } catch (const Exception& e) {
-            LOG_ERROR("{} -> Failed to cache koalageddon config: {}", __func__, e.what())
+            LOG_ERROR("Failed to cache koalageddon config: {}", e.what())
 
             return false;
         }

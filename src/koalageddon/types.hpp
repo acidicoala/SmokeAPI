@@ -1,6 +1,7 @@
 #pragma once
 
 #include <koalabox/core.hpp>
+#include <koalabox/json.hpp>
 
 // Offset values are interpreted according to pointer arithmetic rules, i.e.
 // 1 unit offset represents 4 and 8 bytes in 32-bit and 64-bit architectures respectively.
