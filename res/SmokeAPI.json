@@ -14,16 +14,14 @@
     "16384": "original"
   },
   "extra_dlcs": {
-    "extra_dlcs": {
-      "1234": {
-        "dlcs": {
-          "56789": "Example DLC 1"
-        }
-      },
-      "4321": {
-        "dlcs": {
-          "98765": "Example DLC 2"
-        }
+    "1234": {
+      "dlcs": {
+        "56789": "Example DLC 1"
+      }
+    },
+    "4321": {
+      "dlcs": {
+        "98765": "Example DLC 2"
       }
     }
   },

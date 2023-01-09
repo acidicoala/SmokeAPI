@@ -1,5 +1,5 @@
+#include <steam_api_virtuals/steam_api_virtuals.hpp>
 #include <steam_impl/steam_apps.hpp>
-#include <core/macros.hpp>
 
 VIRTUAL(bool) ISteamApps_BIsSubscribedApp(PARAMS(AppId_t appID)) {
     return steam_apps::IsDlcUnlocked(

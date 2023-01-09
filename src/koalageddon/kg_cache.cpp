@@ -1,10 +1,10 @@
-#include <koalageddon/cache.hpp>
+#include <koalageddon/kg_cache.hpp>
 #include <koalabox/cache.hpp>
 #include <koalabox/logger.hpp>
 
 constexpr auto KEY_KG_CONFIG = "koalageddon_config";
 
-namespace koalageddon::cache {
+namespace koalageddon::kg_cache {
 
     std::optional<KoalageddonConfig> get_koalageddon_config() {
         try {

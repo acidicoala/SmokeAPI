@@ -1,8 +1,8 @@
 #pragma once
 
-#include <koalageddon/types.hpp>
+#include <koalageddon/koalageddon.hpp>
 
-namespace koalageddon::cache {
+namespace koalageddon::kg_cache {
 
     std::optional<KoalageddonConfig> get_koalageddon_config();
 

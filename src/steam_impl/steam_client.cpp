@@ -1,6 +1,6 @@
 #include <steam_impl/steam_client.hpp>
+#include <steam_impl/steam_impl.hpp>
 #include <koalabox/logger.hpp>
-#include <steam_functions/steam_functions.hpp>
 
 namespace steam_client {
 
@@ -13,7 +13,7 @@ namespace steam_client {
 
         LOG_DEBUG("{} -> '{}' @ {}", function_name, interface_version, interface)
 
-        steam_functions::hook_virtuals(interface, interface_version);
+        steam_impl::hook_virtuals(interface, interface_version);
 
         return interface;
     }

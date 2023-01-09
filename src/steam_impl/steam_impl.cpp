@@ -1,4 +1,7 @@
-#include <steam_functions/steam_functions.hpp>
+#include <steam_impl/steam_impl.hpp>
+#include <steam_api_virtuals/steam_api_virtuals.hpp>
+#include <steam_api_exports/steam_api_exports.hpp>
+#include <core/globals.hpp>
 #include <build_config.h>
 #include <koalabox/hook.hpp>
 #include <koalabox/win_util.hpp>
@@ -7,10 +10,10 @@
 #include <polyhook2/Misc.hpp>
 
 #if COMPILE_KOALAGEDDON
-#include <koalageddon/steamclient.hpp>
+#include <koalageddon/steamclient/steamclient.hpp>
 #endif
 
-namespace steam_functions {
+namespace steam_impl {
 
     typedef Map<String, Map<int, int>> FunctionOrdinalMap;
 
@@ -19,7 +22,7 @@ namespace steam_functions {
             {
                 {6,  16},
                 {7,  18},
-                {8,  15},
+                {8, 15},
                 {9, 16},
                 {12, 15},
             }
@@ -105,7 +108,7 @@ namespace steam_functions {
 
             return version_number;
         } catch (const std::exception& ex) {
-            util::panic("Failed to extract version number from: '{}'", version_string);
+            koalabox::util::panic("Failed to extract version number from: '{}'", version_string);
         }
     }
 
@@ -120,11 +123,11 @@ namespace steam_functions {
             }
         }
 
-        util::panic("Invalid interface version ({}) for function {}", interface_version, function_name);
+        koalabox::util::panic("Invalid interface version ({}) for function {}", interface_version, function_name);
     }
 
 #define HOOK_VIRTUALS(MAP, FUNC) \
-    hook::swap_virtual_func( \
+    koalabox::hook::swap_virtual_func( \
         globals::address_map, \
         interface,      \
         #FUNC, \
@@ -209,14 +212,14 @@ namespace steam_functions {
     }
 
     HSteamPipe get_steam_pipe_or_throw() {
-        const auto& steam_api_module = win_util::get_module_handle_or_throw(STEAMAPI_DLL);
+        const auto& steam_api_module = koalabox::win_util::get_module_handle_or_throw(STEAMAPI_DLL);
         void* GetHSteamPipe_address;
         try {
-            GetHSteamPipe_address = (void*) win_util::get_proc_address_or_throw(
+            GetHSteamPipe_address = (void*) koalabox::win_util::get_proc_address_or_throw(
                 steam_api_module, "SteamAPI_GetHSteamPipe"
             );
         } catch (const Exception& ex) {
-            GetHSteamPipe_address = (void*) win_util::get_proc_address_or_throw(
+            GetHSteamPipe_address = (void*) koalabox::win_util::get_proc_address_or_throw(
                 steam_api_module, "GetHSteamPipe"
             );
         }
@@ -245,8 +248,8 @@ namespace steam_functions {
 
     AppId_t get_app_id_or_throw() {
         // Get CreateInterface
-        const auto& steam_client_module = win_util::get_module_handle_or_throw(STEAMCLIENT_DLL);
-        auto* CreateInterface_address = (void*) win_util::get_proc_address_or_throw(
+        const auto& steam_client_module = koalabox::win_util::get_module_handle_or_throw(STEAMCLIENT_DLL);
+        auto* CreateInterface_address = (void*) koalabox::win_util::get_proc_address_or_throw(
             steam_client_module, "CreateInterface"
         );
         auto* CreateInterface_o = PLH::FnCast(CreateInterface_address, CreateInterface);
@@ -255,7 +258,7 @@ namespace steam_functions {
         int result;
         auto* i_steam_client = CreateInterface_o("SteamClient006", &result);
         if (i_steam_client == nullptr) {
-            throw util::exception("Failed to obtain SteamClient006 interface. Result: {}", result);
+            throw koalabox::util::exception("Failed to obtain SteamClient006 interface. Result: {}", result);
         }
 
         // Get GetISteamUtils

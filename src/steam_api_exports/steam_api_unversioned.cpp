@@ -1,12 +1,9 @@
+#include <steam_api_exports/steam_api_exports.hpp>
 #include <steam_impl/steam_client.hpp>
-#include <core/macros.hpp>
 #include <koalabox/logger.hpp>
 #include <koalabox/win_util.hpp>
 #include <koalabox/util.hpp>
-#include <steam_functions/steam_functions.hpp>
 #include <regex>
-
-using namespace koalabox;
 
 /**
  * Searches the `.rdata` section of the original dll for the full interface version string
@@ -17,7 +14,7 @@ String get_versioned_interface(const String& version_prefix, const String& fallb
 
     if (not version_map.contains(version_prefix)) {
         try {
-            const String rdata = win_util::get_pe_section_data_or_throw(globals::steamapi_module, ".rdata");
+            const String rdata = koalabox::win_util::get_pe_section_data_or_throw(globals::steamapi_module, ".rdata");
 
             const std::regex regex(version_prefix + "\\d{3}");
             std::smatch match;
@@ -26,7 +23,7 @@ String get_versioned_interface(const String& version_prefix, const String& fallb
                 return version_map[version_prefix];
             }
 
-            throw util::exception("No match found for '{}'", version_prefix);
+            throw koalabox::util::exception("No match found for '{}'", version_prefix);
         } catch (const Exception& ex) {
             LOG_ERROR(
                 "Failed to get versioned interface: {}."
@@ -41,7 +38,7 @@ String get_versioned_interface(const String& version_prefix, const String& fallb
 }
 
 DLL_EXPORT(void*) SteamClient() {
-    static auto version = get_versioned_interface(steam_functions::STEAM_CLIENT, "006");
+    static auto version = get_versioned_interface(STEAM_CLIENT, "006");
 
     return steam_client::GetGenericInterface(
         __func__, version, [&]() {
@@ -53,7 +50,7 @@ DLL_EXPORT(void*) SteamClient() {
 }
 
 DLL_EXPORT(void*) SteamApps() {
-    static auto version = get_versioned_interface(steam_functions::STEAM_APPS, "002");
+    static auto version = get_versioned_interface(STEAM_APPS, "002");
 
     return steam_client::GetGenericInterface(
         __func__, version, [&]() {
@@ -65,7 +62,7 @@ DLL_EXPORT(void*) SteamApps() {
 }
 
 DLL_EXPORT(void*) SteamUser() {
-    static auto version = get_versioned_interface(steam_functions::STEAM_USER, "012");
+    static auto version = get_versioned_interface(STEAM_USER, "012");
 
     return steam_client::GetGenericInterface(
         __func__, version, [&]() {
@@ -77,7 +74,7 @@ DLL_EXPORT(void*) SteamUser() {
 }
 
 DLL_EXPORT(void*) SteamInventory() {
-    static auto version = get_versioned_interface(steam_functions::STEAM_INVENTORY, "001");
+    static auto version = get_versioned_interface(STEAM_INVENTORY, "001");
 
     return steam_client::GetGenericInterface(
         __func__, version, [&]() {

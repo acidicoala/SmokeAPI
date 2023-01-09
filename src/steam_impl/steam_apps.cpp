@@ -1,23 +1,13 @@
 #include <steam_impl/steam_apps.hpp>
-#include <koalabox/http_client.hpp>
+#include <steam_impl/steam_impl.hpp>
 #include <smoke_api/app_cache.hpp>
-#include <core/config.hpp>
+#include <smoke_api/config.hpp>
 #include <koalabox/logger.hpp>
 #include <koalabox/util.hpp>
-#include <steam_functions/steam_functions.hpp>
 #include <core/types.hpp>
-#include <utility>
+#include <core/api.hpp>
 
 namespace steam_apps {
-    // TODO: Needs to go to API
-
-    struct SteamResponse {
-        uint32_t success = 0;
-        Vector<DLC> dlcs;
-
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(SteamResponse, success, dlcs) // NOLINT(misc-const-correctness)
-    };
-
     /// Steamworks may max GetDLCCount value at 64, depending on how much unowned DLCs the user has.
     /// Despite this limit, some games with more than 64 DLCs still keep using this method.
     /// This means we have to get extra DLC IDs from local config, remote config, or cache.
@@ -26,38 +16,8 @@ namespace steam_apps {
     Map<AppId_t, Vector<DLC>> app_dlcs; // NOLINT(cert-err58-cpp)
     Set<AppId_t> fully_fetched; // NOLINT(cert-err58-cpp)
 
-    std::optional<Vector<DLC>> fetch_from_github(AppId_t app_id) noexcept {
-        try {
-            const auto* url
-                = "https://raw.githubusercontent.com/acidicoala/public-entitlements/main/steam/v2/dlc.json";
-            const auto json = koalabox::http_client::fetch_json(url);
-            const auto response = json.get<AppDlcNameMap>();
-
-            return DLC::get_dlcs_from_apps(response, app_id);
-        } catch (const Json::exception& e) {
-            LOG_ERROR("Failed to fetch dlc list from GitHub: {}", e.what())
-            return std::nullopt;
-        }
-    }
-
-    std::optional<Vector<DLC>> fetch_from_steam(AppId_t app_id) noexcept {
-        try {
-            const auto url = fmt::format("https://store.steampowered.com/dlc/{}/ajaxgetdlclist", app_id);
-            const auto json = koalabox::http_client::fetch_json(url);
-
-            LOG_TRACE("Steam response: \n{}", json.dump(2))
-
-            const auto response = json.get<SteamResponse>();
-
-            if (response.success != 1) {
-                throw std::runtime_error("Web API responded with 'success' != 1");
-            }
-
-            return response.dlcs;
-        } catch (const Exception& e) {
-            LOG_ERROR("Failed to fetch dlc list from Steam: {}", e.what())
-            return std::nullopt;
-        }
+    String get_app_id_log(const AppId_t app_id) {
+        return app_id ? fmt::format("App ID: {:>8}, ", app_id) : "";
     }
 
     /**
@@ -72,7 +32,7 @@ namespace steam_apps {
             // No app id means we are operating in game mode.
             // Hence, we need to use utility functions to get app id.
             try {
-                app_id = steam_functions::get_app_id_or_throw();
+                app_id = steam_impl::get_app_id_or_throw();
                 LOG_INFO("Detected App ID: {}", app_id)
             } catch (const Exception& ex) {
                 LOG_ERROR("Failed to get app ID: {}", ex.what())
@@ -96,19 +56,19 @@ namespace steam_apps {
             aggregated_dlcs < append > source;
         };
 
-        append_dlcs(config::get_extra_dlcs(app_id), "local config");
+        append_dlcs(smoke_api::config::get_extra_dlcs(app_id), "local config");
 
-        const auto github_dlcs = fetch_from_github(app_id);
-        if (github_dlcs) {
-            append_dlcs(*github_dlcs, "GitHub repository");
+        const auto github_dlcs_opt = api::fetch_dlcs_from_github(app_id);
+        if (github_dlcs_opt) {
+            append_dlcs(*github_dlcs_opt, "GitHub repository");
         }
 
-        const auto steam_dlcs = fetch_from_steam(app_id);
-        if (steam_dlcs) {
-            append_dlcs(*steam_dlcs, "Steam API");
+        const auto steam_dlcs_opt = api::fetch_dlcs_from_steam(app_id);
+        if (steam_dlcs_opt) {
+            append_dlcs(*steam_dlcs_opt, "Steam API");
         }
 
-        if (github_dlcs && steam_dlcs) {
+        if (github_dlcs_opt && steam_dlcs_opt) {
             fully_fetched.insert(app_id);
         } else {
             append_dlcs(smoke_api::app_cache::get_dlcs(app_id), "disk cache");
@@ -121,10 +81,6 @@ namespace steam_apps {
         smoke_api::app_cache::save_dlcs(app_id, aggregated_dlcs);
     }
 
-    String get_app_id_log(const AppId_t app_id) {
-        return app_id ? fmt::format("App ID: {:>8}, ", app_id) : "";
-    }
-
     bool IsDlcUnlocked(
         const String& function_name,
         AppId_t app_id,
@@ -132,7 +88,7 @@ namespace steam_apps {
         const Function<bool()>& original_function
     ) {
         try {
-            const auto unlocked = config::is_dlc_unlocked(app_id, dlc_id, original_function);
+            const auto unlocked = smoke_api::config::is_dlc_unlocked(app_id, dlc_id, original_function);
 
             LOG_INFO("{} -> {}DLC ID: {:>8}, Unlocked: {}", function_name, get_app_id_log(app_id), dlc_id, unlocked)
 
@@ -196,7 +152,7 @@ namespace steam_apps {
             const auto inject_dlc = [&](const DLC& dlc) {
                 // Fill the output pointers
                 *pDlcId = dlc.get_id();
-                *pbAvailable = config::is_dlc_unlocked(
+                *pbAvailable = smoke_api::config::is_dlc_unlocked(
                     app_id, *pDlcId, [&]() {
                         return is_originally_unlocked(*pDlcId);
                     }
@@ -223,7 +179,9 @@ namespace steam_apps {
             const auto success = original_function();
 
             if (success) {
-                *pbAvailable = config::is_dlc_unlocked(app_id, *pDlcId, [&]() { return *pbAvailable; });
+                *pbAvailable = smoke_api::config::is_dlc_unlocked(
+                    app_id, *pDlcId, [&]() { return *pbAvailable; }
+                );
                 print_dlc_info("original");
             } else {
                 LOG_WARN("{} -> original call failed for index: {}", function_name, iDLC)

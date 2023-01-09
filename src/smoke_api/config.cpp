@@ -1,9 +1,9 @@
-#include <core/config.hpp>
+#include <smoke_api/config.hpp>
 #include <core/paths.hpp>
 #include <koalabox/util.hpp>
 #include <koalabox/io.hpp>
 
-namespace config {
+namespace smoke_api::config {
     Config instance; // NOLINT(cert-err58-cpp)
 
     // TODO: Reloading via export

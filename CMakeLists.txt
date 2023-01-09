@@ -35,19 +35,21 @@ configure_build_config(extra_build_config)
 
 set(
     SMOKE_API_SOURCES
-    src/core/config.cpp
-    src/core/config.hpp
+    src/core/api.cpp
+    src/core/api.hpp
     src/core/globals.cpp
     src/core/globals.hpp
-    src/core/macros.hpp
     src/core/paths.cpp
     src/core/paths.hpp
     src/core/types.cpp
     src/core/types.hpp
-    src/smoke_api/smoke_api.cpp
-    src/smoke_api/smoke_api.hpp
     src/smoke_api/app_cache.cpp
     src/smoke_api/app_cache.hpp
+    src/smoke_api/config.cpp
+    src/smoke_api/config.hpp
+    src/smoke_api/smoke_api.cpp
+    src/smoke_api/smoke_api.hpp
+    src/steam_api_exports/steam_api_exports.hpp
     src/steam_api_exports/steam_api_flat.cpp
     src/steam_api_exports/steam_api_internal.cpp
     src/steam_api_exports/steam_api_unversioned.cpp
@@ -55,6 +57,7 @@ set(
     src/steam_api_virtuals/isteamclient.cpp
     src/steam_api_virtuals/isteaminventory.cpp
     src/steam_api_virtuals/isteamuser.cpp
+    src/steam_api_virtuals/steam_api_virtuals.hpp
     src/steam_impl/steam_apps.cpp
     src/steam_impl/steam_apps.hpp
     src/steam_impl/steam_client.cpp
@@ -63,8 +66,8 @@ set(
     src/steam_impl/steam_inventory.hpp
     src/steam_impl/steam_user.cpp
     src/steam_impl/steam_user.hpp
-    src/steam_functions/steam_functions.cpp
-    src/steam_functions/steam_functions.hpp
+    src/steam_impl/steam_impl.cpp
+    src/steam_impl/steam_impl.hpp
     src/steamclient_exports/steamclient.cpp
     src/main.cpp
     ${GENERATED_LINKER_EXPORTS}
@@ -74,20 +77,18 @@ set(
 if (CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(
         SMOKE_API_SOURCES ${SMOKE_API_SOURCES}
-        src/koalageddon/cache.hpp
-        src/koalageddon/cache.cpp
+        src/koalageddon/kg_cache.hpp
+        src/koalageddon/kg_cache.cpp
         src/koalageddon/koalageddon.hpp
         src/koalageddon/koalageddon.cpp
-        src/koalageddon/steamclient.cpp
-        src/koalageddon/steamclient.hpp
-        src/koalageddon/types.hpp
         src/koalageddon/vstdlib.cpp
         src/koalageddon/vstdlib.hpp
-        # TODO: Move to koalageddon package
-        src/steamclient_virtuals/client_app_manager.cpp
-        src/steamclient_virtuals/client_apps.cpp
-        src/steamclient_virtuals/client_inventory.cpp
-        src/steamclient_virtuals/client_user.cpp
+        src/koalageddon/steamclient/client_app_manager.cpp
+        src/koalageddon/steamclient/client_apps.cpp
+        src/koalageddon/steamclient/client_inventory.cpp
+        src/koalageddon/steamclient/client_user.cpp
+        src/koalageddon/steamclient/steamclient.cpp
+        src/koalageddon/steamclient/steamclient.hpp
     )
 endif ()
 

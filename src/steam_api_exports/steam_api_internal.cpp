@@ -1,9 +1,5 @@
-#include <core/macros.hpp>
-#include <core/types.hpp>
+#include <steam_api_exports/steam_api_exports.hpp>
 #include <steam_impl/steam_client.hpp>
-#include <koalabox/hook.hpp>
-
-using namespace koalabox;
 
 DLL_EXPORT(void*) SteamInternal_FindOrCreateUserInterface(HSteamUser hSteamUser, const char* version) {
     return steam_client::GetGenericInterface(

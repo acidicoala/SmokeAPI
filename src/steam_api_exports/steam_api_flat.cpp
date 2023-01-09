@@ -1,12 +1,8 @@
-#include <core/macros.hpp>
-#include <core/types.hpp>
+#include <steam_api_exports/steam_api_exports.hpp>
 #include <steam_impl/steam_apps.hpp>
 #include <steam_impl/steam_client.hpp>
 #include <steam_impl/steam_inventory.hpp>
 #include <steam_impl/steam_user.hpp>
-#include <steam_functions/steam_functions.hpp>
-
-using namespace koalabox;
 
 // ISteamApps
 

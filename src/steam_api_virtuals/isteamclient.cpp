@@ -1,5 +1,5 @@
+#include <steam_api_virtuals/steam_api_virtuals.hpp>
 #include <steam_impl/steam_client.hpp>
-#include <steam_functions/steam_functions.hpp>
 
 VIRTUAL(void*) ISteamClient_GetISteamApps(
     PARAMS(

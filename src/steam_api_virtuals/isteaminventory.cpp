@@ -1,5 +1,5 @@
+#include <steam_api_virtuals/steam_api_virtuals.hpp>
 #include <steam_impl/steam_inventory.hpp>
-#include <steam_functions/steam_functions.hpp>
 
 VIRTUAL(EResult) ISteamInventory_GetResultStatus(PARAMS(SteamInventoryResult_t resultHandle)) {
     return steam_inventory::GetResultStatus(

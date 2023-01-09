@@ -1,9 +1,8 @@
 #include <smoke_api/smoke_api.hpp>
 #include <build_config.h>
-#include <core/config.hpp>
+#include <smoke_api/config.hpp>
 #include <core/globals.hpp>
 #include <core/paths.hpp>
-#include <steam_functions/steam_functions.hpp>
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/logger.hpp>
 #include <koalabox/hook.hpp>
@@ -11,6 +10,7 @@
 #include <koalabox/loader.hpp>
 #include <koalabox/win_util.hpp>
 #include <koalabox/util.hpp>
+#include <steam_api_exports/steam_api_exports.hpp>
 
 #if COMPILE_KOALAGEDDON
 #include <koalageddon/koalageddon.hpp>

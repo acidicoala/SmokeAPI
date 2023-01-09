@@ -1,5 +1,4 @@
 #include <koalageddon/vstdlib.hpp>
-#include <core/macros.hpp>
 #include <koalabox/hook.hpp>
 #include <koalabox/logger.hpp>
 

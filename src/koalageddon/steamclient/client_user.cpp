@@ -1,4 +1,4 @@
-#include <core/macros.hpp>
+#include <koalageddon/steamclient/steamclient.hpp>
 #include <steam_impl/steam_apps.hpp>
 
 VIRTUAL(bool) IClientUser_BIsSubscribedApp(PARAMS(AppId_t app_id)) {

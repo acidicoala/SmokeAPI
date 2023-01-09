@@ -3,8 +3,7 @@
 #include <core/types.hpp>
 #include <koalabox/core.hpp>
 
-// TODO: move to smoke_api namespace
-namespace config {
+namespace smoke_api::config {
     enum class AppStatus {
         LOCKED,
         UNLOCKED,

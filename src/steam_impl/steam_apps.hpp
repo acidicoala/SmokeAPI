@@ -1,7 +1,6 @@
 #pragma once
 
 #include <core/types.hpp>
-#include <koalabox/core.hpp>
 
 namespace steam_apps {
 

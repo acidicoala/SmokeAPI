@@ -1,8 +1,9 @@
+#include <koalageddon/steamclient/steamclient.hpp>
 #include <koalageddon/koalageddon.hpp>
-#include <steam_functions/steam_functions.hpp>
 #include <koalabox/hook.hpp>
 #include <koalabox/logger.hpp>
 #include <koalabox/util.hpp>
+
 #include <Zydis/Zydis.h>
 #include <Zydis/DecoderTypes.h>
 
@@ -85,9 +86,9 @@ namespace koalageddon::steamclient {
         const auto& operand = instruction.operands[0];
 
         return instruction.mnemonic == ZYDIS_MNEMONIC_PUSH &&
-               operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE &&
-               operand.visibility == ZYDIS_OPERAND_VISIBILITY_EXPLICIT &&
-               operand.encoding == ZYDIS_OPERAND_ENCODING_SIMM16_32_32;
+            operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE &&
+            operand.visibility == ZYDIS_OPERAND_VISIBILITY_EXPLICIT &&
+            operand.encoding == ZYDIS_OPERAND_ENCODING_SIMM16_32_32;
     }
 
     std::optional<String> get_string_argument(const ZydisDecodedInstruction& instruction) {
@@ -141,9 +142,9 @@ namespace koalageddon::steamclient {
 
         const auto is_mov_base_esp = [](const ZydisDecodedInstruction& instruction) {
             return instruction.mnemonic == ZYDIS_MNEMONIC_MOV &&
-                   instruction.operand_count == 2 &&
-                   instruction.operands[0].type == ZYDIS_OPERAND_TYPE_REGISTER &&
-                   instruction.operands[1].reg.value == ZYDIS_REGISTER_ESP;
+                instruction.operand_count == 2 &&
+                instruction.operands[0].type == ZYDIS_OPERAND_TYPE_REGISTER &&
+                instruction.operands[1].reg.value == ZYDIS_REGISTER_ESP;
         };
 
         // Initialize with a dummy previous instruction
@@ -158,7 +159,7 @@ namespace koalageddon::steamclient {
             &instruction
         ))) {
             LOG_TRACE(
-                "{} visiting {} | {}", __func__,
+                "{} visiting {} │ {}", __func__,
                 (void*) current_address, *get_instruction_string(instruction, current_address)
             )
 
@@ -168,8 +169,8 @@ namespace koalageddon::steamclient {
                 // Save base register
                 context.base_register = instruction.operands[0].reg.value;
             } else if (is_push_immediate(last_instruction) &&
-                       is_push_immediate(instruction) &&
-                       !context.function_name) {
+                is_push_immediate(instruction) &&
+                !context.function_name) {
                 // The very first 2 consecutive pushes indicate interface and function names.
                 // However, subsequent pushes may contain irrelevant strings.
                 const auto push_string_1 = get_string_argument(last_instruction);
@@ -198,7 +199,7 @@ namespace koalageddon::steamclient {
                 // But not continue forward, in order to avoid duplicate processing
                 return;
             } else if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
-                       instruction.operands[0].type == ZYDIS_OPERAND_TYPE_IMMEDIATE) {
+                instruction.operands[0].type == ZYDIS_OPERAND_TYPE_IMMEDIATE) {
                 // On unconditional jump we should recurse as well
                 const auto jump_destination = get_absolute_address(instruction, current_address);
 
@@ -341,7 +342,7 @@ namespace koalageddon::steamclient {
         ))) {
             visited_addresses.insert(current_address);
             LOG_TRACE(
-                "{} visiting {} | {}", __func__,
+                "{} visiting {} │ {}", __func__,
                 (void*) current_address, *get_instruction_string(instruction, current_address)
             )
 
@@ -376,7 +377,7 @@ namespace koalageddon::steamclient {
                 LOG_TRACE("Breaking recursion due to conditional branch")
                 return;
             } else if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
-                       operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE
+                operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE
                 ) {
                 const auto jump_destination = get_absolute_address(instruction, current_address);
 
@@ -385,9 +386,9 @@ namespace koalageddon::steamclient {
                 LOG_TRACE("Breaking recursion due to unconditional branch")
                 return;
             } else if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
-                       operand.type == ZYDIS_OPERAND_TYPE_MEMORY &&
-                       operand.mem.scale == sizeof(uintptr_t) &&
-                       operand.mem.disp.has_displacement
+                operand.type == ZYDIS_OPERAND_TYPE_MEMORY &&
+                operand.mem.scale == sizeof(uintptr_t) &&
+                operand.mem.disp.has_displacement
                 ) {
                 // Special handling for jump tables. Guaranteed to be present in the interface selector.
                 const auto* table = (uintptr_t*) operand.mem.disp.value;

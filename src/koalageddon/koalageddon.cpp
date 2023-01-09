@@ -1,9 +1,9 @@
 #include <koalageddon/koalageddon.hpp>
 #include <koalageddon/vstdlib.hpp>
-#include <koalageddon/cache.hpp>
+#include <koalageddon/kg_cache.hpp>
 #include <build_config.h>
-#include <core/config.hpp>
-#include <steam_functions/steam_functions.hpp>
+#include <smoke_api/config.hpp>
+#include <steam_api_exports/steam_api_exports.hpp>
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/http_client.hpp>
 #include <koalabox/logger.hpp>
@@ -17,10 +17,10 @@ namespace koalageddon {
     * @return A string representing the source of the config.
     */
     String init_koalageddon_config() {
-        if (!config::instance.koalageddon_config.is_null()) {
+        if (!smoke_api::config::instance.koalageddon_config.is_null()) {
             try {
                 // First try to read a local config override
-                config = config::instance.koalageddon_config.get<decltype(config)>();
+                config = smoke_api::config::instance.koalageddon_config.get<decltype(config)>();
 
                 return "local config override";
             } catch (const Exception& ex) {
@@ -33,7 +33,7 @@ namespace koalageddon {
             const String url = "https://raw.githubusercontent.com/acidicoala/public-entitlements/main/koalageddon/v2/steam.json";
             config = koalabox::http_client::fetch_json(url).get<decltype(config)>();
 
-            cache::save_koalageddon_config(config);
+            kg_cache::save_koalageddon_config(config);
 
             return "GitHub repository";
         } catch (const Exception& ex) {
@@ -43,7 +43,7 @@ namespace koalageddon {
         try {
             // Then try to get a cached copy of a previously fetched config.
             // We expect this unboxing to throw exception if no koalageddon config is present.
-            config = cache::get_koalageddon_config().value();
+            config = kg_cache::get_koalageddon_config().value();
 
             return "disk cache";
         } catch (const Exception& ex) {
@@ -71,7 +71,7 @@ namespace koalageddon {
 
                         globals::vstdlib_module = module_handle;
 
-                        if (config::instance.unlock_family_sharing) {
+                        if (smoke_api::config::instance.unlock_family_sharing) {
                             DETOUR_VSTDLIB(Coroutine_Create)
                         }
                     } else if (name < equals > STEAMCLIENT_DLL) {
@@ -87,8 +87,9 @@ namespace koalageddon {
                     }
                 } catch (const Exception& ex) {
                     LOG_ERROR(
-                        "Koalageddon mode dll monitor process_interface_selector error. Module: '{}', Message: {}",
-                        name, ex.what())
+                        "Error listening to DLL load events. Module: '{}', Message: {}",
+                        name, ex.what()
+                    )
                 }
             }
         );

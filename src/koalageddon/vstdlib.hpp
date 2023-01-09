@@ -1,4 +1,3 @@
-#include <core/macros.hpp>
 #include <koalageddon/koalageddon.hpp>
 
 namespace koalageddon::vstdlib {

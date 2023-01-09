@@ -1,7 +1,5 @@
-#include <core/macros.hpp>
-#include <core/types.hpp>
+#include <koalageddon/steamclient/steamclient.hpp>
 #include <steam_impl/steam_inventory.hpp>
-#include <steam_functions/steam_functions.hpp>
 
 VIRTUAL(EResult) IClientInventory_GetResultStatus(PARAMS(SteamInventoryResult_t resultHandle)) {
     return steam_inventory::GetResultStatus(

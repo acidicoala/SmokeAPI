@@ -1,8 +1,6 @@
-#include <core/macros.hpp>
-#include <core/types.hpp>
 #include <steam_impl/steam_apps.hpp>
 #include <koalageddon/koalageddon.hpp>
-#include <steam_functions/steam_functions.hpp>
+#include <koalageddon/steamclient/steamclient.hpp>
 
 VIRTUAL(int) IClientApps_GetDLCCount(PARAMS(AppId_t appId)) {
     return steam_apps::GetDLCCount(
