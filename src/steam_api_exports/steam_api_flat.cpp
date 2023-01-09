@@ -43,18 +43,22 @@ DLL_EXPORT(int) SteamAPI_ISteamApps_GetDLCCount(ISteamApps* self) {
 DLL_EXPORT(bool) SteamAPI_ISteamApps_BGetDLCDataByIndex(
     ISteamApps* self,
     int iDLC,
-    AppId_t* pAppID,
+    AppId_t* pDlcID,
     bool* pbAvailable,
     char* pchName,
     int cchNameBufferSize
 ) {
     return steam_apps::GetDLCDataByIndex(
-        __func__, 0, iDLC, pAppID, pbAvailable, pchName, cchNameBufferSize, [&]() {
+        __func__, 0, iDLC, pDlcID, pbAvailable, pchName, cchNameBufferSize,
+        [&]() {
             GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamApps_BGetDLCDataByIndex)
 
             return SteamAPI_ISteamApps_BGetDLCDataByIndex_o(
-                self, iDLC, pAppID, pbAvailable, pchName, cchNameBufferSize
+                self, iDLC, pDlcID, pbAvailable, pchName, cchNameBufferSize
             );
+        },
+        [&](AppId_t dlc_id) {
+            return SteamAPI_ISteamApps_BIsDlcInstalled(self, dlc_id);
         }
     );
 }

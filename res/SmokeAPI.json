@@ -4,9 +4,29 @@
   "unlock_family_sharing": true,
   "default_app_status": "unlocked",
   "default_dlc_status": "unlocked",
-  "override_app_status": {},
-  "override_dlc_status": {},
-  "extra_dlc_ids": [],
+  "override_app_status": {
+    "1234": "locked",
+    "4321": "unlocked"
+  },
+  "override_dlc_status": {
+    "56789": "locked",
+    "98765": "unlocked",
+    "16384": "original"
+  },
+  "extra_dlcs": {
+    "extra_dlcs": {
+      "1234": {
+        "dlcs": {
+          "56789": "Example DLC 1"
+        }
+      },
+      "4321": {
+        "dlcs": {
+          "98765": "Example DLC 2"
+        }
+      }
+    }
+  },
   "auto_inject_inventory": true,
   "extra_inventory_items": [],
   "koalageddon_config": null

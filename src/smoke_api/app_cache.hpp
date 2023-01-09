@@ -4,8 +4,8 @@
 
 namespace smoke_api::app_cache {
 
-    Vector<AppId_t> get_dlc_ids(AppId_t app_id);
+    Vector<DLC> get_dlcs(AppId_t app_id) noexcept;
 
-    bool save_dlc_ids(AppId_t app_id, const Vector<AppId_t>& dlc_ids);
+    bool save_dlcs(AppId_t app_id, const Vector<DLC>& dlcs) noexcept;
 
 }

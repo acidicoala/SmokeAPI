@@ -41,12 +41,16 @@ VIRTUAL(bool) ISteamApps_BGetDLCDataByIndex(
     )
 ) {
     return steam_apps::GetDLCDataByIndex(
-        __func__, 0, iDLC, pAppID, pbAvailable, pchName, cchNameBufferSize, [&]() {
+        __func__, 0, iDLC, pAppID, pbAvailable, pchName, cchNameBufferSize,
+        [&]() {
             GET_ORIGINAL_HOOKED_FUNCTION(ISteamApps_BGetDLCDataByIndex)
 
             return ISteamApps_BGetDLCDataByIndex_o(
                 ARGS(iDLC, pAppID, pbAvailable, pchName, cchNameBufferSize)
             );
+        },
+        [&](AppId_t dlc_id) {
+            return ISteamApps_BIsDlcInstalled(ARGS(dlc_id));
         }
     );
 }

@@ -16,6 +16,7 @@ namespace steam_inventory {
         return status;
     }
 
+    // TODO: investigate if we can get app id in koalageddon mode
     bool GetResultItems(
         const String& function_name,
         const SteamInventoryResult_t resultHandle,

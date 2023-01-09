@@ -81,15 +81,16 @@ namespace smoke_api {
 
             globals::smokeapi_handle = module_handle;
 
-            koalabox::cache::init_cache(paths::get_cache_path());
-
             config::init();
 
             if (config::instance.logging) {
                 koalabox::logger::init_file_logger(paths::get_log_path());
             }
 
+            // FIXME: Dynamic timestamp resolution: https://stackoverflow.com/q/17212518
             LOG_INFO("🐨 {} v{} | Compiled at '{}'", PROJECT_NAME, PROJECT_VERSION, __TIMESTAMP__)
+
+            koalabox::cache::init_cache(paths::get_cache_path());
 
             const auto exe_path = Path(koalabox::win_util::get_module_file_name_or_throw(nullptr));
             const auto exe_name = exe_path.filename().string();

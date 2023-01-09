@@ -42,6 +42,7 @@ set(
     src/core/macros.hpp
     src/core/paths.cpp
     src/core/paths.hpp
+    src/core/types.cpp
     src/core/types.hpp
     src/smoke_api/smoke_api.cpp
     src/smoke_api/smoke_api.hpp
@@ -82,6 +83,7 @@ if (CMAKE_SIZEOF_VOID_P EQUAL 4)
         src/koalageddon/types.hpp
         src/koalageddon/vstdlib.cpp
         src/koalageddon/vstdlib.hpp
+        # TODO: Move to koalageddon package
         src/steamclient_virtuals/client_app_manager.cpp
         src/steamclient_virtuals/client_apps.cpp
         src/steamclient_virtuals/client_inventory.cpp

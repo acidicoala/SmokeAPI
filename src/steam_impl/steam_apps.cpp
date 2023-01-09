@@ -6,121 +6,119 @@
 #include <koalabox/util.hpp>
 #include <steam_functions/steam_functions.hpp>
 #include <core/types.hpp>
+#include <utility>
 
 namespace steam_apps {
     // TODO: Needs to go to API
-
-    class DLC {
-    private:
-        String appid;
-    public:
-        String name;
-        uint32_t app_id = std::stoi(appid);
-
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(DLC, appid, name)
-    };
 
     struct SteamResponse {
         uint32_t success = 0;
         Vector<DLC> dlcs;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(SteamResponse, success, dlcs)
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(SteamResponse, success, dlcs) // NOLINT(misc-const-correctness)
     };
-
-    using GitHubResponse = Map<String, Vector<uint32_t>>;
 
     /// Steamworks may max GetDLCCount value at 64, depending on how much unowned DLCs the user has.
     /// Despite this limit, some games with more than 64 DLCs still keep using this method.
     /// This means we have to get extra DLC IDs from local config, remote config, or cache.
     constexpr auto MAX_DLC = 64;
 
-    // Key: App ID, Value: DLC ID
-    Map<AppId_t, int> original_dlc_count_map; // NOLINT(cert-err58-cpp)
-    Vector<AppId_t> cached_dlcs;
+    Map<AppId_t, Vector<DLC>> app_dlcs; // NOLINT(cert-err58-cpp)
+    Set<AppId_t> fully_fetched; // NOLINT(cert-err58-cpp)
+
+    std::optional<Vector<DLC>> fetch_from_github(AppId_t app_id) noexcept {
+        try {
+            const auto* url
+                = "https://raw.githubusercontent.com/acidicoala/public-entitlements/main/steam/v2/dlc.json";
+            const auto json = koalabox::http_client::fetch_json(url);
+            const auto response = json.get<AppDlcNameMap>();
+
+            return DLC::get_dlcs_from_apps(response, app_id);
+        } catch (const Json::exception& e) {
+            LOG_ERROR("Failed to fetch dlc list from GitHub: {}", e.what())
+            return std::nullopt;
+        }
+    }
+
+    std::optional<Vector<DLC>> fetch_from_steam(AppId_t app_id) noexcept {
+        try {
+            const auto url = fmt::format("https://store.steampowered.com/dlc/{}/ajaxgetdlclist", app_id);
+            const auto json = koalabox::http_client::fetch_json(url);
+
+            LOG_TRACE("Steam response: \n{}", json.dump(2))
+
+            const auto response = json.get<SteamResponse>();
+
+            if (response.success != 1) {
+                throw std::runtime_error("Web API responded with 'success' != 1");
+            }
+
+            return response.dlcs;
+        } catch (const Exception& e) {
+            LOG_ERROR("Failed to fetch dlc list from Steam: {}", e.what())
+            return std::nullopt;
+        }
+    }
 
     /**
      * @param app_id
      * @return boolean indicating if the function was able to successfully fetch DLC IDs from all sources.
      */
-    bool fetch_and_cache_dlcs(AppId_t app_id) {
+    void fetch_and_cache_dlcs(AppId_t app_id) {
+        static std::mutex mutex;
+        const std::lock_guard<std::mutex> guard(mutex);
+
         if (not app_id) {
+            // No app id means we are operating in game mode.
+            // Hence, we need to use utility functions to get app id.
             try {
                 app_id = steam_functions::get_app_id_or_throw();
-                // TODO: Check what it returns in koalageddon mode
                 LOG_INFO("Detected App ID: {}", app_id)
             } catch (const Exception& ex) {
                 LOG_ERROR("Failed to get app ID: {}", ex.what())
-                return false;
+                app_dlcs[app_id] = {}; // Dummy value to avoid checking for presence on each access
+                return;
             }
         }
 
-        auto total_success = true;
-        const auto app_id_str = std::to_string(app_id);
-
-        const auto fetch_from_steam = [&]() {
-            Vector<AppId_t> dlcs;
-
-            try {
-                // TODO: Refactor into api namespace
-                const auto url = fmt::format("https://store.steampowered.com/dlc/{}/ajaxgetdlclist", app_id_str);
-                const auto json = koalabox::http_client::fetch_json(url);
-                const auto response = json.get<SteamResponse>();
-
-                if (response.success != 1) {
-                    throw std::runtime_error("Web API responded with 'success' != 1");
-                }
-
-                for (const auto& dlc: response.dlcs) {
-                    dlcs.emplace_back(dlc.app_id);
-                }
-            } catch (const Exception& e) {
-                LOG_ERROR("Failed to fetch dlc list from steam api: {}", e.what())
-                total_success = false;
-            }
-
-            return dlcs;
-        };
-
-        const auto fetch_from_github = [&]() {
-            Vector<AppId_t> dlcs;
-
-            try {
-                const String url = "https://raw.githubusercontent.com/acidicoala/public-entitlements/main/steam/v1/dlc.json";
-                const auto json = koalabox::http_client::fetch_json(url);
-                const auto response = json.get<GitHubResponse>();
-
-                if (response.contains(app_id_str)) {
-                    dlcs = response.at(app_id_str);
-                }
-            } catch (const Exception& e) {
-                LOG_ERROR("Failed to fetch extra dlc list from github api: {}", e.what())
-                total_success = false;
-            }
-
-            return dlcs;
-        };
-
-        const auto steam_dlcs = fetch_from_steam();
-        const auto github_dlcs = fetch_from_github();
+        // We want to fetch data only once. However, if any of the remote sources have failed
+        // previously, we want to attempt fetching again.
+        if (fully_fetched.contains(app_id)) {
+            return;
+        }
 
         // Any of the sources might fail, so we try to get optimal result
-        // by combining results from all the sources into a single set.
-        Set<AppId_t> combined_dlcs;
-        combined_dlcs.insert(steam_dlcs.begin(), steam_dlcs.end());
-        combined_dlcs.insert(github_dlcs.begin(), github_dlcs.end());
-        // There is no need to insert cached entries if both steam and GitHub requests were successful.
-        if (!total_success) {
-            const auto cache_dlcs = smoke_api::app_cache::get_dlc_ids(app_id);
-            combined_dlcs.insert(cached_dlcs.begin(), cached_dlcs.end());
+        // by aggregating results from all the sources into a single set.
+        Vector<DLC> aggregated_dlcs;
+
+        const auto append_dlcs = [&](const Vector<DLC>& source, const String& source_name) {
+            LOG_DEBUG("App ID {} has {} DLCs defined in {}", app_id, source.size(), source_name)
+            aggregated_dlcs < append > source;
+        };
+
+        append_dlcs(config::get_extra_dlcs(app_id), "local config");
+
+        const auto github_dlcs = fetch_from_github(app_id);
+        if (github_dlcs) {
+            append_dlcs(*github_dlcs, "GitHub repository");
         }
 
-        // We then transfer that set into a list because we need DLCs to be accessible via index.
-        cached_dlcs.clear();
-        cached_dlcs.insert(cached_dlcs.begin(), combined_dlcs.begin(), combined_dlcs.end());
+        const auto steam_dlcs = fetch_from_steam(app_id);
+        if (steam_dlcs) {
+            append_dlcs(*steam_dlcs, "Steam API");
+        }
 
-        smoke_api::app_cache::save_dlc_ids(app_id, cached_dlcs);
+        if (github_dlcs && steam_dlcs) {
+            fully_fetched.insert(app_id);
+        } else {
+            append_dlcs(smoke_api::app_cache::get_dlcs(app_id), "disk cache");
+        }
 
-        return total_success;
+        // Cache DLCs in memory and cache for future use
+
+        app_dlcs[app_id] = aggregated_dlcs;
+
+        smoke_api::app_cache::save_dlcs(app_id, aggregated_dlcs);
     }
 
     String get_app_id_log(const AppId_t app_id) {
@@ -157,35 +155,17 @@ namespace steam_apps {
             }
 
             const auto original_count = original_function();
-            original_dlc_count_map[app_id] = original_count;
             LOG_DEBUG("{} -> Original DLC count: {}", function_name, original_count)
 
             if (original_count < MAX_DLC) {
                 return total_count(original_count);
             }
 
-            // We need to fetch DLC IDs from all possible sources at this point
+            LOG_DEBUG("Game has {} or more DLCs. Fetching DLCs from remote sources.", original_count)
 
-            const auto injected_count = static_cast<int>(config::instance.extra_dlc_ids.size());
-            LOG_DEBUG("{} -> Injected DLC count: {}", function_name, injected_count)
+            fetch_and_cache_dlcs(app_id);
 
-            // Maintain a list of app_ids for which we have already fetched and cached DLC IDs
-            static Set<AppId_t> cached_apps;
-            if (!cached_apps.contains(app_id)) {
-                static std::mutex mutex;
-                const std::lock_guard<std::mutex> guard(mutex);
-
-                LOG_DEBUG("Game has {} or more DLCs. Fetching DLCs from remote sources.", MAX_DLC)
-
-                if (fetch_and_cache_dlcs(app_id)) {
-                    cached_apps.insert(app_id);
-                }
-            }
-
-            const auto cached_count = static_cast<int>(cached_dlcs.size());
-            LOG_DEBUG("{} -> Cached DLC count: {}", function_name, cached_count)
-
-            return total_count(injected_count + cached_count);
+            return total_count(static_cast<int>(app_dlcs[app_id].size()));
         } catch (const Exception& e) {
             LOG_ERROR(" Uncaught exception: {}", function_name, e.what())
             return 0;
@@ -200,83 +180,56 @@ namespace steam_apps {
         bool* pbAvailable,
         char* pchName,
         int cchNameBufferSize,
-        const Function<bool()>& original_function
+        const Function<bool()>& original_function,
+        const Function<bool(AppId_t)>& is_originally_unlocked
     ) {
         try {
+            LOG_DEBUG("{} -> {}index: {:>3}", function_name, get_app_id_log(app_id), iDLC)
+
             const auto print_dlc_info = [&](const String& tag) {
                 LOG_INFO(
-                    "{} -> [{:12}] {}index: {:>3}, DLC ID: {:>8}, available: {:5}, name: '{}'",
+                    R"({} -> [{:^12}] {}index: {:>3}, DLC ID: {:>8}, available: {:5}, name: "{}")",
                     function_name, tag, get_app_id_log(app_id), iDLC, *pDlcId, *pbAvailable, pchName
                 )
             };
 
-            const auto inject_dlc = [&](const String& tag, const Vector<AppId_t>& dlc_ids, const int index) {
-                const auto dlc_id = dlc_ids[index];
-
+            const auto inject_dlc = [&](const DLC& dlc) {
                 // Fill the output pointers
-                *pDlcId = dlc_id;
-                *pbAvailable = config::is_dlc_unlocked(app_id, dlc_id, []() { return true; });
+                *pDlcId = dlc.get_id();
+                *pbAvailable = config::is_dlc_unlocked(
+                    app_id, *pDlcId, [&]() {
+                        return is_originally_unlocked(*pDlcId);
+                    }
+                );
 
-                auto name = fmt::format("DLC #{} with ID: {} ", iDLC, dlc_id);
-                name = name.substr(0, cchNameBufferSize);
-                *name.rbegin() = '\0';
+                auto name = dlc.get_name();
+                name = name.substr(0, cchNameBufferSize + 1);
                 memcpy_s(pchName, cchNameBufferSize, name.c_str(), name.size());
-
-                print_dlc_info(tag);
-                return true;
             };
 
-            const auto get_original_dlc_count = [](const AppId_t& app_id) {
-                if (original_dlc_count_map.contains(app_id)) {
-                    return original_dlc_count_map[app_id];
+            if (app_dlcs.contains(app_id)) {
+                const auto& dlcs = app_dlcs[app_id];
+
+                if (iDLC >= 0 && iDLC < dlcs.size()) {
+                    inject_dlc(dlcs[iDLC]);
+                    print_dlc_info("injected");
+                    return true;
                 }
 
-                return 0;
-            };
-
-            const auto original_count = get_original_dlc_count(app_id);
-
-            // Original count less than MAX_DLC implies that we need to redirect the call to original function.
-
-            if (original_count < MAX_DLC) {
-                const auto success = original_function();
-
-                if (success) {
-                    *pbAvailable = config::is_dlc_unlocked(app_id, *pDlcId, [&]() { return *pbAvailable; });
-                    print_dlc_info("original");
-                } else {
-                    LOG_WARN("{} -> original call failed for index: {}", function_name, iDLC)
-                }
-                return success;
-            }
-
-            // We must have had cached DLC IDs at this point.
-            // It does not matter if we begin the list with injected DLC IDs or cached ones.
-            // However, we must be consistent at all times. Hence, the convention will be that
-            // injected DLCs will be followed by cached DLCs in the following manner:
-            // [injected-dlc-0, injected-dlc-1, ..., cached-dlc-0, cached-dlc-1, ...]
-
-            if (iDLC < 0) {
                 LOG_WARN("{} -> Out of bounds DLC index: {}", function_name, iDLC)
+                return false;
             }
 
-            const int local_dlc_count = static_cast<int>(config::instance.extra_dlc_ids.size());
-            if (iDLC < local_dlc_count) {
-                return inject_dlc("local config", config::instance.extra_dlc_ids, iDLC);
+            const auto success = original_function();
+
+            if (success) {
+                *pbAvailable = config::is_dlc_unlocked(app_id, *pDlcId, [&]() { return *pbAvailable; });
+                print_dlc_info("original");
+            } else {
+                LOG_WARN("{} -> original call failed for index: {}", function_name, iDLC)
             }
 
-            const auto adjusted_index = iDLC - local_dlc_count;
-            const int cached_dlc_count = static_cast<int>(cached_dlcs.size());
-            if (iDLC < cached_dlc_count) {
-                return inject_dlc("memory cache", cached_dlcs, adjusted_index);
-            }
-
-            LOG_ERROR(
-                "{} -> Out of bounds DLC index: {}, local dlc count: {}, cached dlc count: {}",
-                function_name, iDLC, local_dlc_count, cached_dlc_count
-            )
-
-            return false;
+            return success;
         } catch (const Exception& e) {
             LOG_ERROR("{} -> Uncaught exception: {}", function_name, e.what())
             return false;

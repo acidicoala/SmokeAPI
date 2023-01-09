@@ -1,8 +1,9 @@
 #pragma once
 
+#include <core/types.hpp>
 #include <koalabox/core.hpp>
-#include <koalabox/json.hpp>
 
+// TODO: move to smoke_api namespace
 namespace config {
     enum class AppStatus {
         LOCKED,
@@ -38,7 +39,7 @@ namespace config {
         DlcStatus default_dlc_status = DlcStatus::UNLOCKED;
         Map<String, AppStatus> override_app_status;
         Map<String, DlcStatus> override_dlc_status;
-        Vector<uint32_t> extra_dlc_ids;
+        AppDlcNameMap extra_dlcs;
         bool auto_inject_inventory = true;
         Vector<uint32_t> extra_inventory_items;
         // We have to use general json type here since the library doesn't support std::optional
@@ -53,7 +54,7 @@ namespace config {
             default_dlc_status,
             override_app_status,
             override_dlc_status,
-            extra_dlc_ids,
+            extra_dlcs,
             auto_inject_inventory,
             extra_inventory_items,
             koalageddon_config
@@ -69,4 +70,6 @@ namespace config {
     DlcStatus get_dlc_status(uint32_t dlc_id);
 
     bool is_dlc_unlocked(uint32_t app_id, uint32_t dlc_id, const Function<bool()>& original_function);
+
+    Vector<DLC> get_extra_dlcs(AppId_t app_id);
 }

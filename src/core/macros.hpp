@@ -27,12 +27,12 @@
  * The macros below implement the above-mentioned considerations.
  */
 #ifdef _WIN64
-#define PARAMS(...) void* RCX, ##__VA_ARGS__
-#define ARGS(...) RCX, ##__VA_ARGS__
+#define PARAMS(...) void* RCX, __VA_ARGS__
+#define ARGS(...) RCX, __VA_ARGS__
 #define THIS RCX
 #else
-#define PARAMS(...) void* ECX, void* EDX __VA_OPT__(,) __VA_ARGS__
-#define ARGS(...) ECX, EDX __VA_OPT__(,) __VA_ARGS__
+#define PARAMS(...) const void* ECX, const void* EDX, __VA_ARGS__
+#define ARGS(...) ECX, EDX, __VA_ARGS__
 #define THIS ECX
 #endif
 

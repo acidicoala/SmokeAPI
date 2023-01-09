@@ -26,7 +26,8 @@ namespace steam_apps {
         bool* pbAvailable,
         char* pchName,
         int cchNameBufferSize,
-        const Function<bool()>& original_function
+        const Function<bool()>& original_function,
+        const Function<bool(AppId_t)>& is_originally_unlocked // Aux function to resolve original dlc status
     );
 
 }

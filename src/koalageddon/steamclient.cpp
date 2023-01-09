@@ -44,6 +44,7 @@ namespace koalageddon::steamclient {
     }
 
     SELECTOR_IMPLEMENTATION(IClientAppManager, {
+        koalageddon::client_app_manager_interface = interface;
         HOOK_FUNCTION(IClientAppManager, IsAppDlcInstalled)
     })
 
