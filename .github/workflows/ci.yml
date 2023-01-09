@@ -15,5 +15,3 @@ jobs:
         zip -j $ZIP_NAME
         artifacts/*/*.dll
         res/SmokeAPI.json
-
-      config: Debug
