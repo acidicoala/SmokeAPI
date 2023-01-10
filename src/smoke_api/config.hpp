@@ -25,6 +25,7 @@ namespace smoke_api::config {
         bool unlock_family_sharing = true;
         AppStatus default_app_status = AppStatus::UNLOCKED;
         Map<String, AppStatus> override_app_status;
+        Map<String, AppStatus> override_dlc_status;
         AppDlcNameMap extra_dlcs;
         bool auto_inject_inventory = true;
         Vector<uint32_t> extra_inventory_items;
@@ -38,6 +39,7 @@ namespace smoke_api::config {
             unlock_family_sharing,
             default_app_status,
             override_app_status,
+            override_dlc_status,
             extra_dlcs,
             auto_inject_inventory,
             extra_inventory_items,
@@ -49,7 +51,7 @@ namespace smoke_api::config {
 
     void init();
 
-    bool is_dlc_unlocked(uint32_t app_id, uint32_t dlc_id, const Function<bool()>& original_function);
-
     Vector<DLC> get_extra_dlcs(AppId_t app_id);
+
+    bool is_dlc_unlocked(uint32_t app_id, uint32_t dlc_id, const Function<bool()>& original_function);
 }

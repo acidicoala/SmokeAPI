@@ -6,23 +6,24 @@ namespace steam_user {
 
     EUserHasLicenseForAppResult UserHasLicenseForApp(
         const String& function_name,
-        AppId_t appID,
+        AppId_t appId,
+        AppId_t dlcId,
         const Function<EUserHasLicenseForAppResult()>& original_function
     ) {
         const auto result = original_function();
 
         if (result == k_EUserHasLicenseResultNoAuth) {
-            LOG_WARN("{} -> App ID: {:>8}, Result: NoAuth", function_name, appID)
+            LOG_WARN("{} -> App ID: {:>8}, Result: NoAuth", function_name, dlcId)
             return result;
         }
 
         const auto has_license = smoke_api::config::is_dlc_unlocked(
-            0, appID, [&]() {
+            appId, dlcId, [&]() {
                 return result == k_EUserHasLicenseResultHasLicense;
             }
         );
 
-        LOG_INFO("{} -> App ID: {:>8}, HasLicense: {}", function_name, appID, has_license)
+        LOG_INFO("{} -> App ID: {:>8}, HasLicense: {}", function_name, dlcId, has_license)
 
         return has_license
                ? k_EUserHasLicenseResultHasLicense

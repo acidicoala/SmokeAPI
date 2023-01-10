@@ -5,6 +5,10 @@
   "default_app_status": "unlocked",
   "override_app_status": {
     "1234": "original",
+    "4321": "unlocked"
+  },
+  "override_dlc_status": {
+    "1234": "original",
     "4321": "unlocked",
     "5678": "locked"
   },

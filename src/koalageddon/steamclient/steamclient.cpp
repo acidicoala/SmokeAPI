@@ -10,6 +10,8 @@
 namespace koalageddon::steamclient {
     using namespace koalabox;
 
+    Map<String, void*> interface_name_to_address_map; // NOLINT(cert-err58-cpp)
+
     struct InstructionContext {
         std::optional<ZydisRegister> base_register;
         std::optional<String> function_name;
@@ -24,6 +26,14 @@ namespace koalageddon::steamclient {
     ZydisDecoder decoder = {};
     ZydisFormatter formatter = {};
 
+    void construct_ordinal_map( // NOLINT(misc-no-recursion)
+        const String& target_interface,
+        Map<String, uint32_t>& map,
+        uintptr_t start_address,
+        Set<uintptr_t>& visited_addresses,
+        InstructionContext context
+    );
+
 #define HOOK_FUNCTION(INTERFACE, FUNC) hook::swap_virtual_func_or_throw( \
     globals::address_map, \
     interface, \
@@ -34,18 +44,20 @@ namespace koalageddon::steamclient {
 
 #define SELECTOR_IMPLEMENTATION(INTERFACE, FUNC_BODY) \
     DLL_EXPORT(void) INTERFACE##_Selector( \
-        const void* interface, \
-        const void* arg2, \
-        const void* arg3, \
-        const void* arg4 \
+        void* interface, \
+        void* arg2, \
+        void* arg3, \
+        void* arg4 \
     ) { \
-        CALL_ONCE(FUNC_BODY) \
+        CALL_ONCE({ \
+            interface_name_to_address_map[#INTERFACE] = interface; \
+            [&]()FUNC_BODY(); \
+        }) \
         GET_ORIGINAL_HOOKED_FUNCTION(INTERFACE##_Selector) \
         INTERFACE##_Selector_o(interface, arg2, arg3, arg4); \
     }
 
     SELECTOR_IMPLEMENTATION(IClientAppManager, {
-        koalageddon::client_app_manager_interface = interface;
         HOOK_FUNCTION(IClientAppManager, IsAppDlcInstalled)
     })
 
@@ -69,6 +81,36 @@ namespace koalageddon::steamclient {
         HOOK_FUNCTION(IClientUser, BIsSubscribedApp)
     })
 
+    SELECTOR_IMPLEMENTATION(IClientUtils, {
+        HOOK_FUNCTION(IClientUtils, GetAppID)
+    })
+
+#define CONSTRUCT_ORDINAL_MAP(INTERFACE)        \
+    Set<uintptr_t> nested_visited_addresses;    \
+    construct_ordinal_map(                      \
+        #INTERFACE,                             \
+        ordinal_map[#INTERFACE],                \
+        function_selector_address,              \
+        nested_visited_addresses,               \
+        {}                                      \
+    );
+
+#define DETOUR_SELECTOR(INTERFACE)                                      \
+    if(interface_name == #INTERFACE){                                   \
+        CONSTRUCT_ORDINAL_MAP(INTERFACE)                                \
+        DETOUR_ADDRESS(INTERFACE##_Selector, function_selector_address) \
+    }
+
+    void detour_interface_selector(const String& interface_name, uintptr_t function_selector_address) {
+        LOG_DEBUG("Detected interface: '{}'", interface_name)
+
+        DETOUR_SELECTOR(IClientAppManager)
+        DETOUR_SELECTOR(IClientApps)
+        DETOUR_SELECTOR(IClientInventory)
+        DETOUR_SELECTOR(IClientUser)
+        DETOUR_SELECTOR(IClientUtils)
+    }
+
     uintptr_t get_absolute_address(ZydisDecodedInstruction instruction, uintptr_t address) {
         const auto operand = instruction.operands[0];
 
@@ -86,9 +128,9 @@ namespace koalageddon::steamclient {
         const auto& operand = instruction.operands[0];
 
         return instruction.mnemonic == ZYDIS_MNEMONIC_PUSH &&
-            operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE &&
-            operand.visibility == ZYDIS_OPERAND_VISIBILITY_EXPLICIT &&
-            operand.encoding == ZYDIS_OPERAND_ENCODING_SIMM16_32_32;
+               operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE &&
+               operand.visibility == ZYDIS_OPERAND_VISIBILITY_EXPLICIT &&
+               operand.encoding == ZYDIS_OPERAND_ENCODING_SIMM16_32_32;
     }
 
     std::optional<String> get_string_argument(const ZydisDecodedInstruction& instruction) {
@@ -142,9 +184,9 @@ namespace koalageddon::steamclient {
 
         const auto is_mov_base_esp = [](const ZydisDecodedInstruction& instruction) {
             return instruction.mnemonic == ZYDIS_MNEMONIC_MOV &&
-                instruction.operand_count == 2 &&
-                instruction.operands[0].type == ZYDIS_OPERAND_TYPE_REGISTER &&
-                instruction.operands[1].reg.value == ZYDIS_REGISTER_ESP;
+                   instruction.operand_count == 2 &&
+                   instruction.operands[0].type == ZYDIS_OPERAND_TYPE_REGISTER &&
+                   instruction.operands[1].reg.value == ZYDIS_REGISTER_ESP;
         };
 
         // Initialize with a dummy previous instruction
@@ -169,8 +211,8 @@ namespace koalageddon::steamclient {
                 // Save base register
                 context.base_register = instruction.operands[0].reg.value;
             } else if (is_push_immediate(last_instruction) &&
-                is_push_immediate(instruction) &&
-                !context.function_name) {
+                       is_push_immediate(instruction) &&
+                       !context.function_name) {
                 // The very first 2 consecutive pushes indicate interface and function names.
                 // However, subsequent pushes may contain irrelevant strings.
                 const auto push_string_1 = get_string_argument(last_instruction);
@@ -183,7 +225,7 @@ namespace koalageddon::steamclient {
                         context.function_name = push_string_1;
                     }
 
-                    if (map.contains(*context.function_name)) {
+                    if (context.function_name && map.contains(*context.function_name)) {
                         // Bail early to avoid duplicate work
                         return;
                     }
@@ -199,7 +241,7 @@ namespace koalageddon::steamclient {
                 // But not continue forward, in order to avoid duplicate processing
                 return;
             } else if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
-                instruction.operands[0].type == ZYDIS_OPERAND_TYPE_IMMEDIATE) {
+                       instruction.operands[0].type == ZYDIS_OPERAND_TYPE_IMMEDIATE) {
                 // On unconditional jump we should recurse as well
                 const auto jump_destination = get_absolute_address(instruction, current_address);
 
@@ -304,22 +346,6 @@ namespace koalageddon::steamclient {
         return std::nullopt;
     }
 
-#define CONSTRUCT_ORDINAL_MAP(INTERFACE)        \
-    Set<uintptr_t> nested_visited_addresses;    \
-    construct_ordinal_map(                      \
-        #INTERFACE,                             \
-        ordinal_map[#INTERFACE],                \
-        function_selector_address,              \
-        nested_visited_addresses,               \
-        {}                                      \
-    );
-
-#define DETOUR_SELECTOR(INTERFACE)                                      \
-    if(interface_name == #INTERFACE){                                   \
-        CONSTRUCT_ORDINAL_MAP(INTERFACE)                                \
-        DETOUR_ADDRESS(INTERFACE##_Selector, function_selector_address) \
-    }
-
     void process_interface_selector( // NOLINT(misc-no-recursion)
         const uintptr_t start_address,
         Set<uintptr_t>& visited_addresses
@@ -360,12 +386,7 @@ namespace koalageddon::steamclient {
                 if (interface_name_opt) {
                     const auto& interface_name = *interface_name_opt;
 
-                    LOG_DEBUG("Detected interface: '{}'", interface_name)
-
-                    DETOUR_SELECTOR(IClientAppManager)
-                    DETOUR_SELECTOR(IClientApps)
-                    DETOUR_SELECTOR(IClientInventory)
-                    DETOUR_SELECTOR(IClientUser)
+                    detour_interface_selector(interface_name, function_selector_address);
                 }
             } else if (instruction.meta.category == ZYDIS_CATEGORY_COND_BR) {
                 const auto jump_taken_destination = get_absolute_address(instruction, current_address);
@@ -386,9 +407,9 @@ namespace koalageddon::steamclient {
                 LOG_TRACE("Breaking recursion due to unconditional branch")
                 return;
             } else if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
-                operand.type == ZYDIS_OPERAND_TYPE_MEMORY &&
-                operand.mem.scale == sizeof(uintptr_t) &&
-                operand.mem.disp.has_displacement
+                       operand.type == ZYDIS_OPERAND_TYPE_MEMORY &&
+                       operand.mem.scale == sizeof(uintptr_t) &&
+                       operand.mem.disp.has_displacement
                 ) {
                 // Special handling for jump tables. Guaranteed to be present in the interface selector.
                 const auto* table = (uintptr_t*) operand.mem.disp.value;
@@ -433,4 +454,5 @@ namespace koalageddon::steamclient {
         Set<uintptr_t> visited_addresses;
         process_interface_selector(interface_selector_address, visited_addresses);
     }
+
 }

@@ -1,5 +1,4 @@
 #include <steam_impl/steam_apps.hpp>
-#include <koalageddon/koalageddon.hpp>
 #include <koalageddon/steamclient/steamclient.hpp>
 
 VIRTUAL(int) IClientApps_GetDLCCount(PARAMS(AppId_t appId)) {
@@ -32,8 +31,9 @@ VIRTUAL(bool) IClientApps_BGetDLCDataByIndex(
             );
         },
         [&](AppId_t dlc_id) {
-            if (koalageddon::client_app_manager_interface) {
-                IClientAppManager_IsAppDlcInstalled(koalageddon::client_app_manager_interface, EDX, appID, dlc_id);
+            const auto* app_manager_interface = koalageddon::steamclient::interface_name_to_address_map["IClientAppManager"];
+            if (app_manager_interface) {
+                IClientAppManager_IsAppDlcInstalled(app_manager_interface, EDX, appID, dlc_id);
                 return true;
             }
 

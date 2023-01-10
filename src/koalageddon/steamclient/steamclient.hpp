@@ -26,7 +26,13 @@ VIRTUAL(bool) IClientInventory_GetItemDefinitionIDs(PARAMS(SteamItemDef_t*, uint
 // IClientUser
 VIRTUAL(bool) IClientUser_BIsSubscribedApp(PARAMS(AppId_t));
 
+// IClientUtils
+VIRTUAL(AppId_t) IClientUtils_GetAppID(PARAMS());
+
 namespace koalageddon::steamclient {
+
+    /// We need this interface in other IClient* functions in order to call other functions
+    extern Map<String, void*> interface_name_to_address_map;
 
     void process_client_engine(uintptr_t interface);
 

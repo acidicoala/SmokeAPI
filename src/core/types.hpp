@@ -94,11 +94,6 @@ enum EUserHasLicenseForAppResult {
     k_EUserHasLicenseResultNoAuth = 2,             // User has not been authenticated
 };
 
-class ISteamClient;
-class ISteamApps;
-class ISteamUser;
-class ISteamInventory;
-
 // These aliases exist solely to increase code readability
 
 using AppIdKey = String;

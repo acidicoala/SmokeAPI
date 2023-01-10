@@ -1,10 +1,14 @@
 #include <koalageddon/steamclient/steamclient.hpp>
 #include <steam_impl/steam_apps.hpp>
 
-VIRTUAL(bool) IClientUser_BIsSubscribedApp(PARAMS(AppId_t app_id)) {
-    return steam_apps::IsDlcUnlocked(__func__, 0, app_id, [&]() {
+VIRTUAL(bool) IClientUser_BIsSubscribedApp(PARAMS(AppId_t dlc_id)) {
+    const auto* utils_interface = koalageddon::steamclient::interface_name_to_address_map["IClientUtils"];
+
+    const auto app_id = utils_interface ? IClientUtils_GetAppID(utils_interface, EDX) : 0;
+
+    return steam_apps::IsDlcUnlocked(__func__, app_id, dlc_id, [&]() {
         GET_ORIGINAL_HOOKED_FUNCTION(IClientUser_BIsSubscribedApp)
 
-        return IClientUser_BIsSubscribedApp_o(ARGS(app_id));
+        return IClientUser_BIsSubscribedApp_o(ARGS(dlc_id));
     });
 }

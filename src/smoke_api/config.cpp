@@ -13,25 +13,34 @@ namespace smoke_api::config {
 
         if (exists(path)) {
             try {
-                instance = Json::parse(koalabox::io::read_file(path)).get<Config>();
+                const auto config_str = koalabox::io::read_file(path);
+
+                LOG_DEBUG("Parsing config:\n{}", config_str)
+
+                instance = Json::parse(config_str).get<Config>();
+
             } catch (const Exception& e) {
-                koalabox::util::panic("Error parsing config: {}", e.what());
+                const auto message = fmt::format("Error parsing config file: {}", e.what());
+                koalabox::util::error_box("SmokeAPI Error", message);
             }
         }
     }
 
-    bool is_dlc_unlocked(AppId_t app_id, AppId_t dlc_id, const Function<bool()>& original_function) {
-        const auto app_id_str = std::to_string(app_id);
-        const auto dlc_id_str = std::to_string(dlc_id);
+    Vector<DLC> get_extra_dlcs(AppId_t app_id) {
+        return DLC::get_dlcs_from_apps(instance.extra_dlcs, app_id);
+    }
 
+    bool is_dlc_unlocked(AppId_t app_id, AppId_t dlc_id, const Function<bool()>& original_function) {
         auto status = instance.default_app_status;
 
+        const auto app_id_str = std::to_string(app_id);
         if (instance.override_app_status.contains(app_id_str)) {
             status = instance.override_app_status[app_id_str];
         }
 
-        if (instance.override_app_status.contains(dlc_id_str)) {
-            status = instance.override_app_status[dlc_id_str];
+        const auto dlc_id_str = std::to_string(dlc_id);
+        if (instance.override_dlc_status.contains(dlc_id_str)) {
+            status = instance.override_dlc_status[dlc_id_str];
         }
 
         bool is_unlocked;
@@ -47,15 +56,18 @@ namespace smoke_api::config {
                 is_unlocked = original_function();
                 break;
         }
+
         LOG_TRACE(
-            "App ID: {}, DLC ID: {}, Status: {}, Original: {}, Is Unlocked: {}",
+            "App ID: {}, DLC ID: {}, Status: {}, Original: {}, Unlocked: {}",
             app_id_str, dlc_id_str, Json(status).dump(), original_function(), is_unlocked
         )
 
         return is_unlocked;
     }
 
-    Vector<DLC> get_extra_dlcs(AppId_t app_id) {
-        return DLC::get_dlcs_from_apps(instance.extra_dlcs, app_id);
+    DLL_EXPORT(void) ReloadConfig() {
+        LOG_INFO("Reloading config")
+
+        init();
     }
 }

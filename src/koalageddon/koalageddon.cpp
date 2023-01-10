@@ -9,7 +9,6 @@
 #include <koalabox/logger.hpp>
 
 namespace koalageddon {
-    const void* client_app_manager_interface = nullptr;
 
     KoalageddonConfig config; // NOLINT(cert-err58-cpp)
 
@@ -56,6 +55,8 @@ namespace koalageddon {
     }
 
     void init() {
+        // TODO: Load cached koalageddon config by default
+
         std::thread(
             []() {
                 const auto kg_config_source = init_koalageddon_config();

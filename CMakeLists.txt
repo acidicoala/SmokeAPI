@@ -87,6 +87,7 @@ if (CMAKE_SIZEOF_VOID_P EQUAL 4)
         src/koalageddon/steamclient/client_apps.cpp
         src/koalageddon/steamclient/client_inventory.cpp
         src/koalageddon/steamclient/client_user.cpp
+        src/koalageddon/steamclient/client_utils.cpp
         src/koalageddon/steamclient/steamclient.cpp
         src/koalageddon/steamclient/steamclient.hpp
     )

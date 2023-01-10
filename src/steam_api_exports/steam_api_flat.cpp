@@ -3,30 +3,31 @@
 #include <steam_impl/steam_client.hpp>
 #include <steam_impl/steam_inventory.hpp>
 #include <steam_impl/steam_user.hpp>
+#include <steam_impl/steam_impl.hpp>
 
 // ISteamApps
 
-DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsSubscribedApp(ISteamApps* self, AppId_t appID) {
+DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsSubscribedApp(void* self, AppId_t dlcID) {
     return steam_apps::IsDlcUnlocked(
-        __func__, 0, appID, [&]() {
+        __func__, 0, dlcID, [&]() {
             GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamApps_BIsSubscribedApp)
 
-            return SteamAPI_ISteamApps_BIsSubscribedApp_o(self, appID);
+            return SteamAPI_ISteamApps_BIsSubscribedApp_o(self, dlcID);
         }
     );
 }
 
-DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsDlcInstalled(ISteamApps* self, AppId_t appID) {
+DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsDlcInstalled(void* self, AppId_t dlcID) {
     return steam_apps::IsDlcUnlocked(
-        __func__, 0, appID, [&]() {
+        __func__, 0, dlcID, [&]() {
             GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamApps_BIsDlcInstalled)
 
-            return SteamAPI_ISteamApps_BIsDlcInstalled_o(self, appID);
+            return SteamAPI_ISteamApps_BIsDlcInstalled_o(self, dlcID);
         }
     );
 }
 
-DLL_EXPORT(int) SteamAPI_ISteamApps_GetDLCCount(ISteamApps* self) {
+DLL_EXPORT(int) SteamAPI_ISteamApps_GetDLCCount(void* self) {
     return steam_apps::GetDLCCount(
         __func__, 0, [&]() {
             GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamApps_GetDLCCount)
@@ -37,7 +38,7 @@ DLL_EXPORT(int) SteamAPI_ISteamApps_GetDLCCount(ISteamApps* self) {
 }
 
 DLL_EXPORT(bool) SteamAPI_ISteamApps_BGetDLCDataByIndex(
-    ISteamApps* self,
+    void* self,
     int iDLC,
     AppId_t* pDlcID,
     bool* pbAvailable,
@@ -59,26 +60,10 @@ DLL_EXPORT(bool) SteamAPI_ISteamApps_BGetDLCDataByIndex(
     );
 }
 
-// ISteamUser
-
-DLL_EXPORT(EUserHasLicenseForAppResult) SteamAPI_ISteamUser_UserHasLicenseForApp(
-    ISteamUser* self,
-    CSteamID steamID,
-    AppId_t appID
-) {
-    return steam_user::UserHasLicenseForApp(
-        __func__, appID, [&]() {
-            GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamUser_UserHasLicenseForApp)
-
-            return SteamAPI_ISteamUser_UserHasLicenseForApp_o(self, steamID, appID);
-        }
-    );
-}
-
 // ISteamClient
 
 DLL_EXPORT(void*) SteamAPI_ISteamClient_GetISteamGenericInterface(
-    ISteamClient* self,
+    void* self,
     HSteamUser hSteamUser,
     HSteamPipe hSteamPipe,
     const char* pchVersion
@@ -95,7 +80,7 @@ DLL_EXPORT(void*) SteamAPI_ISteamClient_GetISteamGenericInterface(
 // ISteamInventory
 
 DLL_EXPORT(EResult) SteamAPI_ISteamInventory_GetResultStatus(
-    ISteamInventory* self,
+    void* self,
     SteamInventoryResult_t resultHandle
 ) {
     return steam_inventory::GetResultStatus(
@@ -108,7 +93,7 @@ DLL_EXPORT(EResult) SteamAPI_ISteamInventory_GetResultStatus(
 }
 
 DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetResultItems(
-    ISteamInventory* self,
+    void* self,
     SteamInventoryResult_t resultHandle,
     SteamItemDetails_t* pOutItemsArray,
     uint32_t* punOutItemsArraySize
@@ -129,7 +114,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetResultItems(
 }
 
 DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetResultItemProperty(
-    ISteamInventory* self,
+    void* self,
     SteamInventoryResult_t resultHandle,
     uint32_t unItemIndex,
     const char* pchPropertyName,
@@ -148,7 +133,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetResultItemProperty(
 }
 
 DLL_EXPORT(bool) SteamAPI_ISteamInventory_CheckResultSteamID(
-    ISteamInventory* self,
+    void* self,
     SteamInventoryResult_t resultHandle,
     CSteamID steamIDExpected
 ) {
@@ -162,7 +147,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_CheckResultSteamID(
 }
 
 DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetAllItems(
-    ISteamInventory* self,
+    void* self,
     SteamInventoryResult_t* pResultHandle
 ) {
     return steam_inventory::GetAllItems(
@@ -175,7 +160,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetAllItems(
 }
 
 DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetItemsByID(
-    ISteamInventory* self,
+    void* self,
     SteamInventoryResult_t* pResultHandle,
     const SteamItemInstanceID_t* pInstanceIDs,
     uint32_t unCountInstanceIDs
@@ -190,7 +175,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetItemsByID(
 }
 
 DLL_EXPORT(bool) SteamAPI_ISteamInventory_SerializeResult(
-    ISteamInventory* self,
+    void* self,
     SteamInventoryResult_t resultHandle,
     void* pOutBuffer,
     uint32_t* punOutBufferSize
@@ -205,7 +190,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_SerializeResult(
 }
 
 DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetItemDefinitionIDs(
-    ISteamInventory* self,
+    void* self,
     SteamItemDef_t* pItemDefIDs,
     uint32_t* punItemDefIDsArraySize
 ) {
@@ -214,6 +199,22 @@ DLL_EXPORT(bool) SteamAPI_ISteamInventory_GetItemDefinitionIDs(
             GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamInventory_GetItemDefinitionIDs)
 
             return SteamAPI_ISteamInventory_GetItemDefinitionIDs_o(self, pItemDefIDs, punItemDefIDsArraySize);
+        }
+    );
+}
+
+// ISteamUser
+
+DLL_EXPORT(EUserHasLicenseForAppResult) SteamAPI_ISteamUser_UserHasLicenseForApp(
+    void* self,
+    CSteamID steamID,
+    AppId_t dlcID
+) {
+    return steam_user::UserHasLicenseForApp(
+        __func__, steam_impl::get_app_id_or_throw(), dlcID, [&]() {
+            GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamUser_UserHasLicenseForApp)
+
+            return SteamAPI_ISteamUser_UserHasLicenseForApp_o(self, steamID, dlcID);
         }
     );
 }

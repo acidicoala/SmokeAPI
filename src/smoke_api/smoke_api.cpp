@@ -128,4 +128,5 @@ namespace smoke_api {
             LOG_ERROR("Shutdown error: {}", ex.what())
         }
     }
+
 }
