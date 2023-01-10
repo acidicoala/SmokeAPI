@@ -4,30 +4,19 @@
 #include <koalabox/core.hpp>
 
 namespace smoke_api::config {
+
     enum class AppStatus {
-        LOCKED,
+        UNDEFINED,
+        ORIGINAL,
         UNLOCKED,
-        UNDEFINED
+        LOCKED,
     };
 
     NLOHMANN_JSON_SERIALIZE_ENUM(AppStatus, {
         { AppStatus::UNDEFINED, nullptr },
-        { AppStatus::LOCKED, "locked" },
+        { AppStatus::ORIGINAL, "original" },
         { AppStatus::UNLOCKED, "unlocked" },
-    })
-
-    enum class DlcStatus {
-        LOCKED,
-        UNLOCKED,
-        ORIGINAL,
-        UNDEFINED
-    };
-
-    NLOHMANN_JSON_SERIALIZE_ENUM(DlcStatus, {
-        { DlcStatus::UNDEFINED, nullptr },
-        { DlcStatus::LOCKED, "locked" },
-        { DlcStatus::UNLOCKED, "unlocked" },
-        { DlcStatus::ORIGINAL, "original" },
+        { AppStatus::LOCKED, "locked" },
     })
 
     struct Config {
@@ -35,9 +24,7 @@ namespace smoke_api::config {
         bool logging = false;
         bool unlock_family_sharing = true;
         AppStatus default_app_status = AppStatus::UNLOCKED;
-        DlcStatus default_dlc_status = DlcStatus::UNLOCKED;
         Map<String, AppStatus> override_app_status;
-        Map<String, DlcStatus> override_dlc_status;
         AppDlcNameMap extra_dlcs;
         bool auto_inject_inventory = true;
         Vector<uint32_t> extra_inventory_items;
@@ -50,9 +37,7 @@ namespace smoke_api::config {
             logging,
             unlock_family_sharing,
             default_app_status,
-            default_dlc_status,
             override_app_status,
-            override_dlc_status,
             extra_dlcs,
             auto_inject_inventory,
             extra_inventory_items,
@@ -63,10 +48,6 @@ namespace smoke_api::config {
     extern Config instance;
 
     void init();
-
-    AppStatus get_app_status(uint32_t app_id);
-
-    DlcStatus get_dlc_status(uint32_t dlc_id);
 
     bool is_dlc_unlocked(uint32_t app_id, uint32_t dlc_id, const Function<bool()>& original_function);
 

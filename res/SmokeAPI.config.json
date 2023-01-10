@@ -3,15 +3,10 @@
   "logging": true,
   "unlock_family_sharing": true,
   "default_app_status": "unlocked",
-  "default_dlc_status": "unlocked",
   "override_app_status": {
-    "1234": "locked",
-    "4321": "unlocked"
-  },
-  "override_dlc_status": {
-    "56789": "locked",
-    "98765": "unlocked",
-    "16384": "original"
+    "1234": "original",
+    "4321": "unlocked",
+    "5678": "locked"
   },
   "extra_dlcs": {
     "1234": {

@@ -83,7 +83,7 @@ SmokeAPI does not require any manual configuration. By default, it uses the most
 
 ¹ DLC/Item IDs can be obtained from https://steamdb.info. You need to be logged in with your steam account in order to see accurate inventory item IDs.
 
-[SmokeAPI.json]: res/SmokeAPI.json
+[SmokeAPI.json]: res/SmokeAPI.config.json
 
 [manually maintained list of DLC IDs]: https://github.com/acidicoala/public-entitlements/blob/main/steam/v1/dlc.json
 
