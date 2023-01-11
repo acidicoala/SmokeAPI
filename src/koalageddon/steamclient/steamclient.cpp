@@ -22,17 +22,17 @@ namespace koalageddon::steamclient {
 
     const auto MAX_INSTRUCTION_SIZE = 15;
 
-    // TODO: Refactor into Koalabox
     ZydisDecoder decoder = {};
     ZydisFormatter formatter = {};
 
     void construct_ordinal_map( // NOLINT(misc-no-recursion)
         const String& target_interface,
-        Map<String, uint32_t>& map,
-        uintptr_t start_address,
-        Set<uintptr_t>& visited_addresses,
-        InstructionContext context
+        Map<String, uint32_t>& function_name_to_ordinal_map,
+        uintptr_t start_address
     );
+
+#define CONSTRUCT_ORDINAL_MAP(INTERFACE) \
+    construct_ordinal_map(#INTERFACE, ordinal_map[#INTERFACE], function_selector_address);
 
 #define HOOK_FUNCTION(INTERFACE, FUNC) hook::swap_virtual_func_or_throw( \
     globals::address_map, \
@@ -84,16 +84,6 @@ namespace koalageddon::steamclient {
     SELECTOR_IMPLEMENTATION(IClientUtils, {
         HOOK_FUNCTION(IClientUtils, GetAppID)
     })
-
-#define CONSTRUCT_ORDINAL_MAP(INTERFACE)        \
-    Set<uintptr_t> nested_visited_addresses;    \
-    construct_ordinal_map(                      \
-        #INTERFACE,                             \
-        ordinal_map[#INTERFACE],                \
-        function_selector_address,              \
-        nested_visited_addresses,               \
-        {}                                      \
-    );
 
 #define DETOUR_SELECTOR(INTERFACE)                                      \
     if(interface_name == #INTERFACE){                                   \
@@ -163,160 +153,6 @@ namespace koalageddon::steamclient {
         return std::nullopt;
     }
 
-    void construct_ordinal_map( // NOLINT(misc-no-recursion)
-        const String& target_interface,
-        Map<String, uint32_t>& map,
-        uintptr_t start_address,
-        Set<uintptr_t>& visited_addresses,
-        InstructionContext context
-    ) {
-        if (visited_addresses.contains(start_address)) {
-            // Avoid infinite recursion
-            return;
-        }
-
-        visited_addresses.insert(start_address);
-
-        if (context.function_name && map.contains(*context.function_name)) {
-            // Avoid duplicate work
-            return;
-        }
-
-        const auto is_mov_base_esp = [](const ZydisDecodedInstruction& instruction) {
-            return instruction.mnemonic == ZYDIS_MNEMONIC_MOV &&
-                   instruction.operand_count == 2 &&
-                   instruction.operands[0].type == ZYDIS_OPERAND_TYPE_REGISTER &&
-                   instruction.operands[1].reg.value == ZYDIS_REGISTER_ESP;
-        };
-
-        // Initialize with a dummy previous instruction
-        std::list instruction_list{ZydisDecodedInstruction{}};
-
-        auto current_address = (uintptr_t) start_address;
-        ZydisDecodedInstruction instruction{};
-        while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(
-            &decoder,
-            (void*) current_address,
-            MAX_INSTRUCTION_SIZE,
-            &instruction
-        ))) {
-            LOG_TRACE(
-                "{} visiting {} │ {}", __func__,
-                (void*) current_address, *get_instruction_string(instruction, current_address)
-            )
-
-            const auto& last_instruction = instruction_list.front();
-
-            if (!context.base_register && is_mov_base_esp(instruction)) {
-                // Save base register
-                context.base_register = instruction.operands[0].reg.value;
-            } else if (is_push_immediate(last_instruction) &&
-                       is_push_immediate(instruction) &&
-                       !context.function_name) {
-                // The very first 2 consecutive pushes indicate interface and function names.
-                // However, subsequent pushes may contain irrelevant strings.
-                const auto push_string_1 = get_string_argument(last_instruction);
-                const auto push_string_2 = get_string_argument(instruction);
-
-                if (push_string_1 && push_string_2) {
-                    if (*push_string_1 == target_interface) {
-                        context.function_name = push_string_2;
-                    } else if (*push_string_2 == target_interface) {
-                        context.function_name = push_string_1;
-                    }
-
-                    if (context.function_name && map.contains(*context.function_name)) {
-                        // Bail early to avoid duplicate work
-                        return;
-                    }
-                }
-            } else if (instruction.meta.category == ZYDIS_CATEGORY_COND_BR) {
-                // On conditional jump we should recurse
-                const auto jump_taken_destination = get_absolute_address(instruction, current_address);
-                const auto jump_not_taken_destination = current_address + instruction.length;
-
-                construct_ordinal_map(target_interface, map, jump_taken_destination, visited_addresses, context);
-                construct_ordinal_map(target_interface, map, jump_not_taken_destination, visited_addresses, context);
-
-                // But not continue forward, in order to avoid duplicate processing
-                return;
-            } else if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
-                       instruction.operands[0].type == ZYDIS_OPERAND_TYPE_IMMEDIATE) {
-                // On unconditional jump we should recurse as well
-                const auto jump_destination = get_absolute_address(instruction, current_address);
-
-                construct_ordinal_map(target_interface, map, jump_destination, visited_addresses, context);
-                return;
-            } else if (instruction.mnemonic == ZYDIS_MNEMONIC_CALL) {
-                // On call instructions we should extract the ordinal
-
-                if (context.base_register && context.function_name) {
-                    std::optional<uint32_t> offset;
-
-                    const auto operand = instruction.operands[0];
-
-                    auto last_destination_reg = ZYDIS_REGISTER_NONE;
-                    bool is_derived_from_base_reg = false;
-
-                    // Sometimes the offset is present in the call instruction itself,
-                    // hence we can immediately obtain it.
-                    if (operand.type == ZYDIS_OPERAND_TYPE_MEMORY && operand.mem.base != ZYDIS_REGISTER_NONE) {
-                        offset = static_cast<uint32_t>(operand.mem.disp.value);
-                        last_destination_reg = operand.mem.base;
-                    } else if (operand.type == ZYDIS_OPERAND_TYPE_REGISTER) {
-                        last_destination_reg = operand.reg.value;
-                    }
-
-                    for (const auto& previous_instruction: instruction_list) {
-                        const auto& destination_operand = previous_instruction.operands[0];
-                        const auto& source_operand = previous_instruction.operands[1];
-
-                        // Extract offset if necessary
-                        if (previous_instruction.mnemonic == ZYDIS_MNEMONIC_MOV &&
-                            previous_instruction.operand_count == 2 &&
-                            destination_operand.reg.value == last_destination_reg &&
-                            source_operand.type == ZYDIS_OPERAND_TYPE_MEMORY) {
-
-                            const auto source_mem = source_operand.mem;
-                            if (source_mem.base == *context.base_register &&
-                                source_mem.disp.has_displacement &&
-                                source_mem.disp.value == 8) {
-                                // We have verified that the chain eventually leads up to the base register.
-                                // Hence, we can conclude that the offset is valid.
-                                is_derived_from_base_reg = true;
-                                break;
-                            }
-
-                            // Otherwise, keep going through the chain
-                            last_destination_reg = source_mem.base;
-
-                            if (!offset) {
-                                offset = static_cast<uint32_t>(source_mem.disp.value);
-                            }
-                        }
-                    }
-
-                    if (offset && is_derived_from_base_reg) {
-                        const auto ordinal = *offset / sizeof(uintptr_t);
-
-                        LOG_DEBUG("Found function ordinal {}::{}@{}", target_interface, *context.function_name, ordinal)
-
-                        map[*context.function_name] = ordinal;
-                        break;
-                    }
-                }
-            } else if (instruction.mnemonic == ZYDIS_MNEMONIC_RET) {
-                // Finish parsing on return
-                return;
-            }
-
-            // We push items to the front so that it becomes easy to iterate over instructions
-            // in reverse order of addition.
-            instruction_list.push_front(instruction);
-            current_address += instruction.length;
-        }
-    }
-
     std::optional<String> find_interface_name(uintptr_t selector_address) {
         auto current_address = selector_address;
         ZydisDecodedInstruction instruction{};
@@ -346,11 +182,24 @@ namespace koalageddon::steamclient {
         return std::nullopt;
     }
 
-    void process_interface_selector( // NOLINT(misc-no-recursion)
-        const uintptr_t start_address,
-        Set<uintptr_t>& visited_addresses
+    /**
+     * Recursively walks through the code, until a return instruction is reached.
+     * Recursion occurs whenever a jump/branch is encountered.
+     */
+    template<typename T>
+    void visit_code( // NOLINT(misc-no-recursion)
+        Set<uintptr_t>& visited_addresses,
+        uintptr_t start_address,
+        T context,
+        const Function<bool(
+            const ZydisDecodedInstruction& instruction,
+            const ZydisDecodedOperand& operand,
+            const uintptr_t& current_address,
+            T& context,
+            const std::list<ZydisDecodedInstruction>& instruction_list
+        )>& callback
     ) {
-        LOG_TRACE("start_address: {}", (void*) start_address)
+        LOG_TRACE("{} -> start_address: {}", __func__, (void*) start_address)
 
         if (visited_addresses.contains(start_address)) {
             LOG_TRACE("Breaking recursion due to visited address")
@@ -358,77 +207,226 @@ namespace koalageddon::steamclient {
         }
 
         auto current_address = start_address;
+        std::list instruction_list{ZydisDecodedInstruction{}};
 
         ZydisDecodedInstruction instruction{};
-        while (ZYAN_SUCCESS(ZydisDecoderDecodeBuffer(
-            &decoder,
-            (void*) current_address,
-            MAX_INSTRUCTION_SIZE,
-            &instruction
-        ))) {
+        while (
+            ZYAN_SUCCESS(
+                ZydisDecoderDecodeBuffer(
+                    &decoder,
+                    (void*) current_address,
+                    MAX_INSTRUCTION_SIZE,
+                    &instruction
+                )
+            )) {
             visited_addresses.insert(current_address);
             LOG_TRACE(
-                "{} visiting {} │ {}", __func__,
-                (void*) current_address, *get_instruction_string(instruction, current_address)
+                "{} -> visiting {} │ {}",
+                __func__, (void*) current_address, *get_instruction_string(instruction, current_address)
             )
 
             const auto operand = instruction.operands[0];
 
-            if (instruction.mnemonic == ZYDIS_MNEMONIC_CALL &&
-                operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE
-                ) {
-                LOG_TRACE("Found call instruction at {}", (void*) current_address)
+            const auto should_return = callback(instruction, operand, current_address, context, instruction_list);
 
-                const auto function_selector_address = get_absolute_address(instruction, current_address);
+            if (should_return) {
+                return;
+            }
 
-                const auto interface_name_opt = find_interface_name(function_selector_address);
-
-                if (interface_name_opt) {
-                    const auto& interface_name = *interface_name_opt;
-
-                    detour_interface_selector(interface_name, function_selector_address);
-                }
-            } else if (instruction.meta.category == ZYDIS_CATEGORY_COND_BR) {
+            if (instruction.meta.category == ZYDIS_CATEGORY_COND_BR) {
                 const auto jump_taken_destination = get_absolute_address(instruction, current_address);
                 const auto jump_not_taken_destination = current_address + instruction.length;
 
-                process_interface_selector(jump_taken_destination, visited_addresses);
-                process_interface_selector(jump_not_taken_destination, visited_addresses);
+                visit_code(visited_addresses, jump_taken_destination, context, callback);
+                visit_code(visited_addresses, jump_not_taken_destination, context, callback);
 
-                LOG_TRACE("Breaking recursion due to conditional branch")
+                LOG_TRACE("{} -> Breaking recursion due to a conditional branch", __func__)
                 return;
-            } else if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
-                operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE
-                ) {
+            }
+
+            if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP && operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE) {
                 const auto jump_destination = get_absolute_address(instruction, current_address);
 
-                process_interface_selector(jump_destination, visited_addresses);
+                visit_code(visited_addresses, jump_destination, context, callback);
 
-                LOG_TRACE("Breaking recursion due to unconditional branch")
+                LOG_TRACE("{} -> Breaking recursion due to an unconditional jump", __func__)
                 return;
-            } else if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
-                       operand.type == ZYDIS_OPERAND_TYPE_MEMORY &&
-                       operand.mem.scale == sizeof(uintptr_t) &&
-                       operand.mem.disp.has_displacement
-                ) {
+            }
+
+            if (instruction.mnemonic == ZYDIS_MNEMONIC_JMP &&
+                operand.type == ZYDIS_OPERAND_TYPE_MEMORY &&
+                operand.mem.scale == sizeof(uintptr_t) &&
+                operand.mem.disp.has_displacement) {
                 // Special handling for jump tables. Guaranteed to be present in the interface selector.
                 const auto* table = (uintptr_t*) operand.mem.disp.value;
 
                 const auto* table_entry = table;
                 while (util::is_valid_pointer((void*) *table_entry)) {
-                    process_interface_selector(*table_entry, visited_addresses);
+                    visit_code(visited_addresses, *table_entry, context, callback);
 
                     table_entry++;
                 }
 
-                return;
-            } else if (instruction.mnemonic == ZYDIS_MNEMONIC_RET) {
-                LOG_TRACE("Breaking recursion due to return instruction")
+                LOG_TRACE("{} -> Breaking recursion due to a jump table", __func__)
                 return;
             }
 
+            if (instruction.mnemonic == ZYDIS_MNEMONIC_RET) {
+                LOG_TRACE("{} -> Breaking recursion due to return instruction", __func__)
+                return;
+            }
+
+
+            // We push items to the front so that it becomes easy to iterate over instructions
+            // in reverse order of addition.
+            instruction_list.push_front(instruction);
             current_address += instruction.length;
         }
+    }
+
+    void construct_ordinal_map( // NOLINT(misc-no-recursion)
+        const String& target_interface,
+        Map<String, uint32_t>& function_name_to_ordinal_map,
+        uintptr_t start_address
+    ) {
+        Set<uintptr_t> visited_addresses;
+        visit_code<InstructionContext>(visited_addresses, start_address, {}, [&](
+                const ZydisDecodedInstruction& instruction,
+                const ZydisDecodedOperand& operand,
+                const auto&,
+                InstructionContext& context,
+                const std::list<ZydisDecodedInstruction>& instruction_list
+            ) {
+                if (context.function_name && function_name_to_ordinal_map.contains(*context.function_name)) {
+                    // Avoid duplicate work
+                    return true;
+                }
+
+                const auto& last_instruction = instruction_list.front();
+
+                const auto is_mov_base_esp = instruction.mnemonic == ZYDIS_MNEMONIC_MOV &&
+                                             instruction.operand_count == 2 &&
+                                             instruction.operands[0].type == ZYDIS_OPERAND_TYPE_REGISTER &&
+                                             instruction.operands[1].reg.value == ZYDIS_REGISTER_ESP;
+
+                if (!context.base_register && is_mov_base_esp) {
+                    // Save base register
+                    context.base_register = instruction.operands[0].reg.value;
+                } else if (is_push_immediate(last_instruction) &&
+                           is_push_immediate(instruction) &&
+                           !context.function_name) {
+                    // The very first 2 consecutive pushes indicate interface and function names.
+                    // However, subsequent pushes may contain irrelevant strings.
+                    const auto push_string_1 = get_string_argument(last_instruction);
+                    const auto push_string_2 = get_string_argument(instruction);
+
+                    if (push_string_1 && push_string_2) {
+                        if (*push_string_1 == target_interface) {
+                            context.function_name = push_string_2;
+                        } else if (*push_string_2 == target_interface) {
+                            context.function_name = push_string_1;
+                        }
+
+                        if (context.function_name && function_name_to_ordinal_map.contains(*context.function_name)) {
+                            // Bail early to avoid duplicate work
+                            return true;
+                        }
+                    }
+                } else if (instruction.mnemonic == ZYDIS_MNEMONIC_CALL) {
+                    // On call instructions we should extract the ordinal
+
+                    if (context.base_register && context.function_name) {
+                        const auto& base_register = *(context.base_register);
+                        const auto& function_name = *(context.function_name);
+
+
+                        std::optional<uint32_t> offset;
+
+                        auto last_destination_reg = ZYDIS_REGISTER_NONE;
+                        bool is_derived_from_base_reg = false;
+
+                        // Sometimes the offset is present in the call instruction itself,
+                        // hence we can immediately obtain it.
+                        if (operand.type == ZYDIS_OPERAND_TYPE_MEMORY && operand.mem.base != ZYDIS_REGISTER_NONE) {
+                            offset = static_cast<uint32_t>(operand.mem.disp.value);
+                            last_destination_reg = operand.mem.base;
+                        } else if (operand.type == ZYDIS_OPERAND_TYPE_REGISTER) {
+                            last_destination_reg = operand.reg.value;
+                        }
+
+                        for (const auto& previous_instruction: instruction_list) {
+                            const auto& destination_operand = previous_instruction.operands[0];
+                            const auto& source_operand = previous_instruction.operands[1];
+
+                            // Extract offset if necessary
+                            if (previous_instruction.mnemonic == ZYDIS_MNEMONIC_MOV &&
+                                previous_instruction.operand_count == 2 &&
+                                destination_operand.reg.value == last_destination_reg &&
+                                source_operand.type == ZYDIS_OPERAND_TYPE_MEMORY) {
+
+                                const auto source_mem = source_operand.mem;
+                                if (source_mem.base == base_register &&
+                                    source_mem.disp.has_displacement &&
+                                    source_mem.disp.value == 8) {
+                                    // We have verified that the chain eventually leads up to the base register.
+                                    // Hence, we can conclude that the offset is valid.
+                                    is_derived_from_base_reg = true;
+                                    break;
+                                }
+
+                                // Otherwise, keep going through the chain
+                                last_destination_reg = source_mem.base;
+
+                                if (!offset) {
+                                    offset = static_cast<uint32_t>(source_mem.disp.value);
+                                }
+                            }
+                        }
+
+                        if (offset && is_derived_from_base_reg) {
+                            const auto ordinal = *offset / sizeof(uintptr_t);
+
+                            LOG_DEBUG("Found function ordinal {}::{}@{}", target_interface, function_name, ordinal)
+
+                            function_name_to_ordinal_map[function_name] = ordinal;
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+        );
+    }
+
+    void process_interface_selector( // NOLINT(misc-no-recursion)
+        const uintptr_t start_address,
+        Set<uintptr_t>& visited_addresses
+    ) {
+        visit_code<nullptr_t>(visited_addresses, start_address, nullptr, [](
+                const ZydisDecodedInstruction& instruction,
+                const ZydisDecodedOperand& operand,
+                const auto& current_address,
+                auto,
+                const auto&
+            ) {
+                if (instruction.mnemonic == ZYDIS_MNEMONIC_CALL && operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE) {
+                    LOG_TRACE("Found call instruction at {}", (void*) current_address)
+
+                    const auto function_selector_address = get_absolute_address(instruction, current_address);
+
+                    const auto interface_name_opt = find_interface_name(function_selector_address);
+
+                    if (interface_name_opt) {
+                        const auto& interface_name = *interface_name_opt;
+
+                        detour_interface_selector(interface_name, function_selector_address);
+                    }
+                }
+
+                return false;
+            }
+        );
     }
 
     void process_client_engine(uintptr_t interface) {
