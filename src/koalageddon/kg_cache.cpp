@@ -8,9 +8,9 @@ namespace koalageddon::kg_cache {
 
     std::optional<KoalageddonConfig> get_koalageddon_config() {
         try {
-            const auto cache = koalabox::cache::read_from_cache(KEY_KG_CONFIG);
+            const auto config_json = koalabox::cache::read_from_cache(KEY_KG_CONFIG);
 
-            return cache[KEY_KG_CONFIG].get<KoalageddonConfig>();
+            return config_json.get<KoalageddonConfig>();
         } catch (const Exception& e) {
             LOG_ERROR("Failed to get cached koalageddon config: {}", e.what())
 

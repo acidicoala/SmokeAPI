@@ -54,23 +54,24 @@ void init_hook_mode() {
     // the support for it has been dropped from this project.
 }
 
-bool is_valve_steam(const String& exe_name) {
-    if (exe_name < not_equals > "steam.exe") {
+bool is_valve_steam(const String& exe_name) noexcept {
+    try {
+        if (exe_name < not_equals > "steam.exe") {
+            return false;
+        }
+
+        // Verify that it's steam from valve, and not some other executable coincidentally named steam
+
+        const HMODULE steam_handle = koalabox::win_util::get_module_handle_or_throw(nullptr);
+        const auto manifest = koalabox::win_util::get_module_manifest(steam_handle);
+
+        // Steam.exe manifest is expected to contain this string
+        return manifest < contains > "valvesoftware.steam.steam";
+    } catch (const Exception& e) {
+        LOG_ERROR("{} -> {}", __func__, e.what())
+
         return false;
     }
-
-    const HMODULE steam_handle = koalabox::win_util::get_module_handle_or_throw(nullptr);
-    const auto manifest = koalabox::win_util::get_module_manifest(steam_handle);
-
-    // Verify that it's steam from valve, and not some other executable coincidentally named steam
-
-    if (!manifest) {
-        // Steam.exe is expected to have a manifest
-        return false;
-    }
-
-    // Steam.exe manifest is expected to contain this string
-    return *manifest < contains > "valvesoftware.steam.steam";
 }
 
 namespace smoke_api {
@@ -87,7 +88,8 @@ namespace smoke_api {
                 koalabox::logger::init_file_logger(paths::get_log_path());
             }
 
-            // FIXME: Dynamic timestamp resolution: https://stackoverflow.com/q/17212518
+            // This kind of timestamp is reliable on for CI builds, as it will reflect the compilation
+            // time stamp only when this file gets recompiled.
             LOG_INFO("🐨 {} v{} | Compiled at '{}'", PROJECT_NAME, PROJECT_VERSION, __TIMESTAMP__)
 
             koalabox::cache::init_cache(paths::get_cache_path());

@@ -7,7 +7,6 @@
 namespace smoke_api::config {
     Config instance; // NOLINT(cert-err58-cpp)
 
-    // TODO: Reloading via export
     void init() {
         const auto path = paths::get_config_path();
 
@@ -15,10 +14,9 @@ namespace smoke_api::config {
             try {
                 const auto config_str = koalabox::io::read_file(path);
 
-                LOG_DEBUG("Parsing config:\n{}", config_str)
-
                 instance = Json::parse(config_str).get<Config>();
 
+                LOG_DEBUG("Parsed config:\n{}", Json(instance))
             } catch (const Exception& e) {
                 const auto message = fmt::format("Error parsing config file: {}", e.what());
                 koalabox::util::error_box("SmokeAPI Error", message);

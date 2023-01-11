@@ -4,9 +4,10 @@
 #include <build_config.h>
 #include <smoke_api/config.hpp>
 #include <steam_api_exports/steam_api_exports.hpp>
+#include <core/api.hpp>
 #include <koalabox/dll_monitor.hpp>
-#include <koalabox/http_client.hpp>
 #include <koalabox/logger.hpp>
+#include <koalabox/win_util.hpp>
 
 namespace koalageddon {
 
@@ -15,54 +16,76 @@ namespace koalageddon {
     /**
     * @return A string representing the source of the config.
     */
-    String init_koalageddon_config() {
-        if (!smoke_api::config::instance.koalageddon_config.is_null()) {
-            try {
-                // First try to read a local config override
-                config = smoke_api::config::instance.koalageddon_config.get<decltype(config)>();
+    void init_koalageddon_config() {
+        const auto print_source = [](const String& source) {
+            LOG_INFO("Loaded Koalageddon config from the {}", source)
+        };
 
-                return "local config override";
+        // First try to read a local config override
+        const auto& kg_config = smoke_api::config::instance.koalageddon_config;
+        if (!kg_config.is_null()) {
+            try {
+                config = kg_config.get<decltype(config)>();
+
+                print_source("local config override");
+                return;
             } catch (const Exception& ex) {
                 LOG_ERROR("Failed to get local koalageddon config: {}", ex.what())
             }
         }
 
+        // Then try to get a cached copy of a previously fetched config.
         try {
-            // Then try to fetch config from GitHub
-            const String url = "https://raw.githubusercontent.com/acidicoala/public-entitlements/main/koalageddon/v2/steam.json";
-            config = koalabox::http_client::fetch_json(url).get<decltype(config)>();
-
-            kg_cache::save_koalageddon_config(config);
-
-            return "GitHub repository";
-        } catch (const Exception& ex) {
-            LOG_ERROR("Failed to get remote koalageddon config: {}", ex.what())
-        }
-
-        try {
-            // Then try to get a cached copy of a previously fetched config.
-            // We expect this unboxing to throw exception if no koalageddon config is present.
             config = kg_cache::get_koalageddon_config().value();
 
-            return "disk cache";
+            print_source("disk cache");
         } catch (const Exception& ex) {
             LOG_ERROR("Failed to get cached koalageddon config: {}", ex.what())
+
+            print_source("default config bundled in the binary");
+
+            // Fallback on the default config, to continue execution immediately.
+            config = {};
         }
 
-        // Finally, fallback on the default config
-        config = {};
-        return "default config bundled in the binary";
+        // Finally, fetch the remote config from GitHub, and inform user about the need to restart Steam,
+        // if a new config has been fetched
+        NEW_THREAD({
+            try {
+                const auto github_config_opt = api::fetch_koalageddon_config();
+                if (!github_config_opt) {
+                    return;
+                }
+
+                const auto github_config = *github_config_opt;
+
+                kg_cache::save_koalageddon_config(github_config);
+
+                if (github_config == config) {
+                    LOG_DEBUG("Fetched Koalageddon config is equal to existing config")
+
+                    return;
+                }
+
+                LOG_DEBUG("Fetched a new Koalageddon config")
+
+                ::MessageBox(
+                    nullptr,
+                    TEXT(
+                        "SmokeAPI has downloaded an updated config for Koalageddon mode. "
+                        "Please restart Steam in order to apply the new Koalageddon config. "
+                    ),
+                    TEXT("SmokeAPI - Koalageddon"),
+                    MB_SETFOREGROUND | MB_ICONINFORMATION | MB_OK
+                );
+            } catch (const Exception& ex) {
+                LOG_ERROR("Failed to get remote koalageddon config: {}", ex.what())
+            }
+        })
     }
 
     void init() {
-        // TODO: Load cached koalageddon config by default
-
-        std::thread(
-            []() {
-                const auto kg_config_source = init_koalageddon_config();
-                LOG_INFO("Loaded Koalageddon config from the {}", kg_config_source)
-            }
-        ).detach();
+        init_koalageddon_config();
 
         koalabox::dll_monitor::init_listener(
             {VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& module_handle, const String& name) {

@@ -32,7 +32,7 @@ namespace smoke_api::config {
         // We have to use general json type here since the library doesn't support std::optional
         Json koalageddon_config;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE(
             Config, // NOLINT(misc-const-correctness)
             $version,
             logging,

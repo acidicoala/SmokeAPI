@@ -14,6 +14,6 @@ jobs:
       zip_command: >
         zip -j $ZIP_NAME
         artifacts/*/*.dll
-        res/SmokeAPI.json
+        res/SmokeAPI.config.json
 
       config: Release

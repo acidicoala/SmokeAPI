@@ -77,10 +77,10 @@ set(
 if (CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(
         SMOKE_API_SOURCES ${SMOKE_API_SOURCES}
-        src/koalageddon/kg_cache.hpp
         src/koalageddon/kg_cache.cpp
-        src/koalageddon/koalageddon.hpp
+        src/koalageddon/kg_cache.hpp
         src/koalageddon/koalageddon.cpp
+        src/koalageddon/koalageddon.hpp
         src/koalageddon/vstdlib.cpp
         src/koalageddon/vstdlib.hpp
         src/koalageddon/steamclient/client_app_manager.cpp
