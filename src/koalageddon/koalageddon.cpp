@@ -8,6 +8,7 @@
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/logger.hpp>
 #include <koalabox/win_util.hpp>
+#include <koalabox/ipc.hpp>
 
 namespace koalageddon {
 
@@ -117,5 +118,21 @@ namespace koalageddon {
                 }
             }
         );
+
+        NEW_THREAD({
+            koalabox::ipc::init_pipe_server("smoke_api.koalageddon", [](const koalabox::ipc::Request& request) {
+                koalabox::ipc::Response response;
+
+                if (request.name < equals > "config::reload") {
+                    smoke_api::config::ReloadConfig();
+                    response.success = true;
+                } else {
+                    response.success = false;
+                    response.data["error_message"] = "Invalid request name: " + request.name;
+                }
+
+                return response;
+            });
+        })
     }
 }

@@ -113,6 +113,7 @@ namespace smoke_api {
             } else {
                 init_proxy_mode();
             }
+
             LOG_INFO("🚀 Initialization complete")
         } catch (const Exception& ex) {
             koalabox::util::panic(fmt::format("Initialization error: {}", ex.what()));

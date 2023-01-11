@@ -54,4 +54,6 @@ namespace smoke_api::config {
     Vector<DLC> get_extra_dlcs(AppId_t app_id);
 
     bool is_dlc_unlocked(uint32_t app_id, uint32_t dlc_id, const Function<bool()>& original_function);
+
+    DLL_EXPORT(void) ReloadConfig();
 }
