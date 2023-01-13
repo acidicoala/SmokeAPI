@@ -1,9 +1,10 @@
 #pragma once
 
-#include <koalabox/core.hpp>
-#include <koalabox/hook.hpp>
 #include <nlohmann/json.hpp>
 #include <core/globals.hpp>
+#include <koalabox/core.hpp>
+#include <koalabox/hook.hpp>
+#include <koalabox/logger.hpp>
 
 /**
  * By default, virtual functions are declared with __thiscall
@@ -23,7 +24,7 @@
  *
  * In x86-64 however, there is only one calling convention,
  * so __fastcall is simply ignored. However, RDX in this case
- * will store the 1st actual argument to the function, so we
+ * will store_mode the 1st actual argument to the function, so we
  * have to omit it from the function signature.
  *
  * The macros below implement the above-mentioned considerations.
@@ -60,9 +61,9 @@
 #define DETOUR_VSTDLIB(FUNC) $DETOUR(vstdlib::FUNC, #FUNC, globals::vstdlib_module)
 
 #ifdef _WIN64
-#define COMPILE_KOALAGEDDON 0
+#define COMPILE_STORE_MODE 0
 #else
-#define COMPILE_KOALAGEDDON 1
+#define COMPILE_STORE_MODE 1
 #endif
 
 constexpr auto STEAM_APPS = "STEAMAPPS_INTERFACE_VERSION";
@@ -134,5 +135,6 @@ public:
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(DLC, appid, name)
 
     static Vector<DLC> get_dlcs_from_apps(const AppDlcNameMap& apps, AppId_t app_id);
+
     static DlcNameMap get_dlc_map_from_vector(const Vector<DLC>& vector);
 };

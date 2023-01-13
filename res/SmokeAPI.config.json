@@ -12,6 +12,8 @@
     "4321": "unlocked",
     "5678": "locked"
   },
+  "auto_inject_inventory": true,
+  "extra_inventory_items": [],
   "extra_dlcs": {
     "1234": {
       "dlcs": {
@@ -24,7 +26,5 @@
       }
     }
   },
-  "auto_inject_inventory": true,
-  "extra_inventory_items": [],
-  "koalageddon_config": null
+  "store_config": null
 }

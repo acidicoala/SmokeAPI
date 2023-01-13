@@ -3,6 +3,7 @@
 #include <smoke_api/config.hpp>
 #include <core/globals.hpp>
 #include <core/paths.hpp>
+#include <common/steamclient_exports.hpp>
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/logger.hpp>
 #include <koalabox/hook.hpp>
@@ -10,11 +11,29 @@
 #include <koalabox/loader.hpp>
 #include <koalabox/win_util.hpp>
 #include <koalabox/util.hpp>
-#include <steam_api_exports/steam_api_exports.hpp>
+//#include <steam_api_exports/steam_api_exports.hpp>
 
-#if COMPILE_KOALAGEDDON
-#include <koalageddon/koalageddon.hpp>
+#if COMPILE_STORE_MODE
+#include <store_mode/store.hpp>
 #endif
+
+// Hooking steam_api has shown itself to be less desirable than steamclient
+// for the reasons outlined below:
+//
+// Calling original in flat functions will actually call the hooked functions
+// because the original function redirects the execution to a function taken
+// from self pointer, which would have been hooked by SteamInternal_*Interface
+// functions.
+//
+// Furthermore, turns out that many flat functions share the same body,
+// which looks like the following snippet:
+//
+//   mov rax, qword ptr ds:[rcx]
+//   jmp qword ptr ds:[rax+immediate]
+//
+// This means that we end up inadvertently hooking unintended functions.
+// Given that hooking steam_api has no apparent benefits, but has inherent flaws,
+// the support for it has been dropped from this project.
 
 void init_proxy_mode() {
     LOG_INFO("🔀 Detected proxy mode")
@@ -34,24 +53,6 @@ void init_hook_mode() {
             koalabox::dll_monitor::shutdown_listener();
         }
     );
-
-    // Hooking steam_api has shown itself to be less desirable than steamclient
-    // for the reasons outlined below:
-    //
-    // Calling original in flat functions will actually call the hooked functions
-    // because the original function redirects the execution to a function taken
-    // from self pointer, which would have been hooked by SteamInternal_*Interface
-    // functions.
-    //
-    // Furthermore, turns out that many flat functions share the same body,
-    // which looks like the following snippet:
-    //
-    //   mov rax, qword ptr ds:[rcx]
-    //   jmp qword ptr ds:[rax+immediate]
-    //
-    // This means that we end up inadvertently hooking unintended functions.
-    // Given that hooking steam_api has no apparent benefits, but has inherent flaws,
-    // the support for it has been dropped from this project.
 }
 
 bool is_valve_steam(const String& exe_name) noexcept {
@@ -82,7 +83,7 @@ namespace smoke_api {
 
             globals::smokeapi_handle = module_handle;
 
-            config::init();
+            config::init_config();
 
             if (config::instance.logging) {
                 koalabox::logger::init_file_logger(paths::get_log_path());
@@ -103,9 +104,9 @@ namespace smoke_api {
                 koalabox::hook::init(true);
 
                 if (is_valve_steam(exe_name)) {
-#if COMPILE_KOALAGEDDON
-                    LOG_INFO("🐨💥 Detected Koalageddon mode")
-                    koalageddon::init();
+#if COMPILE_STORE_MODE
+                    LOG_INFO("🛍️ Detected Store mode")
+                    store::init_store_mode();
 #endif
                 } else {
                     init_hook_mode();

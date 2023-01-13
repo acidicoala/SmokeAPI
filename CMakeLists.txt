@@ -19,14 +19,14 @@ file(GLOB DLL_INPUT "res/dll/*/sdk/redistributable_bin/${DLL_SUFFIX}.dll")
 
 set(
     STEAM_API_EXPORTS
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/steam_api_exports/steam_api_flat.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/steam_api_exports/steam_api_internal.cpp"
-    "${CMAKE_CURRENT_SOURCE_DIR}/src/steam_api_exports/steam_api_unversioned.cpp"
+    "src/game_mode/exports/steam_api_flat.cpp"
+    "src/game_mode/exports/steam_api_internal.cpp"
+    "src/game_mode/exports/steam_api_unversioned.cpp"
 )
 
 configure_linker_exports(
     FORWARDED_DLL "${STEAMAPI_DLL}_o"
-    INPUT_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/steam_api_exports"
+    INPUT_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/game_mode/exports"
     INPUT_DLLS "${DLL_INPUT}"
     DEP_SOURCES "${STEAM_API_EXPORTS}"
 )
@@ -35,6 +35,10 @@ configure_build_config(extra_build_config)
 
 set(
     SMOKE_API_SOURCES
+    src/common/app_cache.cpp
+    src/common/app_cache.hpp
+    src/common/steamclient_exports.cpp
+    src/common/steamclient_exports.hpp
     src/core/api.cpp
     src/core/api.hpp
     src/core/globals.cpp
@@ -43,53 +47,51 @@ set(
     src/core/paths.hpp
     src/core/types.cpp
     src/core/types.hpp
-    src/smoke_api/app_cache.cpp
-    src/smoke_api/app_cache.hpp
+    src/game_mode/exports/steam_api_flat.cpp
+    src/game_mode/exports/steam_api_internal.cpp
+    src/game_mode/exports/steam_api_unversioned.cpp
+    src/game_mode/virtuals/isteamapps.cpp
+    src/game_mode/virtuals/isteamclient.cpp
+    src/game_mode/virtuals/isteaminventory.cpp
+    src/game_mode/virtuals/isteamuser.cpp
+    src/game_mode/virtuals/steam_api_virtuals.hpp
     src/smoke_api/config.cpp
     src/smoke_api/config.hpp
     src/smoke_api/smoke_api.cpp
     src/smoke_api/smoke_api.hpp
-    src/steam_api_exports/steam_api_exports.hpp
-    src/steam_api_exports/steam_api_flat.cpp
-    src/steam_api_exports/steam_api_internal.cpp
-    src/steam_api_exports/steam_api_unversioned.cpp
-    src/steam_api_virtuals/isteamapps.cpp
-    src/steam_api_virtuals/isteamclient.cpp
-    src/steam_api_virtuals/isteaminventory.cpp
-    src/steam_api_virtuals/isteamuser.cpp
-    src/steam_api_virtuals/steam_api_virtuals.hpp
     src/steam_impl/steam_apps.cpp
     src/steam_impl/steam_apps.hpp
     src/steam_impl/steam_client.cpp
     src/steam_impl/steam_client.hpp
+    src/steam_impl/steam_impl.cpp
+    src/steam_impl/steam_impl.hpp
     src/steam_impl/steam_inventory.cpp
     src/steam_impl/steam_inventory.hpp
     src/steam_impl/steam_user.cpp
     src/steam_impl/steam_user.hpp
-    src/steam_impl/steam_impl.cpp
-    src/steam_impl/steam_impl.hpp
-    src/steamclient_exports/steamclient.cpp
     src/main.cpp
     ${GENERATED_LINKER_EXPORTS}
 )
 
-# Include koalageddon mode sources only in 32-bit builds
+# Include store_mode mode sources only in 32-bit builds
 if (CMAKE_SIZEOF_VOID_P EQUAL 4)
     set(
         SMOKE_API_SOURCES ${SMOKE_API_SOURCES}
-        src/koalageddon/kg_cache.cpp
-        src/koalageddon/kg_cache.hpp
-        src/koalageddon/koalageddon.cpp
-        src/koalageddon/koalageddon.hpp
-        src/koalageddon/vstdlib.cpp
-        src/koalageddon/vstdlib.hpp
-        src/koalageddon/steamclient/client_app_manager.cpp
-        src/koalageddon/steamclient/client_apps.cpp
-        src/koalageddon/steamclient/client_inventory.cpp
-        src/koalageddon/steamclient/client_user.cpp
-        src/koalageddon/steamclient/client_utils.cpp
-        src/koalageddon/steamclient/steamclient.cpp
-        src/koalageddon/steamclient/steamclient.hpp
+        src/store_mode/steamclient/client_app_manager.cpp
+        src/store_mode/steamclient/client_apps.cpp
+        src/store_mode/steamclient/client_inventory.cpp
+        src/store_mode/steamclient/client_user.cpp
+        src/store_mode/steamclient/client_utils.cpp
+        src/store_mode/steamclient/steamclient.cpp
+        src/store_mode/steamclient/steamclient.hpp
+        src/store_mode/vstdlib/vstdlib.cpp
+        src/store_mode/vstdlib/vstdlib.hpp
+        src/store_mode/store.cpp
+        src/store_mode/store.hpp
+        src/store_mode/store_api.cpp
+        src/store_mode/store_api.hpp
+        src/store_mode/store_cache.cpp
+        src/store_mode/store_cache.hpp
     )
 endif ()
 

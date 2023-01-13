@@ -7,7 +7,7 @@
 namespace smoke_api::config {
     Config instance; // NOLINT(cert-err58-cpp)
 
-    void init() {
+    void init_config() {
         const auto path = paths::get_config_path();
 
         if (exists(path)) {
@@ -66,6 +66,6 @@ namespace smoke_api::config {
     DLL_EXPORT(void) ReloadConfig() {
         LOG_INFO("Reloading config")
 
-        init();
+        init_config();
     }
 }

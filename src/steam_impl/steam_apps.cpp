@@ -1,6 +1,6 @@
 #include <steam_impl/steam_apps.hpp>
 #include <steam_impl/steam_impl.hpp>
-#include <smoke_api/app_cache.hpp>
+#include <common/app_cache.hpp>
 #include <smoke_api/config.hpp>
 #include <koalabox/logger.hpp>
 #include <koalabox/util.hpp>

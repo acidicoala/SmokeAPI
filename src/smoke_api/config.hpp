@@ -1,7 +1,6 @@
 #pragma once
 
 #include <core/types.hpp>
-#include <koalabox/core.hpp>
 
 namespace smoke_api::config {
 
@@ -30,7 +29,7 @@ namespace smoke_api::config {
         bool auto_inject_inventory = true;
         Vector<uint32_t> extra_inventory_items;
         // We have to use general json type here since the library doesn't support std::optional
-        Json koalageddon_config;
+        Json store_config;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(
             Config, // NOLINT(misc-const-correctness)
@@ -43,13 +42,13 @@ namespace smoke_api::config {
             extra_dlcs,
             auto_inject_inventory,
             extra_inventory_items,
-            koalageddon_config
+            store_config
         )
     };
 
     extern Config instance;
 
-    void init();
+    void init_config();
 
     Vector<DLC> get_extra_dlcs(AppId_t app_id);
 

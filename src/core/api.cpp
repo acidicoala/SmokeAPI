@@ -27,7 +27,7 @@ namespace api {
 
     std::optional<Vector<DLC>> fetch_dlcs_from_steam(AppId_t app_id) noexcept {
         try {
-            const auto url = fmt::format("https://store.steampowered.com/dlc/{}/ajaxgetdlclist", app_id);
+            const auto url = fmt::format("https://store_mode.steampowered.com/dlc/{}/ajaxgetdlclist", app_id);
             const auto json = koalabox::http_client::fetch_json(url);
 
             const auto response = json.get<SteamResponse>();
@@ -39,19 +39,6 @@ namespace api {
             return response.dlcs;
         } catch (const Exception& e) {
             LOG_ERROR("Failed to fetch dlc list from Steam: {}", e.what())
-            return std::nullopt;
-        }
-    }
-
-    std::optional<koalageddon::KoalageddonConfig> fetch_koalageddon_config() noexcept {
-        try {
-            const String url =
-                "https://raw.githubusercontent.com/acidicoala/public-entitlements/main/koalageddon/v2/steam.json";
-            const auto kg_config_json = koalabox::http_client::fetch_json(url);
-
-            return kg_config_json.get<koalageddon::KoalageddonConfig>();
-        } catch (const Exception& e) {
-            LOG_ERROR("Failed to fetch Koalageddon config from GitHub: {}", e.what())
             return std::nullopt;
         }
     }

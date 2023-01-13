@@ -1,16 +1,15 @@
 #include <steam_impl/steam_impl.hpp>
-#include <steam_api_virtuals/steam_api_virtuals.hpp>
-#include <steam_api_exports/steam_api_exports.hpp>
+#include <game_mode/virtuals/steam_api_virtuals.hpp>
+#include <common/steamclient_exports.hpp>
 #include <core/globals.hpp>
 #include <build_config.h>
-#include <koalabox/hook.hpp>
+#include <koalabox/util.hpp>
 #include <koalabox/win_util.hpp>
 #include <koalabox/logger.hpp>
-#include <koalabox/util.hpp>
 #include <polyhook2/Misc.hpp>
 
-#if COMPILE_KOALAGEDDON
-#include <koalageddon/steamclient/steamclient.hpp>
+#if COMPILE_STORE_MODE
+#include <store_mode/steamclient/steamclient.hpp>
 #endif
 
 namespace steam_impl {
@@ -201,8 +200,8 @@ namespace steam_impl {
                 HOOK_STEAM_INVENTORY(ISteamInventory_GetResultItemProperty)
             }
         } else if (version_string.starts_with(CLIENT_ENGINE)) {
-#if COMPILE_KOALAGEDDON
-            koalageddon::steamclient::process_client_engine(reinterpret_cast<uintptr_t>(interface));
+#if COMPILE_STORE_MODE
+            store::steamclient::process_client_engine(reinterpret_cast<uintptr_t>(interface));
 #endif
         } else {
             return;
