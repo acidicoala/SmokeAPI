@@ -73,7 +73,7 @@ In this installation mode, SmokeAPI is loaded into the Steam process, which make
 . From Koaloader archive unpack `version.dll` from `version-32`, and place it in {steam-dir}.
 . In {steam-dir} create the following Koaloader configuration file:
 +
-.`Koaloader.json`
+.`Koaloader.config.json`
 [%collapsible]
 ====
 [source,json]
@@ -233,7 +233,7 @@ They will be added to the list of missing DLC IDs to facilitate config-less oper
 
 == 🏗️ Building from source
 
-=== ✅ Requirements
+=== 🚦 Requirements
 
 :fn-lower-ver: footnote:lower-versions[Older versions may be supported as well.]
 
@@ -265,10 +265,10 @@ For example:
 
 SmokeAPI makes use of the following open source projects:
 
-- https://github.com/libcpr/cpr[C++ Requests]
-- https://github.com/nlohmann/json[JSON for Modern C++]
-- https://github.com/stevemk14ebr/PolyHook_2_0[PolyHook 2]
-- https://github.com/gabime/spdlog[spdlog]
+* https://github.com/libcpr/cpr[C++ Requests]
+* https://github.com/nlohmann/json[JSON for Modern C++]
+* https://github.com/stevemk14ebr/PolyHook_2_0[PolyHook 2]
+* https://github.com/gabime/spdlog[spdlog]
 
 == 📄 License
 
