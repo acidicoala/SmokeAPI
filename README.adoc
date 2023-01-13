@@ -61,7 +61,7 @@ Usage of this unlocker entails breaking one or more terms of service, which migh
 SmokeAPI supports 2 main modes of installation: *Store* mode and *Game* mode, which are described in the next section.
 
 NOTE: It is worth noting that the following instructions describe a _manual_ installation method.
-You can benefit from _automatic_ installation and GUI configuration from Koalageddon v2 (Coming soon).
+You can benefit from _automatic_ installation and GUI configuration by using Koalageddon v2 (Coming soon).
 
 === 🛍️ Store mode
 
@@ -97,7 +97,7 @@ In this installation mode, SmokeAPI is loaded into the Steam process, which make
 
 === 🎮 Game mode
 
-In this installation mode, SmokeAPI is loaded into a game process, which makes limits it to that particular game only.
+In this installation mode, SmokeAPI is loaded into a game process, which limits it to that particular game only.
 This mode itself supports 2 modes: hook mode and proxy mode.
 Try installing the unlocker in hook mode first.
 If it doesn't work, try installing it in proxy mode.
@@ -111,7 +111,7 @@ If it doesn't work, try installing it in proxy mode.
 
 ==== 🔀 Proxy mode
 
-. Find `steam_api.dll`/`steam_api64.dll` file in game directory, and add `_o` to its name, e.g. `steam_api64_o.dll`.
+. Find `steam_api.dll` / `steam_api64.dll` file in game directory, and rename it to `steam_api_o.dll` / `steam_api64_o.dll`.
 . Download the latest SmokeAPI release zip from  {smokeapi_release}.
 . From SmokeAPI archive unpack `steam_api.dll`/`steam_api64.dll`, depending on the game bitness, and place it next to the original steam_api DLL file.
 
