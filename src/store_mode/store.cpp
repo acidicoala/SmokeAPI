@@ -119,7 +119,7 @@ namespace store {
         );
 
         NEW_THREAD({
-            koalabox::ipc::init_pipe_server("smoke_api.store_mode", [](const koalabox::ipc::Request& request) {
+            koalabox::ipc::init_pipe_server("smokeapi.store.steam", [](const koalabox::ipc::Request& request) {
                 koalabox::ipc::Response response;
 
                 if (request.name < equals > "config::reload") {

@@ -205,7 +205,7 @@ Default::: `{}`
 
 `store_config`:: An object that specifies offsets required for store mode operation.
 It will override the config fetched from {steam_config}[remote source] or local cache.
-Do not modify this value.
+Do not modify this value unless you know what you are doing.
 +
 [horizontal]
 Type::: Object (Map of String to Integer)
