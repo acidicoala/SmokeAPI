@@ -61,7 +61,7 @@ Usage of this unlocker entails breaking one or more terms of service, which migh
 SmokeAPI supports 2 main modes of installation: *Store* mode and *Game* mode, which are described in the next section.
 
 NOTE: It is worth noting that the following instructions describe a _manual_ installation method.
-You can benefit from _automatic_ installation and GUI configuration by using Koalageddon v2 (Coming soon).
+You can benefit from _automatic_ installation and GUI configuration by using https://github.com/acidicoala/Koalageddon2#readme[Koalageddon v2].
 
 === 🛍️ Store mode
 
