@@ -28,7 +28,7 @@ configure_linker_exports(
     FORWARDED_DLL "${STEAMAPI_DLL}_o"
     INPUT_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/game_mode/exports"
     INPUT_DLLS "${DLL_INPUT}"
-    DEP_SOURCES "${STEAM_API_EXPORTS}"
+    DEP_SOURCES "${STEAM_API_EXPORTS}" # Is this redundant?
 )
 
 configure_build_config(extra_build_config)

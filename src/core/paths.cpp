@@ -2,6 +2,7 @@
 #include <core/globals.hpp>
 #include <koalabox/loader.hpp>
 
+// TODO: Refactor to KoalaBox
 namespace paths {
 
     Path get_self_path() {

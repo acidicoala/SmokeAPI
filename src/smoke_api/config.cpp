@@ -7,6 +7,7 @@
 namespace smoke_api::config {
     Config instance; // NOLINT(cert-err58-cpp)
 
+    // TODO: Refactor to Koalabox
     void init_config() {
         const auto path = paths::get_config_path();
 

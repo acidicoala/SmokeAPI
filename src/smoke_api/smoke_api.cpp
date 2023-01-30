@@ -89,7 +89,7 @@ namespace smoke_api {
                 koalabox::logger::init_file_logger(paths::get_log_path());
             }
 
-            // This kind of timestamp is reliable on for CI builds, as it will reflect the compilation
+            // This kind of timestamp is reliable only for CI builds, as it will reflect the compilation
             // time stamp only when this file gets recompiled.
             LOG_INFO("🐨 {} v{} | Compiled at '{}'", PROJECT_NAME, PROJECT_VERSION, __TIMESTAMP__)
 

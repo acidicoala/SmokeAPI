@@ -1,7 +1,7 @@
 #include <core/globals.hpp>
 
 namespace globals {
-
+    // TODO: Refactor to koalabox?
     HMODULE smokeapi_handle = nullptr;
     HMODULE steamapi_module = nullptr;
     HMODULE vstdlib_module = nullptr;

@@ -27,7 +27,7 @@ namespace api {
 
     std::optional<Vector<DLC>> fetch_dlcs_from_steam(AppId_t app_id) noexcept {
         try {
-            const auto url = fmt::format("https://store_mode.steampowered.com/dlc/{}/ajaxgetdlclist", app_id);
+            const auto url = fmt::format("https://store.steampowered.com/dlc/{}/ajaxgetdlclist", app_id);
             const auto json = koalabox::http_client::fetch_json(url);
 
             const auto response = json.get<SteamResponse>();
