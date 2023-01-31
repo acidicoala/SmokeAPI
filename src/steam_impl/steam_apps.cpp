@@ -25,20 +25,13 @@ namespace steam_apps {
      * @return boolean indicating if the function was able to successfully fetch DLC IDs from all sources.
      */
     void fetch_and_cache_dlcs(AppId_t app_id) {
-        static std::mutex mutex;
-        const std::lock_guard<std::mutex> guard(mutex);
+        static Mutex mutex;
+        const MutexLockGuard guard(mutex);
 
-        if (not app_id) {
-            // No app id means we are operating in game mode.
-            // Hence, we need to use utility functions to get app id.
-            try {
-                app_id = steam_impl::get_app_id_or_throw();
-                LOG_INFO("Detected App ID: {}", app_id)
-            } catch (const Exception& ex) {
-                LOG_ERROR("Failed to get app ID: {}", ex.what())
-                app_dlcs[app_id] = {}; // Dummy value to avoid checking for presence on each access
-                return;
-            }
+        if (app_id == 0) {
+            LOG_ERROR("{} -> App ID is 0", __func__)
+            app_dlcs[app_id] = {}; // Dummy value to avoid checking for presence on each access
+            return;
         }
 
         // We want to fetch data only once. However, if any of the remote sources have failed
@@ -75,7 +68,6 @@ namespace steam_apps {
         }
 
         // Cache DLCs in memory and cache for future use
-
         app_dlcs[app_id] = aggregated_dlcs;
 
         smoke_api::app_cache::save_dlcs(app_id, aggregated_dlcs);

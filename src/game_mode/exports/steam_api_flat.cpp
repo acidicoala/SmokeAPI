@@ -8,33 +8,51 @@
 // ISteamApps
 
 DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsSubscribedApp(void* self, AppId_t dlcID) {
-    return steam_apps::IsDlcUnlocked(
-        __func__, 0, dlcID, [&]() {
-            GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamApps_BIsSubscribedApp)
+    try {
+        static const auto app_id = steam_impl::get_app_id_or_throw();
+        return steam_apps::IsDlcUnlocked(
+            __func__, app_id, dlcID, [&]() {
+                GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamApps_BIsSubscribedApp)
 
-            return SteamAPI_ISteamApps_BIsSubscribedApp_o(self, dlcID);
-        }
-    );
+                return SteamAPI_ISteamApps_BIsSubscribedApp_o(self, dlcID);
+            }
+        );
+    } catch (const Exception& e) {
+        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        return false;
+    }
 }
 
 DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsDlcInstalled(void* self, AppId_t dlcID) {
-    return steam_apps::IsDlcUnlocked(
-        __func__, 0, dlcID, [&]() {
-            GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamApps_BIsDlcInstalled)
+    try {
+        static const auto app_id = steam_impl::get_app_id_or_throw();
+        return steam_apps::IsDlcUnlocked(
+            __func__, app_id, dlcID, [&]() {
+                GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamApps_BIsDlcInstalled)
 
-            return SteamAPI_ISteamApps_BIsDlcInstalled_o(self, dlcID);
-        }
-    );
+                return SteamAPI_ISteamApps_BIsDlcInstalled_o(self, dlcID);
+            }
+        );
+    } catch (const Exception& e) {
+        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        return false;
+    }
 }
 
 DLL_EXPORT(int) SteamAPI_ISteamApps_GetDLCCount(void* self) {
-    return steam_apps::GetDLCCount(
-        __func__, 0, [&]() {
-            GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamApps_GetDLCCount)
+    try {
+        static const auto app_id = steam_impl::get_app_id_or_throw();
+        return steam_apps::GetDLCCount(
+            __func__, app_id, [&]() {
+                GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamApps_GetDLCCount)
 
-            return SteamAPI_ISteamApps_GetDLCCount_o(self);
-        }
-    );
+                return SteamAPI_ISteamApps_GetDLCCount_o(self);
+            }
+        );
+    } catch (const Exception& e) {
+        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        return 0;
+    }
 }
 
 DLL_EXPORT(bool) SteamAPI_ISteamApps_BGetDLCDataByIndex(
@@ -45,19 +63,24 @@ DLL_EXPORT(bool) SteamAPI_ISteamApps_BGetDLCDataByIndex(
     char* pchName,
     int cchNameBufferSize
 ) {
-    return steam_apps::GetDLCDataByIndex(
-        __func__, 0, iDLC, pDlcID, pbAvailable, pchName, cchNameBufferSize,
-        [&]() {
-            GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamApps_BGetDLCDataByIndex)
-
-            return SteamAPI_ISteamApps_BGetDLCDataByIndex_o(
-                self, iDLC, pDlcID, pbAvailable, pchName, cchNameBufferSize
-            );
-        },
-        [&](AppId_t dlc_id) {
-            return SteamAPI_ISteamApps_BIsDlcInstalled(self, dlc_id);
-        }
-    );
+    try {
+        static const auto app_id = steam_impl::get_app_id_or_throw();
+        return steam_apps::GetDLCDataByIndex(
+            __func__, app_id, iDLC, pDlcID, pbAvailable, pchName, cchNameBufferSize,
+            [&]() {
+                GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamApps_BGetDLCDataByIndex)
+                return SteamAPI_ISteamApps_BGetDLCDataByIndex_o(
+                    self, iDLC, pDlcID, pbAvailable, pchName, cchNameBufferSize
+                );
+            },
+            [&](AppId_t dlc_id) {
+                return SteamAPI_ISteamApps_BIsDlcInstalled(self, dlc_id);
+            }
+        );
+    } catch (const Exception& e) {
+        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        return false;
+    }
 }
 
 // ISteamClient
@@ -68,13 +91,17 @@ DLL_EXPORT(void*) SteamAPI_ISteamClient_GetISteamGenericInterface(
     HSteamPipe hSteamPipe,
     const char* pchVersion
 ) {
-    return steam_client::GetGenericInterface(
-        __func__, pchVersion, [&]() {
-            GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamClient_GetISteamGenericInterface)
-
-            return SteamAPI_ISteamClient_GetISteamGenericInterface_o(self, hSteamUser, hSteamPipe, pchVersion);
-        }
-    );
+    try {
+        return steam_client::GetGenericInterface(
+            __func__, pchVersion, [&]() {
+                GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamClient_GetISteamGenericInterface)
+                return SteamAPI_ISteamClient_GetISteamGenericInterface_o(self, hSteamUser, hSteamPipe, pchVersion);
+            }
+        );
+    } catch (const Exception& e) {
+        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        return nullptr;
+    }
 }
 
 // ISteamInventory
@@ -210,18 +237,18 @@ DLL_EXPORT(EUserHasLicenseForAppResult) SteamAPI_ISteamUser_UserHasLicenseForApp
     CSteamID steamID,
     AppId_t dlcID
 ) {
-    AppId_t app_id;
     try {
-        app_id = steam_impl::get_app_id_or_throw();
+        static const auto app_id = steam_impl::get_app_id_or_throw();
+        return steam_user::UserHasLicenseForApp(
+            __func__, app_id, dlcID, [&]() {
+                GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamUser_UserHasLicenseForApp)
+
+                return SteamAPI_ISteamUser_UserHasLicenseForApp_o(self, steamID, dlcID);
+            }
+        );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error getting app id: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        return k_EUserHasLicenseResultDoesNotHaveLicense;
     }
 
-    return steam_user::UserHasLicenseForApp(
-        __func__, app_id, dlcID, [&]() {
-            GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamUser_UserHasLicenseForApp)
-
-            return SteamAPI_ISteamUser_UserHasLicenseForApp_o(self, steamID, dlcID);
-        }
-    );
 }

@@ -18,8 +18,8 @@ namespace steam_apps {
     );
 
     bool GetDLCDataByIndex(
-        const String& dlc_id,
-        AppId_t dlc_ids,
+        const String& function_name,
+        AppId_t app_id,
         int iDLC,
         AppId_t* pDlcId,
         bool* pbAvailable,
