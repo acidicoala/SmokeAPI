@@ -27,6 +27,8 @@ namespace api {
 
     std::optional<Vector<DLC>> fetch_dlcs_from_steam(AppId_t app_id) noexcept {
         try {
+            // TODO: Communicate directly with Steam servers.
+            // ref.: https://github.com/SteamRE/SteamKit
             const auto url = fmt::format("https://store.steampowered.com/dlc/{}/ajaxgetdlclist", app_id);
             const auto json = koalabox::http_client::fetch_json(url);
 

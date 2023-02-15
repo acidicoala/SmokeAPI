@@ -140,7 +140,8 @@ The configuration file is expected to conform to the Json standard.
 Type::: Boolean
 Default::: `false`
 
-`unlock_family_sharing`:: Toggles Family Sharing bypass, which enables the borrower of a shared library to start and continue playing games when library owner is playing as well.
+`unlock_family_sharing`:: *_Store mode only_*.
+Toggles Family Sharing bypass, which enables the borrower of a shared library to start and continue playing games when library owner is playing as well.
 +
 [horizontal]
 Type::: Boolean
@@ -203,7 +204,8 @@ The format is the same as in the aforementioned GitHub config.
 Type::: Object (Map of String to Object)
 Default::: `{}`
 
-`store_config`:: An object that specifies offsets required for store mode operation.
+`store_config`:: *_Store mode only_*.
+An object that specifies offsets required for store mode operation.
 It will override the config fetched from {steam_config}[remote source] or local cache.
 Do not modify this value unless you know what you are doing.
 +
