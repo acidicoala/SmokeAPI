@@ -7,12 +7,9 @@ constexpr auto KEY_APPS = "apps";
 
 AppDlcNameMap get_cached_apps() noexcept {
     try {
-        const auto cache = koalabox::cache::read_from_cache(KEY_APPS);
-
-        return cache.get<AppDlcNameMap>();
+        return koalabox::cache::get(KEY_APPS).get<AppDlcNameMap>();
     } catch (const Exception& e) {
         LOG_WARN("Failed to get cached apps: {}", e.what())
-
         return {};
     }
 }
@@ -41,7 +38,7 @@ namespace smoke_api::app_cache {
 
             apps[std::to_string(app_id)] = App{.dlcs=DLC::get_dlc_map_from_vector(dlcs)};
 
-            return koalabox::cache::save_to_cache(KEY_APPS, Json(apps));
+            return koalabox::cache::put(KEY_APPS, Json(apps));
         } catch (const Exception& e) {
             LOG_ERROR("Error saving DLCs to disk cache: {}", e.what())
 

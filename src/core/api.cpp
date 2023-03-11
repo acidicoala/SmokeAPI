@@ -15,7 +15,7 @@ namespace api {
         try {
             const auto* url =
                 "https://raw.githubusercontent.com/acidicoala/public-entitlements/main/steam/v2/dlc.json";
-            const auto json = koalabox::http_client::fetch_json(url);
+            const auto json = koalabox::http_client::get_json(url);
             const auto response = json.get<AppDlcNameMap>();
 
             return DLC::get_dlcs_from_apps(response, app_id);
@@ -30,7 +30,7 @@ namespace api {
             // TODO: Communicate directly with Steam servers.
             // ref.: https://github.com/SteamRE/SteamKit
             const auto url = fmt::format("https://store.steampowered.com/dlc/{}/ajaxgetdlclist", app_id);
-            const auto json = koalabox::http_client::fetch_json(url);
+            const auto json = koalabox::http_client::get_json(url);
 
             const auto response = json.get<SteamResponse>();
 

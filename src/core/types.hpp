@@ -45,17 +45,17 @@
 #define VIRTUAL(TYPE) __declspec(noinline) TYPE __fastcall
 
 #define GET_ORIGINAL_HOOKED_FUNCTION(FUNC) \
-    static const auto FUNC##_o = koalabox::hook::get_original_hooked_function(globals::address_map, #FUNC, FUNC);
+    static const auto FUNC##_o = koalabox::hook::get_original_hooked_function(#FUNC, FUNC);
 
 #define GET_ORIGINAL_FUNCTION_STEAMAPI(FUNC) \
     static const auto FUNC##_o = koalabox::hook::get_original_function(globals::steamapi_module, #FUNC, FUNC);
 
 
 #define DETOUR_ADDRESS(FUNC, ADDRESS) \
-    koalabox::hook::detour_or_warn(globals::address_map, ADDRESS, #FUNC, reinterpret_cast<uintptr_t>(FUNC));
+    koalabox::hook::detour_or_warn(ADDRESS, #FUNC, reinterpret_cast<uintptr_t>(FUNC));
 
 #define $DETOUR(FUNC, NAME, MODULE_HANDLE) \
-    koalabox::hook::detour_or_warn(globals::address_map, MODULE_HANDLE, NAME, reinterpret_cast<uintptr_t>(FUNC));
+    koalabox::hook::detour_or_warn(MODULE_HANDLE, NAME, reinterpret_cast<uintptr_t>(FUNC));
 
 #define DETOUR_STEAMCLIENT(FUNC) $DETOUR(FUNC, #FUNC, globals::steamclient_module)
 #define DETOUR_VSTDLIB(FUNC) $DETOUR(vstdlib::FUNC, #FUNC, globals::vstdlib_module)

@@ -1,7 +1,7 @@
+#include <ranges>
 #include <steam_impl/steam_impl.hpp>
 #include <game_mode/virtuals/steam_api_virtuals.hpp>
 #include <common/steamclient_exports.hpp>
-#include <core/globals.hpp>
 #include <build_config.h>
 #include <koalabox/util.hpp>
 #include <koalabox/win_util.hpp>
@@ -21,7 +21,7 @@ namespace steam_impl {
             {
                 {6,  16},
                 {7,  18},
-                {8, 15},
+                {8,  15},
                 {9, 16},
                 {12, 15},
             }
@@ -114,9 +114,7 @@ namespace steam_impl {
     int get_ordinal(const FunctionOrdinalMap& ordinal_map, const String& function_name, int interface_version) {
         const auto& map = ordinal_map.at(function_name);
 
-        for (auto it = map.rbegin(); it != map.rend(); it++) {
-            const auto [version, ordinal] = *it;
-
+        for (auto [version, ordinal]: std::ranges::reverse_view(map)) {
             if (interface_version >= version) {
                 return ordinal;
             }
@@ -127,7 +125,6 @@ namespace steam_impl {
 
 #define HOOK_VIRTUALS(MAP, FUNC) \
     koalabox::hook::swap_virtual_func( \
-        globals::address_map, \
         interface,      \
         #FUNC, \
         get_ordinal(MAP, #FUNC, version_number), \

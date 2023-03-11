@@ -7,11 +7,9 @@
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/logger.hpp>
 #include <koalabox/hook.hpp>
-#include <koalabox/cache.hpp>
 #include <koalabox/loader.hpp>
 #include <koalabox/win_util.hpp>
 #include <koalabox/util.hpp>
-//#include <steam_api_exports/steam_api_exports.hpp>
 
 #if COMPILE_STORE_MODE
 #include <store_mode/store.hpp>
@@ -92,8 +90,6 @@ namespace smoke_api {
             // This kind of timestamp is reliable only for CI builds, as it will reflect the compilation
             // time stamp only when this file gets recompiled.
             LOG_INFO("🐨 {} v{} | Compiled at '{}'", PROJECT_NAME, PROJECT_VERSION, __TIMESTAMP__)
-
-            koalabox::cache::init_cache(paths::get_cache_path());
 
             const auto exe_path = Path(koalabox::win_util::get_module_file_name_or_throw(nullptr));
             const auto exe_name = exe_path.filename().string();
