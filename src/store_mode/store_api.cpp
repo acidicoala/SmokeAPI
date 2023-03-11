@@ -7,7 +7,7 @@ namespace store::api {
         try {
             const String url =
                 "https://raw.githubusercontent.com/acidicoala/public-entitlements/main/steam/v2/store_config.json";
-            const auto kg_config_json = koalabox::http_client::fetch_json(url);
+            const auto kg_config_json = koalabox::http_client::get_json(url);
 
             return kg_config_json.get<StoreConfig>();
         } catch (const Exception& e) {

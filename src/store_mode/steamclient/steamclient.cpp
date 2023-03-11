@@ -35,7 +35,6 @@ namespace store::steamclient {
     construct_ordinal_map(#INTERFACE, ordinal_map[#INTERFACE], function_selector_address);
 
 #define HOOK_FUNCTION(INTERFACE, FUNC) hook::swap_virtual_func_or_throw( \
-    globals::address_map, \
     interface, \
     #INTERFACE"_"#FUNC, \
     ordinal_map[#INTERFACE][#FUNC], \
