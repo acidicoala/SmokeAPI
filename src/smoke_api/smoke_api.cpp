@@ -4,6 +4,7 @@
 #include <core/globals.hpp>
 #include <core/paths.hpp>
 #include <common/steamclient_exports.hpp>
+#include <koalabox/globals.hpp>
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/logger.hpp>
 #include <koalabox/hook.hpp>
@@ -78,6 +79,8 @@ namespace smoke_api {
     void init(HMODULE module_handle) {
         try {
             DisableThreadLibraryCalls(module_handle);
+
+            koalabox::globals::init_globals(module_handle, PROJECT_NAME);
 
             globals::smokeapi_handle = module_handle;
 
