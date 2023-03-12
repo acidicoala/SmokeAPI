@@ -263,14 +263,9 @@ For example:
 .\build.ps1 32 Debug
 ----
 
-== 👋 Acknowledgements
+== 📚 Open-Source libraries
 
-SmokeAPI makes use of the following open source projects:
-
-* https://github.com/libcpr/cpr[C++ Requests]
-* https://github.com/nlohmann/json[JSON for Modern C++]
-* https://github.com/stevemk14ebr/PolyHook_2_0[PolyHook 2]
-* https://github.com/gabime/spdlog[spdlog]
+This project makes use of the open source projects specified in the https://github.com/acidicoala/KoalaBox#-open-source-libraries[KoalaBox Readme]
 
 == 📄 License
 
