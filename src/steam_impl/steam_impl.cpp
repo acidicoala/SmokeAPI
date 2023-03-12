@@ -145,8 +145,7 @@ namespace steam_impl {
         static Set<void*> hooked_interfaces;
 
         if (hooked_interfaces.contains(interface)) {
-            // This interface is already hooked. Skipping it.
-            return;
+            LOG_DEBUG("Interface {} at {} has already been hooked.", version_string, interface)
         }
 
         static Mutex section;
