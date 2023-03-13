@@ -60,10 +60,10 @@ Usage of this unlocker entails breaking one or more terms of service, which migh
 
 SmokeAPI supports 2 main modes of installation: *Store* mode and *Game* mode, which are described in the next section.
 
+=== 🛍️ Store mode
+
 NOTE: It is worth noting that the following instructions describe a _manual_ installation method.
 You can benefit from _automatic_ installation and GUI configuration by using https://github.com/acidicoala/Koalageddon2#readme[Koalageddon v2].
-
-=== 🛍️ Store mode
 
 In this installation mode, SmokeAPI is loaded into the Steam process, which makes it able to affect all Steam games.
 
@@ -172,7 +172,7 @@ Default::: `{}`
 Possible values::: An object with key-value pairs, where the key corresponds to the app ID, and value to the app status.
 Possible app status values are defined in the `default_app_status` option.
 Furthermore, it is possible to lock even the legitimately locked DLCs by setting the corresponding app status value to `locked`.
-Type::: Object (Map of String to String)
+Type::: Object
 Default::: `{}`
 
 `auto_inject_inventory`:: Toggles whether SmokeAPI should automatically inject a list of all registered inventory items, when a game queries user inventory
@@ -201,7 +201,7 @@ Default::: `2`
 [horizontal]
 Possible values::: An object with key-value pairs, where the key corresponds to the app ID, and value to the object that contains DLC IDs.
 The format is the same as in the aforementioned GitHub config.
-Type::: Object (Map of String to Object)
+Type::: Object
 Default::: `{}`
 
 `store_config`:: *_Store mode only_*.
@@ -210,8 +210,55 @@ It will override the config fetched from {steam_config}[remote source] or local 
 Do not modify this value unless you know what you are doing.
 +
 [horizontal]
-Type::: Object (Map of String to Integer)
+Type::: Object
 Default::: See {steam_config}[online config]
+
+.Complete example
+
+[%collapsible]
+====
+[source,json]
+----
+{
+  "$version": 2,
+  "logging": true,
+  "unlock_family_sharing": true,
+  "default_app_status": "unlocked",
+  "override_app_status": {
+    "1234": "original",
+    "4321": "unlocked"
+  },
+  "override_dlc_status": {
+    "1234": "original",
+    "4321": "unlocked",
+    "5678": "locked"
+  },
+  "auto_inject_inventory": true,
+  "extra_inventory_items": [],
+  "extra_dlcs": {
+    "1234": {
+      "dlcs": {
+        "56789": "Example DLC 1"
+      }
+    },
+    "4321": {
+      "dlcs": {
+        "98765": "Example DLC 2",
+        "98766": "Example DLC 3"
+      }
+    }
+  },
+  "store_config": {
+      "client_engine_steam_client_internal_ordinal": 12,
+      "steam_client_internal_interface_selector_ordinal": 18,
+      "vstdlib_callback_address_offset": 20,
+      "vstdlib_callback_data_offset": 0,
+      "vstdlib_callback_interceptor_address_offset": 1,
+      "vstdlib_callback_name_offset": 4
+  }
+}
+----
+====
 
 == Extra info
 

@@ -3,28 +3,10 @@
   "logging": true,
   "unlock_family_sharing": true,
   "default_app_status": "unlocked",
-  "override_app_status": {
-    "1234": "original",
-    "4321": "unlocked"
-  },
-  "override_dlc_status": {
-    "1234": "original",
-    "4321": "unlocked",
-    "5678": "locked"
-  },
+  "override_app_status": {},
+  "override_dlc_status": {},
   "auto_inject_inventory": true,
   "extra_inventory_items": [],
-  "extra_dlcs": {
-    "1234": {
-      "dlcs": {
-        "56789": "Example DLC 1"
-      }
-    },
-    "4321": {
-      "dlcs": {
-        "98765": "Example DLC 2"
-      }
-    }
-  },
+  "extra_dlcs": {},
   "store_config": null
 }
