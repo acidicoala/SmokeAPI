@@ -195,7 +195,7 @@ namespace steam_impl {
             if (version_number >= 2) {
                 HOOK_STEAM_INVENTORY(ISteamInventory_GetResultItemProperty)
             }
-        } else if (version_string.starts_with(CLIENT_ENGINE)) {
+        } else if (version_string.starts_with(CLIENT_ENGINE) && !hooked_interfaces.contains(interface)) {
 #if COMPILE_STORE_MODE
             store::steamclient::process_client_engine(reinterpret_cast<uintptr_t>(interface));
 #endif
