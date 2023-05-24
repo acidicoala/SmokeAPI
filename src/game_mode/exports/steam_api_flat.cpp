@@ -2,6 +2,7 @@
 #include <steam_impl/steam_client.hpp>
 #include <steam_impl/steam_inventory.hpp>
 #include <steam_impl/steam_user.hpp>
+#include <steam_impl/steam_game_server.hpp>
 #include <steam_impl/steam_impl.hpp>
 #include <koalabox/logger.hpp>
 
@@ -249,6 +250,36 @@ DLL_EXPORT(EUserHasLicenseForAppResult) SteamAPI_ISteamUser_UserHasLicenseForApp
     } catch (const Exception& e) {
         LOG_ERROR("{} -> Error: {}", __func__, e.what())
         return k_EUserHasLicenseResultDoesNotHaveLicense;
+    }
+
+}
+
+// ISteamGameServer
+
+DLL_EXPORT(EUserHasLicenseForAppResult) SteamAPI_ISteamGameServer_UserHasLicenseForApp(
+    void* self,
+    CSteamID steamID,
+    AppId_t dlcID
+) {
+    try {
+        /*
+        Will crash here.
+        Probably because server only app don't need to init same interfaces used to recover the appID in the client (ISteamUser).
+        */
+        //static const auto app_id = steam_impl::get_app_id_or_throw();
+        // TODO : CLEAN THIS BY FINDING A WAY TO GET AppID FROM ISteamGameServer (hooking InitGameServer maybe ?)
+        static const auto app_id = 0; // Workaround
+        return steam_game_server::UserHasLicenseForApp(
+            __func__, app_id, dlcID, [&]() {
+                GET_ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_ISteamGameServer_UserHasLicenseForApp)
+
+                    return SteamAPI_ISteamGameServer_UserHasLicenseForApp_o(self, steamID, dlcID);
+            }
+        );
+    }
+    catch (const Exception& e) {
+        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+            return k_EUserHasLicenseResultDoesNotHaveLicense;
     }
 
 }

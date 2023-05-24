@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(SmokeAPI VERSION 2.0.5)
+project(SmokeAPI VERSION 2.0.51)
 
 include(KoalaBox/cmake/KoalaBox.cmake)
 
@@ -69,6 +69,8 @@ set(
     src/steam_impl/steam_inventory.hpp
     src/steam_impl/steam_user.cpp
     src/steam_impl/steam_user.hpp
+	src/steam_impl/steam_game_server.cpp
+	src/steam_impl/steam_game_server.hpp
     src/main.cpp
     ${GENERATED_LINKER_EXPORTS}
 )
