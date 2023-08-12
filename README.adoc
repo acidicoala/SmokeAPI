@@ -123,7 +123,7 @@ NOTE: This document describes configuration for version 2 of SmokeAPI.
 You can find the version 1 documentation https://github.com/acidicoala/SmokeAPI/blob/v1.0.3/README.md#-configuration[here].
 
 :steam_config: https://github.com/acidicoala/public-entitlements/blob/main/steam/v2/store_config.json
-:fn-app-id: footnote:fn-app-id[App/DLC IDs can be obtained from https://steamdb.info. Keep in mind that you need to be signed in with a steam account in order to see accurate inventory item IDs on that website.]
+:fn-app-id: footnote:fn-app-id[App/DLC IDs can be obtained from https://steamdb.info[SteamDB] or https://steambase.io[Steambase]. Keep in mind that you need to be signed in with a steam account in order to see accurate inventory item IDs on that website.]
 
 SmokeAPI does not require any manual configuration.
 By default, it uses the most reasonable options and tries to unlock all DLCs that it can.
