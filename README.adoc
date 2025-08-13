@@ -2,7 +2,7 @@
 
 _Legit DLC Unlocker for Steamworks_
 
-image::https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u1f428/u1f428_u2615.png[,256,align="center"]
+image::https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u1f428/u1f428_u2615.png[,128,align="center"]
 
 == ✨ Features
 

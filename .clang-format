@@ -1,0 +1,13 @@
+---
+Language: Cpp
+BasedOnStyle: LLVM
+Standard: c++20
+BreakBeforeBraces: Attach
+LineEnding: LF
+ColumnLimit: 100
+AlignAfterOpenBracket: BlockIndent
+IndentWidth: 4
+ContinuationIndentWidth: 4
+NamespaceIndentation: All
+UseTab: Never
+PointerAlignment: Left

@@ -47,6 +47,7 @@ set(
     src/core/paths.hpp
     src/core/types.cpp
     src/core/types.hpp
+    src/game_mode/exports/steam_api.cpp
     src/game_mode/exports/steam_api_flat.cpp
     src/game_mode/exports/steam_api_internal.cpp
     src/game_mode/exports/steam_api_unversioned.cpp
@@ -92,6 +93,7 @@ if (CMAKE_SIZEOF_VOID_P EQUAL 4)
         src/store_mode/store_api.hpp
         src/store_mode/store_cache.cpp
         src/store_mode/store_cache.hpp
+        src/game_mode/exports/steam_api.cpp
     )
 endif ()
 
@@ -102,3 +104,5 @@ configure_output_name(${STEAMAPI_DLL})
 configure_include_directories()
 
 target_link_libraries(SmokeAPI PRIVATE KoalaBox)
+
+add_subdirectory(tools)

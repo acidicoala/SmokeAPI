@@ -23,6 +23,7 @@ namespace smoke_api::config {
         bool logging = false;
         bool unlock_family_sharing = true;
         AppStatus default_app_status = AppStatus::UNLOCKED;
+        uint32_t override_app_id = 0;
         Map<String, AppStatus> override_app_status;
         Map<String, AppStatus> override_dlc_status;
         AppDlcNameMap extra_dlcs;
@@ -37,6 +38,7 @@ namespace smoke_api::config {
             logging,
             unlock_family_sharing,
             default_app_status,
+            override_app_id,
             override_app_status,
             override_dlc_status,
             extra_dlcs,

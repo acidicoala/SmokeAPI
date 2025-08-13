@@ -32,13 +32,6 @@
       </indentOptions>
     </codeStyleSettings>
     <codeStyleSettings language="ObjectiveC">
-      <option name="KEEP_FIRST_COLUMN_COMMENT" value="false" />
-      <option name="BLANK_LINES_BEFORE_IMPORTS" value="0" />
-      <option name="BLANK_LINES_AFTER_IMPORTS" value="0" />
-      <option name="BLANK_LINES_AROUND_CLASS" value="0" />
-      <option name="BLANK_LINES_AROUND_METHOD" value="0" />
-      <option name="BLANK_LINES_AROUND_METHOD_IN_INTERFACE" value="0" />
-      <option name="IF_BRACE_FORCE" value="3" />
       <option name="SOFT_MARGINS" value="120" />
       <indentOptions>
         <option name="CONTINUATION_INDENT_SIZE" value="4" />

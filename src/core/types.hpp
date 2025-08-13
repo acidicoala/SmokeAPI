@@ -44,12 +44,16 @@
 #define DLL_EXPORT(TYPE) extern "C" [[maybe_unused]] __declspec( dllexport ) TYPE __cdecl
 #define VIRTUAL(TYPE) __declspec(noinline) TYPE __fastcall
 
+// TODO: Replace with direct call
 #define GET_ORIGINAL_HOOKED_FUNCTION(FUNC) \
     static const auto FUNC##_o = koalabox::hook::get_original_hooked_function(#FUNC, FUNC);
 
-#define GET_ORIGINAL_FUNCTION_STEAMAPI(FUNC) \
-    static const auto FUNC##_o = koalabox::hook::get_original_function(globals::steamapi_module, #FUNC, FUNC);
+#define ORIGINAL_FUNCTION_STEAMAPI(FUNC) \
+    koalabox::hook::get_original_function(globals::steamapi_module, #FUNC, FUNC)
 
+// TODO: Rename to DEFINE_ORIGINAL_FUNCTION_STEAMAPI
+#define GET_ORIGINAL_FUNCTION_STEAMAPI(FUNC) \
+    static const auto FUNC##_o = ORIGINAL_FUNCTION_STEAMAPI(FUNC);
 
 #define DETOUR_ADDRESS(FUNC, ADDRESS) \
     koalabox::hook::detour_or_warn(ADDRESS, #FUNC, reinterpret_cast<uintptr_t>(FUNC));
@@ -90,9 +94,10 @@ struct SteamItemDetails_t {
 
 // results from UserHasLicenseForApp
 enum EUserHasLicenseForAppResult {
-    k_EUserHasLicenseResultHasLicense = 0,         // User has a license for specified app
-    k_EUserHasLicenseResultDoesNotHaveLicense = 1, // User does not have a license for the specified app
-    k_EUserHasLicenseResultNoAuth = 2,             // User has not been authenticated
+    k_EUserHasLicenseResultHasLicense = 0, // User has a license for specified app
+    k_EUserHasLicenseResultDoesNotHaveLicense = 1,
+    // User does not have a license for the specified app
+    k_EUserHasLicenseResultNoAuth = 2, // User has not been authenticated
 };
 
 // These aliases exist solely to increase code readability
@@ -115,10 +120,12 @@ private:
     // These 2 names must match the property names from Steam API
     String appid;
     String name;
+
 public:
     explicit DLC() = default;
 
-    explicit DLC(String appid, String name) : appid{std::move(appid)}, name{std::move(name)} {}
+    explicit DLC(String appid, String name) : appid{std::move(appid)}, name{std::move(name)} {
+    }
 
     [[nodiscard]] String get_id_str() const {
         return appid;
@@ -134,7 +141,7 @@ public:
 
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(DLC, appid, name)
 
-    static Vector<DLC> get_dlcs_from_apps(const AppDlcNameMap& apps, AppId_t app_id);
+    static Vector<DLC> get_dlcs_from_apps(const AppDlcNameMap &apps, AppId_t app_id);
 
-    static DlcNameMap get_dlc_map_from_vector(const Vector<DLC>& vector);
+    static DlcNameMap get_dlc_map_from_vector(const Vector<DLC> &vector);
 };

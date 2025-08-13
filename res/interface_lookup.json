@@ -1,0 +1,3412 @@
+{
+    "STEAMAPPS_INTERFACE_VERSION001": {
+        "GetAppData": {
+            "vt_idx": 0
+        }
+    },
+    "STEAMAPPS_INTERFACE_VERSION002": {
+        "BIsCybercafe": {
+            "vt_idx": 2
+        },
+        "BIsLowViolence": {
+            "vt_idx": 1
+        },
+        "BIsSubscribed": {
+            "vt_idx": 0
+        },
+        "BIsSubscribedApp": {
+            "vt_idx": 6
+        },
+        "BIsVACBanned": {
+            "vt_idx": 3
+        },
+        "GetAvailableGameLanguages": {
+            "vt_idx": 5
+        },
+        "GetCurrentGameLanguage": {
+            "vt_idx": 4
+        }
+    },
+    "STEAMAPPS_INTERFACE_VERSION008": {
+        "BGetDLCDataByIndex": {
+            "vt_idx": 11
+        },
+        "BIsAppInstalled": {
+            "vt_idx": 19
+        },
+        "BIsCybercafe": {
+            "vt_idx": 2
+        },
+        "BIsDlcInstalled": {
+            "vt_idx": 7
+        },
+        "BIsLowViolence": {
+            "vt_idx": 1
+        },
+        "BIsSubscribed": {
+            "vt_idx": 0
+        },
+        "BIsSubscribedApp": {
+            "vt_idx": 6
+        },
+        "BIsSubscribedFromFamilySharing": {
+            "vt_idx": 27
+        },
+        "BIsSubscribedFromFreeWeekend": {
+            "vt_idx": 9
+        },
+        "BIsTimedTrial": {
+            "vt_idx": 28
+        },
+        "BIsVACBanned": {
+            "vt_idx": 3
+        },
+        "GetAppBuildId": {
+            "vt_idx": 23
+        },
+        "GetAppInstallDir": {
+            "vt_idx": 18
+        },
+        "GetAppOwner": {
+            "vt_idx": 20
+        },
+        "GetAvailableGameLanguages": {
+            "vt_idx": 5
+        },
+        "GetBetaInfo": {
+            "vt_idx": 31
+        },
+        "GetCurrentBetaName": {
+            "vt_idx": 15
+        },
+        "GetCurrentGameLanguage": {
+            "vt_idx": 4
+        },
+        "GetDLCCount": {
+            "vt_idx": 10
+        },
+        "GetDlcDownloadProgress": {
+            "vt_idx": 22
+        },
+        "GetEarliestPurchaseUnixTime": {
+            "vt_idx": 8
+        },
+        "GetFileDetails": {
+            "vt_idx": 25
+        },
+        "GetInstalledDepots": {
+            "vt_idx": 17
+        },
+        "GetLaunchCommandLine": {
+            "vt_idx": 26
+        },
+        "GetLaunchQueryParam": {
+            "vt_idx": 21
+        },
+        "GetNumBetas": {
+            "vt_idx": 30
+        },
+        "InstallDLC": {
+            "vt_idx": 12
+        },
+        "MarkContentCorrupt": {
+            "vt_idx": 16
+        },
+        "RequestAllProofOfPurchaseKeys": {
+            "vt_idx": 24
+        },
+        "RequestAppProofOfPurchaseKey": {
+            "vt_idx": 14
+        },
+        "SetActiveBeta": {
+            "vt_idx": 32
+        },
+        "SetDlcContext": {
+            "vt_idx": 29
+        },
+        "UninstallDLC": {
+            "vt_idx": 13
+        }
+    },
+    "STEAMAPPTICKET_INTERFACE_VERSION001": {
+        "GetAppOwnershipTicketData": {
+            "vt_idx": 0
+        }
+    },
+    "STEAMHTMLSURFACE_INTERFACE_VERSION_005": {
+        "AddHeader": {
+            "vt_idx": 10
+        },
+        "AllowStartRequest": {
+            "vt_idx": 34
+        },
+        "CopyToClipboard": {
+            "vt_idx": 24
+        },
+        "CreateBrowser": {
+            "vt_idx": 2
+        },
+        "ExecuteJavascript": {
+            "vt_idx": 11
+        },
+        "FileLoadDialogResponse": {
+            "vt_idx": 36
+        },
+        "Find": {
+            "vt_idx": 26
+        },
+        "GetLinkAtPosition": {
+            "vt_idx": 28
+        },
+        "GoBack": {
+            "vt_idx": 8
+        },
+        "GoForward": {
+            "vt_idx": 9
+        },
+        "Init": {
+            "vt_idx": 0
+        },
+        "JSDialogResponse": {
+            "vt_idx": 35
+        },
+        "KeyChar": {
+            "vt_idx": 19
+        },
+        "KeyDown": {
+            "vt_idx": 17
+        },
+        "KeyUp": {
+            "vt_idx": 18
+        },
+        "LoadURL": {
+            "vt_idx": 4
+        },
+        "MouseDoubleClick": {
+            "vt_idx": 14
+        },
+        "MouseDown": {
+            "vt_idx": 13
+        },
+        "MouseMove": {
+            "vt_idx": 15
+        },
+        "MouseUp": {
+            "vt_idx": 12
+        },
+        "MouseWheel": {
+            "vt_idx": 16
+        },
+        "OpenDeveloperTools": {
+            "vt_idx": 33
+        },
+        "PasteFromClipboard": {
+            "vt_idx": 25
+        },
+        "Reload": {
+            "vt_idx": 7
+        },
+        "RemoveBrowser": {
+            "vt_idx": 3
+        },
+        "SetBackgroundMode": {
+            "vt_idx": 31
+        },
+        "SetCookie": {
+            "vt_idx": 29
+        },
+        "SetDPIScalingFactor": {
+            "vt_idx": 32
+        },
+        "SetHorizontalScroll": {
+            "vt_idx": 20
+        },
+        "SetKeyFocus": {
+            "vt_idx": 22
+        },
+        "SetPageScaleFactor": {
+            "vt_idx": 30
+        },
+        "SetSize": {
+            "vt_idx": 5
+        },
+        "SetVerticalScroll": {
+            "vt_idx": 21
+        },
+        "Shutdown": {
+            "vt_idx": 1
+        },
+        "StopFind": {
+            "vt_idx": 27
+        },
+        "StopLoad": {
+            "vt_idx": 6
+        },
+        "ViewSource": {
+            "vt_idx": 23
+        }
+    },
+    "STEAMHTTP_INTERFACE_VERSION003": {
+        "CreateCookieContainer": {
+            "vt_idx": 17
+        },
+        "CreateHTTPRequest": {
+            "vt_idx": 0
+        },
+        "DeferHTTPRequest": {
+            "vt_idx": 7
+        },
+        "GetHTTPDownloadProgressPct": {
+            "vt_idx": 15
+        },
+        "GetHTTPRequestWasTimedOut": {
+            "vt_idx": 24
+        },
+        "GetHTTPResponseBodyData": {
+            "vt_idx": 12
+        },
+        "GetHTTPResponseBodySize": {
+            "vt_idx": 11
+        },
+        "GetHTTPResponseHeaderSize": {
+            "vt_idx": 9
+        },
+        "GetHTTPResponseHeaderValue": {
+            "vt_idx": 10
+        },
+        "GetHTTPStreamingResponseBodyData": {
+            "vt_idx": 13
+        },
+        "PrioritizeHTTPRequest": {
+            "vt_idx": 8
+        },
+        "ReleaseCookieContainer": {
+            "vt_idx": 18
+        },
+        "ReleaseHTTPRequest": {
+            "vt_idx": 14
+        },
+        "SendHTTPRequest": {
+            "vt_idx": 5
+        },
+        "SendHTTPRequestAndStreamResponse": {
+            "vt_idx": 6
+        },
+        "SetCookie": {
+            "vt_idx": 19
+        },
+        "SetHTTPRequestAbsoluteTimeoutMS": {
+            "vt_idx": 23
+        },
+        "SetHTTPRequestContextValue": {
+            "vt_idx": 1
+        },
+        "SetHTTPRequestCookieContainer": {
+            "vt_idx": 20
+        },
+        "SetHTTPRequestGetOrPostParameter": {
+            "vt_idx": 4
+        },
+        "SetHTTPRequestHeaderValue": {
+            "vt_idx": 3
+        },
+        "SetHTTPRequestNetworkActivityTimeout": {
+            "vt_idx": 2
+        },
+        "SetHTTPRequestRawPostBody": {
+            "vt_idx": 16
+        },
+        "SetHTTPRequestRequiresVerifiedCertificate": {
+            "vt_idx": 22
+        },
+        "SetHTTPRequestUserAgentInfo": {
+            "vt_idx": 21
+        }
+    },
+    "STEAMINVENTORY_INTERFACE_V003": {
+        "AddPromoItem": {
+            "vt_idx": 12
+        },
+        "AddPromoItems": {
+            "vt_idx": 13
+        },
+        "CheckResultSteamID": {
+            "vt_idx": 4
+        },
+        "ConsumeItem": {
+            "vt_idx": 14
+        },
+        "DeserializeResult": {
+            "vt_idx": 9
+        },
+        "DestroyResult": {
+            "vt_idx": 5
+        },
+        "ExchangeItems": {
+            "vt_idx": 15
+        },
+        "GenerateItems": {
+            "vt_idx": 10
+        },
+        "GetAllItems": {
+            "vt_idx": 6
+        },
+        "GetEligiblePromoItemDefinitionIDs": {
+            "vt_idx": 24
+        },
+        "GetItemDefinitionIDs": {
+            "vt_idx": 21
+        },
+        "GetItemDefinitionProperty": {
+            "vt_idx": 22
+        },
+        "GetItemPrice": {
+            "vt_idx": 29
+        },
+        "GetItemsByID": {
+            "vt_idx": 7
+        },
+        "GetItemsWithPrices": {
+            "vt_idx": 28
+        },
+        "GetNumItemsWithPrices": {
+            "vt_idx": 27
+        },
+        "GetResultItemProperty": {
+            "vt_idx": 2
+        },
+        "GetResultItems": {
+            "vt_idx": 1
+        },
+        "GetResultStatus": {
+            "vt_idx": 0
+        },
+        "GetResultTimestamp": {
+            "vt_idx": 3
+        },
+        "GrantPromoItems": {
+            "vt_idx": 11
+        },
+        "InspectItem": {
+            "vt_idx": 37
+        },
+        "LoadItemDefinitions": {
+            "vt_idx": 20
+        },
+        "RemoveProperty": {
+            "vt_idx": 31
+        },
+        "RequestEligiblePromoItemDefinitionsIDs": {
+            "vt_idx": 23
+        },
+        "RequestPrices": {
+            "vt_idx": 26
+        },
+        "SendItemDropHeartbeat": {
+            "vt_idx": 17
+        },
+        "SerializeResult": {
+            "vt_idx": 8
+        },
+        "SetProperty": {
+            "vt_idx": 35
+        },
+        "StartPurchase": {
+            "vt_idx": 25
+        },
+        "StartUpdateProperties": {
+            "vt_idx": 30
+        },
+        "SubmitUpdateProperties": {
+            "vt_idx": 36
+        },
+        "TradeItems": {
+            "vt_idx": 19
+        },
+        "TransferItemQuantity": {
+            "vt_idx": 16
+        },
+        "TriggerItemDrop": {
+            "vt_idx": 18
+        }
+    },
+    "STEAMMUSICREMOTE_INTERFACE_VERSION001": {
+        "BActivationSuccess": {
+            "vt_idx": 3
+        },
+        "BIsCurrentMusicRemote": {
+            "vt_idx": 2
+        },
+        "CurrentEntryDidChange": {
+            "vt_idx": 21
+        },
+        "CurrentEntryIsAvailable": {
+            "vt_idx": 17
+        },
+        "CurrentEntryWillChange": {
+            "vt_idx": 16
+        },
+        "DeregisterSteamMusicRemote": {
+            "vt_idx": 1
+        },
+        "EnableLooped": {
+            "vt_idx": 9
+        },
+        "EnablePlayNext": {
+            "vt_idx": 7
+        },
+        "EnablePlayPrevious": {
+            "vt_idx": 6
+        },
+        "EnablePlaylists": {
+            "vt_idx": 11
+        },
+        "EnableQueue": {
+            "vt_idx": 10
+        },
+        "EnableShuffled": {
+            "vt_idx": 8
+        },
+        "PlaylistDidChange": {
+            "vt_idx": 31
+        },
+        "PlaylistWillChange": {
+            "vt_idx": 27
+        },
+        "QueueDidChange": {
+            "vt_idx": 26
+        },
+        "QueueWillChange": {
+            "vt_idx": 22
+        },
+        "RegisterSteamMusicRemote": {
+            "vt_idx": 0
+        },
+        "ResetPlaylistEntries": {
+            "vt_idx": 28
+        },
+        "ResetQueueEntries": {
+            "vt_idx": 23
+        },
+        "SetCurrentPlaylistEntry": {
+            "vt_idx": 30
+        },
+        "SetCurrentQueueEntry": {
+            "vt_idx": 25
+        },
+        "SetDisplayName": {
+            "vt_idx": 4
+        },
+        "SetPNGIcon_64x64": {
+            "vt_idx": 5
+        },
+        "SetPlaylistEntry": {
+            "vt_idx": 29
+        },
+        "SetQueueEntry": {
+            "vt_idx": 24
+        },
+        "UpdateCurrentEntryCoverArt": {
+            "vt_idx": 20
+        },
+        "UpdateCurrentEntryElapsedSeconds": {
+            "vt_idx": 19
+        },
+        "UpdateCurrentEntryText": {
+            "vt_idx": 18
+        },
+        "UpdateLooped": {
+            "vt_idx": 14
+        },
+        "UpdatePlaybackStatus": {
+            "vt_idx": 12
+        },
+        "UpdateShuffled": {
+            "vt_idx": 13
+        },
+        "UpdateVolume": {
+            "vt_idx": 15
+        }
+    },
+    "STEAMMUSIC_INTERFACE_VERSION001": {
+        "BIsEnabled": {
+            "vt_idx": 0
+        },
+        "BIsPlaying": {
+            "vt_idx": 1
+        },
+        "GetPlaybackStatus": {
+            "vt_idx": 2
+        },
+        "GetVolume": {
+            "vt_idx": 8
+        },
+        "Pause": {
+            "vt_idx": 4
+        },
+        "Play": {
+            "vt_idx": 3
+        },
+        "PlayNext": {
+            "vt_idx": 6
+        },
+        "PlayPrevious": {
+            "vt_idx": 5
+        },
+        "SetVolume": {
+            "vt_idx": 7
+        }
+    },
+    "STEAMPARENTALSETTINGS_INTERFACE_VERSION001": {
+        "BIsAppBlocked": {
+            "vt_idx": 2
+        },
+        "BIsAppInBlockList": {
+            "vt_idx": 3
+        },
+        "BIsFeatureBlocked": {
+            "vt_idx": 4
+        },
+        "BIsFeatureInBlockList": {
+            "vt_idx": 5
+        },
+        "BIsParentalLockEnabled": {
+            "vt_idx": 0
+        },
+        "BIsParentalLockLocked": {
+            "vt_idx": 1
+        }
+    },
+    "STEAMREMOTEPLAY_INTERFACE_VERSION003": {
+        "BEnableRemotePlayTogetherDirectInput": {
+            "vt_idx": 8
+        },
+        "BGetSessionClientResolution": {
+            "vt_idx": 5
+        },
+        "BSendRemotePlayTogetherInvite": {
+            "vt_idx": 7
+        },
+        "CreateMouseCursor": {
+            "vt_idx": 13
+        },
+        "DisableRemotePlayTogetherDirectInput": {
+            "vt_idx": 9
+        },
+        "GetInput": {
+            "vt_idx": 10
+        },
+        "GetSessionClientFormFactor": {
+            "vt_idx": 4
+        },
+        "GetSessionClientName": {
+            "vt_idx": 3
+        },
+        "GetSessionCount": {
+            "vt_idx": 0
+        },
+        "GetSessionID": {
+            "vt_idx": 1
+        },
+        "GetSessionSteamID": {
+            "vt_idx": 2
+        },
+        "SetMouseCursor": {
+            "vt_idx": 14
+        },
+        "SetMousePosition": {
+            "vt_idx": 12
+        },
+        "SetMouseVisibility": {
+            "vt_idx": 11
+        },
+        "ShowRemotePlayTogetherUI": {
+            "vt_idx": 6
+        }
+    },
+    "STEAMREMOTESTORAGE_INTERFACE_VERSION016": {
+        "BeginFileWriteBatch": {
+            "vt_idx": 56
+        },
+        "CommitPublishedFileUpdate": {
+            "vt_idx": 37
+        },
+        "CreatePublishedFileUpdateRequest": {
+            "vt_idx": 30
+        },
+        "DeletePublishedFile": {
+            "vt_idx": 39
+        },
+        "EndFileWriteBatch": {
+            "vt_idx": 57
+        },
+        "EnumeratePublishedFilesByUserAction": {
+            "vt_idx": 51
+        },
+        "EnumeratePublishedWorkshopFiles": {
+            "vt_idx": 52
+        },
+        "EnumerateUserPublishedFiles": {
+            "vt_idx": 40
+        },
+        "EnumerateUserSharedWorkshopFiles": {
+            "vt_idx": 48
+        },
+        "EnumerateUserSubscribedFiles": {
+            "vt_idx": 42
+        },
+        "FileDelete": {
+            "vt_idx": 6
+        },
+        "FileExists": {
+            "vt_idx": 13
+        },
+        "FileForget": {
+            "vt_idx": 5
+        },
+        "FilePersisted": {
+            "vt_idx": 14
+        },
+        "FileRead": {
+            "vt_idx": 1
+        },
+        "FileReadAsync": {
+            "vt_idx": 3
+        },
+        "FileReadAsyncComplete": {
+            "vt_idx": 4
+        },
+        "FileShare": {
+            "vt_idx": 7
+        },
+        "FileWrite": {
+            "vt_idx": 0
+        },
+        "FileWriteAsync": {
+            "vt_idx": 2
+        },
+        "FileWriteStreamCancel": {
+            "vt_idx": 12
+        },
+        "FileWriteStreamClose": {
+            "vt_idx": 11
+        },
+        "FileWriteStreamOpen": {
+            "vt_idx": 9
+        },
+        "FileWriteStreamWriteChunk": {
+            "vt_idx": 10
+        },
+        "GetCachedUGCCount": {
+            "vt_idx": 28
+        },
+        "GetFileCount": {
+            "vt_idx": 18
+        },
+        "GetFileNameAndSize": {
+            "vt_idx": 19
+        },
+        "GetFileSize": {
+            "vt_idx": 15
+        },
+        "GetFileTimestamp": {
+            "vt_idx": 16
+        },
+        "GetLocalFileChange": {
+            "vt_idx": 55
+        },
+        "GetLocalFileChangeCount": {
+            "vt_idx": 54
+        },
+        "GetPublishedFileDetails": {
+            "vt_idx": 38
+        },
+        "GetPublishedItemVoteDetails": {
+            "vt_idx": 45
+        },
+        "GetQuota": {
+            "vt_idx": 20
+        },
+        "GetSyncPlatforms": {
+            "vt_idx": 17
+        },
+        "GetUGCDetails": {
+            "vt_idx": 26
+        },
+        "GetUGCDownloadProgress": {
+            "vt_idx": 25
+        },
+        "GetUserPublishedItemVoteDetails": {
+            "vt_idx": 47
+        },
+        "IsCloudEnabledForAccount": {
+            "vt_idx": 21
+        },
+        "IsCloudEnabledForApp": {
+            "vt_idx": 22
+        },
+        "PublishVideo": {
+            "vt_idx": 49
+        },
+        "PublishWorkshopFile": {
+            "vt_idx": 29
+        },
+        "SetCloudEnabledForApp": {
+            "vt_idx": 23
+        },
+        "SetSyncPlatforms": {
+            "vt_idx": 8
+        },
+        "SetUserPublishedFileAction": {
+            "vt_idx": 50
+        },
+        "SubscribePublishedFile": {
+            "vt_idx": 41
+        },
+        "UGCDownload": {
+            "vt_idx": 24
+        },
+        "UGCDownloadToLocation": {
+            "vt_idx": 53
+        },
+        "UGCRead": {
+            "vt_idx": 27
+        },
+        "UnsubscribePublishedFile": {
+            "vt_idx": 43
+        },
+        "UpdatePublishedFileDescription": {
+            "vt_idx": 34
+        },
+        "UpdatePublishedFileFile": {
+            "vt_idx": 31
+        },
+        "UpdatePublishedFilePreviewFile": {
+            "vt_idx": 32
+        },
+        "UpdatePublishedFileSetChangeDescription": {
+            "vt_idx": 44
+        },
+        "UpdatePublishedFileTags": {
+            "vt_idx": 36
+        },
+        "UpdatePublishedFileTitle": {
+            "vt_idx": 33
+        },
+        "UpdatePublishedFileVisibility": {
+            "vt_idx": 35
+        },
+        "UpdateUserPublishedItemVote": {
+            "vt_idx": 46
+        }
+    },
+    "STEAMSCREENSHOTS_INTERFACE_VERSION003": {
+        "AddScreenshotToLibrary": {
+            "vt_idx": 1
+        },
+        "AddVRScreenshotToLibrary": {
+            "vt_idx": 8
+        },
+        "HookScreenshots": {
+            "vt_idx": 3
+        },
+        "IsScreenshotsHooked": {
+            "vt_idx": 7
+        },
+        "SetLocation": {
+            "vt_idx": 4
+        },
+        "TagPublishedFile": {
+            "vt_idx": 6
+        },
+        "TagUser": {
+            "vt_idx": 5
+        },
+        "TriggerScreenshot": {
+            "vt_idx": 2
+        },
+        "WriteScreenshot": {
+            "vt_idx": 0
+        }
+    },
+    "STEAMTIMELINE_INTERFACE_V004": {
+        "AddGamePhaseTag": {
+            "vt_idx": 14
+        },
+        "AddInstantaneousTimelineEvent": {
+            "vt_idx": 3
+        },
+        "AddRangeTimelineEvent": {
+            "vt_idx": 4
+        },
+        "ClearTimelineTooltip": {
+            "vt_idx": 1
+        },
+        "DoesEventRecordingExist": {
+            "vt_idx": 9
+        },
+        "DoesGamePhaseRecordingExist": {
+            "vt_idx": 13
+        },
+        "EndGamePhase": {
+            "vt_idx": 11
+        },
+        "EndRangeTimelineEvent": {
+            "vt_idx": 7
+        },
+        "OpenOverlayToGamePhase": {
+            "vt_idx": 16
+        },
+        "OpenOverlayToTimelineEvent": {
+            "vt_idx": 17
+        },
+        "RemoveTimelineEvent": {
+            "vt_idx": 8
+        },
+        "SetGamePhaseAttribute": {
+            "vt_idx": 15
+        },
+        "SetGamePhaseID": {
+            "vt_idx": 12
+        },
+        "SetTimelineGameMode": {
+            "vt_idx": 2
+        },
+        "SetTimelineTooltip": {
+            "vt_idx": 0
+        },
+        "StartGamePhase": {
+            "vt_idx": 10
+        },
+        "StartRangeTimelineEvent": {
+            "vt_idx": 5
+        },
+        "UpdateRangeTimelineEvent": {
+            "vt_idx": 6
+        }
+    },
+    "STEAMUGC_INTERFACE_VERSION021": {
+        "AddAppDependency": {
+            "vt_idx": 87
+        },
+        "AddContentDescriptor": {
+            "vt_idx": 63
+        },
+        "AddDependency": {
+            "vt_idx": 85
+        },
+        "AddExcludedTag": {
+            "vt_idx": 24
+        },
+        "AddItemKeyValueTag": {
+            "vt_idx": 57
+        },
+        "AddItemPreviewFile": {
+            "vt_idx": 58
+        },
+        "AddItemPreviewVideo": {
+            "vt_idx": 59
+        },
+        "AddItemToFavorites": {
+            "vt_idx": 70
+        },
+        "AddRequiredKeyValueTag": {
+            "vt_idx": 42
+        },
+        "AddRequiredTag": {
+            "vt_idx": 22
+        },
+        "AddRequiredTagGroup": {
+            "vt_idx": 23
+        },
+        "BInitWorkshopForGameServer": {
+            "vt_idx": 80
+        },
+        "CreateItem": {
+            "vt_idx": 44
+        },
+        "CreateQueryAllUGCRequest": {
+            "vt_idx": 2
+        },
+        "CreateQueryUGCDetailsRequest": {
+            "vt_idx": 3
+        },
+        "CreateQueryUserUGCRequest": {
+            "vt_idx": 0
+        },
+        "DeleteItem": {
+            "vt_idx": 90
+        },
+        "DownloadItem": {
+            "vt_idx": 79
+        },
+        "GetAppDependencies": {
+            "vt_idx": 89
+        },
+        "GetItemDownloadInfo": {
+            "vt_idx": 78
+        },
+        "GetItemInstallInfo": {
+            "vt_idx": 77
+        },
+        "GetItemState": {
+            "vt_idx": 76
+        },
+        "GetItemUpdateProgress": {
+            "vt_idx": 67
+        },
+        "GetNumSubscribedItems": {
+            "vt_idx": 74
+        },
+        "GetNumSupportedGameVersions": {
+            "vt_idx": 18
+        },
+        "GetQueryUGCAdditionalPreview": {
+            "vt_idx": 14
+        },
+        "GetQueryUGCChildren": {
+            "vt_idx": 11
+        },
+        "GetQueryUGCContentDescriptors": {
+            "vt_idx": 20
+        },
+        "GetQueryUGCKeyValueTag": {
+            "vt_idx": 17
+        },
+        "GetQueryUGCMetadata": {
+            "vt_idx": 10
+        },
+        "GetQueryUGCNumAdditionalPreviews": {
+            "vt_idx": 13
+        },
+        "GetQueryUGCNumKeyValueTags": {
+            "vt_idx": 15
+        },
+        "GetQueryUGCNumTags": {
+            "vt_idx": 6
+        },
+        "GetQueryUGCPreviewURL": {
+            "vt_idx": 9
+        },
+        "GetQueryUGCResult": {
+            "vt_idx": 5
+        },
+        "GetQueryUGCStatistic": {
+            "vt_idx": 12
+        },
+        "GetQueryUGCTag": {
+            "vt_idx": 7
+        },
+        "GetQueryUGCTagDisplayName": {
+            "vt_idx": 8
+        },
+        "GetSubscribedItems": {
+            "vt_idx": 75
+        },
+        "GetSupportedGameVersionData": {
+            "vt_idx": 19
+        },
+        "GetUserContentDescriptorPreferences": {
+            "vt_idx": 93
+        },
+        "GetUserItemVote": {
+            "vt_idx": 69
+        },
+        "GetWorkshopEULAStatus": {
+            "vt_idx": 92
+        },
+        "ReleaseQueryUGCRequest": {
+            "vt_idx": 21
+        },
+        "RemoveAllItemKeyValueTags": {
+            "vt_idx": 55
+        },
+        "RemoveAppDependency": {
+            "vt_idx": 88
+        },
+        "RemoveContentDescriptor": {
+            "vt_idx": 64
+        },
+        "RemoveDependency": {
+            "vt_idx": 86
+        },
+        "RemoveItemFromFavorites": {
+            "vt_idx": 71
+        },
+        "RemoveItemKeyValueTags": {
+            "vt_idx": 56
+        },
+        "RemoveItemPreview": {
+            "vt_idx": 62
+        },
+        "RequestUGCDetails": {
+            "vt_idx": 43
+        },
+        "SendQueryUGCRequest": {
+            "vt_idx": 4
+        },
+        "SetAdminQuery": {
+            "vt_idx": 35
+        },
+        "SetAllowCachedResponse": {
+            "vt_idx": 34
+        },
+        "SetAllowLegacyUpload": {
+            "vt_idx": 54
+        },
+        "SetCloudFileNameFilter": {
+            "vt_idx": 36
+        },
+        "SetItemContent": {
+            "vt_idx": 52
+        },
+        "SetItemDescription": {
+            "vt_idx": 47
+        },
+        "SetItemMetadata": {
+            "vt_idx": 49
+        },
+        "SetItemPreview": {
+            "vt_idx": 53
+        },
+        "SetItemTags": {
+            "vt_idx": 51
+        },
+        "SetItemTitle": {
+            "vt_idx": 46
+        },
+        "SetItemUpdateLanguage": {
+            "vt_idx": 48
+        },
+        "SetItemVisibility": {
+            "vt_idx": 50
+        },
+        "SetItemsDisabledLocally": {
+            "vt_idx": 94
+        },
+        "SetLanguage": {
+            "vt_idx": 33
+        },
+        "SetMatchAnyTag": {
+            "vt_idx": 37
+        },
+        "SetRankedByTrendDays": {
+            "vt_idx": 39
+        },
+        "SetRequiredGameVersions": {
+            "vt_idx": 65
+        },
+        "SetReturnAdditionalPreviews": {
+            "vt_idx": 30
+        },
+        "SetReturnChildren": {
+            "vt_idx": 29
+        },
+        "SetReturnKeyValueTags": {
+            "vt_idx": 26
+        },
+        "SetReturnLongDescription": {
+            "vt_idx": 27
+        },
+        "SetReturnMetadata": {
+            "vt_idx": 28
+        },
+        "SetReturnOnlyIDs": {
+            "vt_idx": 25
+        },
+        "SetReturnPlaytimeStats": {
+            "vt_idx": 32
+        },
+        "SetReturnTotalOnly": {
+            "vt_idx": 31
+        },
+        "SetSearchText": {
+            "vt_idx": 38
+        },
+        "SetSubscriptionsLoadOrder": {
+            "vt_idx": 95
+        },
+        "SetTimeCreatedDateRange": {
+            "vt_idx": 40
+        },
+        "SetTimeUpdatedDateRange": {
+            "vt_idx": 41
+        },
+        "SetUserItemVote": {
+            "vt_idx": 68
+        },
+        "ShowWorkshopEULA": {
+            "vt_idx": 91
+        },
+        "StartItemUpdate": {
+            "vt_idx": 45
+        },
+        "StartPlaytimeTracking": {
+            "vt_idx": 82
+        },
+        "StopPlaytimeTracking": {
+            "vt_idx": 83
+        },
+        "StopPlaytimeTrackingForAllItems": {
+            "vt_idx": 84
+        },
+        "SubmitItemUpdate": {
+            "vt_idx": 66
+        },
+        "SubscribeItem": {
+            "vt_idx": 72
+        },
+        "SuspendDownloads": {
+            "vt_idx": 81
+        },
+        "UnsubscribeItem": {
+            "vt_idx": 73
+        },
+        "UpdateItemPreviewFile": {
+            "vt_idx": 60
+        },
+        "UpdateItemPreviewVideo": {
+            "vt_idx": 61
+        }
+    },
+    "STEAMUSERSTATS_INTERFACE_VERSION003": {
+        "ClearAchievement": {
+            "vt_idx": 8
+        },
+        "GetAchievement": {
+            "vt_idx": 6
+        },
+        "GetAchievementDisplayAttribute": {
+            "vt_idx": 11
+        },
+        "GetAchievementIcon": {
+            "vt_idx": 10
+        },
+        "GetStat": {
+            "vt_idx": 2
+        },
+        "IndicateAchievementProgress": {
+            "vt_idx": 12
+        },
+        "RequestCurrentStats": {
+            "vt_idx": 0
+        },
+        "SetAchievement": {
+            "vt_idx": 7
+        },
+        "SetStat": {
+            "vt_idx": 4
+        },
+        "StoreStats": {
+            "vt_idx": 9
+        },
+        "UpdateAvgRateStat": {
+            "vt_idx": 5
+        }
+    },
+    "STEAMUSERSTATS_INTERFACE_VERSION013": {
+        "AttachLeaderboardUGC": {
+            "vt_idx": 31
+        },
+        "ClearAchievement": {
+            "vt_idx": 7
+        },
+        "DownloadLeaderboardEntries": {
+            "vt_idx": 27
+        },
+        "DownloadLeaderboardEntriesForUsers": {
+            "vt_idx": 28
+        },
+        "FindLeaderboard": {
+            "vt_idx": 22
+        },
+        "FindOrCreateLeaderboard": {
+            "vt_idx": 21
+        },
+        "GetAchievement": {
+            "vt_idx": 5
+        },
+        "GetAchievementAchievedPercent": {
+            "vt_idx": 36
+        },
+        "GetAchievementAndUnlockTime": {
+            "vt_idx": 8
+        },
+        "GetAchievementDisplayAttribute": {
+            "vt_idx": 11
+        },
+        "GetAchievementIcon": {
+            "vt_idx": 10
+        },
+        "GetAchievementName": {
+            "vt_idx": 14
+        },
+        "GetAchievementProgressLimits": {
+            "vt_idx": 43
+        },
+        "GetDownloadedLeaderboardEntry": {
+            "vt_idx": 29
+        },
+        "GetGlobalStat": {
+            "vt_idx": 39
+        },
+        "GetGlobalStatHistory": {
+            "vt_idx": 41
+        },
+        "GetLeaderboardDisplayType": {
+            "vt_idx": 26
+        },
+        "GetLeaderboardEntryCount": {
+            "vt_idx": 24
+        },
+        "GetLeaderboardName": {
+            "vt_idx": 23
+        },
+        "GetLeaderboardSortMethod": {
+            "vt_idx": 25
+        },
+        "GetMostAchievedAchievementInfo": {
+            "vt_idx": 34
+        },
+        "GetNextMostAchievedAchievementInfo": {
+            "vt_idx": 35
+        },
+        "GetNumAchievements": {
+            "vt_idx": 13
+        },
+        "GetNumberOfCurrentPlayers": {
+            "vt_idx": 32
+        },
+        "GetStat": {
+            "vt_idx": 1
+        },
+        "GetUserAchievement": {
+            "vt_idx": 18
+        },
+        "GetUserAchievementAndUnlockTime": {
+            "vt_idx": 19
+        },
+        "GetUserStat": {
+            "vt_idx": 17
+        },
+        "IndicateAchievementProgress": {
+            "vt_idx": 12
+        },
+        "RequestGlobalAchievementPercentages": {
+            "vt_idx": 33
+        },
+        "RequestGlobalStats": {
+            "vt_idx": 37
+        },
+        "RequestUserStats": {
+            "vt_idx": 15
+        },
+        "ResetAllStats": {
+            "vt_idx": 20
+        },
+        "SetAchievement": {
+            "vt_idx": 6
+        },
+        "SetStat": {
+            "vt_idx": 3
+        },
+        "StoreStats": {
+            "vt_idx": 9
+        },
+        "UpdateAvgRateStat": {
+            "vt_idx": 4
+        },
+        "UploadLeaderboardScore": {
+            "vt_idx": 30
+        }
+    },
+    "STEAMVIDEO_INTERFACE_V007": {
+        "GetOPFSettings": {
+            "vt_idx": 2
+        },
+        "GetOPFStringForApp": {
+            "vt_idx": 3
+        },
+        "GetVideoURL": {
+            "vt_idx": 0
+        },
+        "IsBroadcasting": {
+            "vt_idx": 1
+        }
+    },
+    "SteamClient007": {
+        "BReleaseSteamPipe": {
+            "vt_idx": 1
+        },
+        "ConnectToGlobalUser": {
+            "vt_idx": 2
+        },
+        "CreateLocalUser": {
+            "vt_idx": 3
+        },
+        "CreateSteamPipe": {
+            "vt_idx": 0
+        },
+        "GetIPCCallCount": {
+            "vt_idx": 16
+        },
+        "GetISteamApps": {
+            "vt_idx": 18
+        },
+        "GetISteamContentServer": {
+            "vt_idx": 11
+        },
+        "GetISteamFriends": {
+            "vt_idx": 8
+        },
+        "GetISteamGameServer": {
+            "vt_idx": 6
+        },
+        "GetISteamGenericInterface": {
+            "vt_idx": 14
+        },
+        "GetISteamMasterServerUpdater": {
+            "vt_idx": 12
+        },
+        "GetISteamMatchmaking": {
+            "vt_idx": 10
+        },
+        "GetISteamMatchmakingServers": {
+            "vt_idx": 13
+        },
+        "GetISteamNetworking": {
+            "vt_idx": 19
+        },
+        "GetISteamUser": {
+            "vt_idx": 5
+        },
+        "GetISteamUserStats": {
+            "vt_idx": 17
+        },
+        "GetISteamUtils": {
+            "vt_idx": 9
+        },
+        "ReleaseUser": {
+            "vt_idx": 4
+        },
+        "RunFrame": {
+            "vt_idx": 15
+        },
+        "SetLocalIPBinding": {
+            "vt_idx": 7
+        },
+        "SetWarningMessageHook": {
+            "vt_idx": 20
+        }
+    },
+    "SteamController008": {
+        "ActivateActionSet": {
+            "vt_idx": 5
+        },
+        "ActivateActionSetLayer": {
+            "vt_idx": 7
+        },
+        "DeactivateActionSetLayer": {
+            "vt_idx": 8
+        },
+        "DeactivateAllActionSetLayers": {
+            "vt_idx": 9
+        },
+        "GetActionOriginFromXboxOrigin": {
+            "vt_idx": 31
+        },
+        "GetActionSetHandle": {
+            "vt_idx": 4
+        },
+        "GetActiveActionSetLayers": {
+            "vt_idx": 10
+        },
+        "GetAnalogActionData": {
+            "vt_idx": 15
+        },
+        "GetAnalogActionHandle": {
+            "vt_idx": 14
+        },
+        "GetAnalogActionOrigins": {
+            "vt_idx": 16
+        },
+        "GetConnectedControllers": {
+            "vt_idx": 3
+        },
+        "GetControllerBindingRevision": {
+            "vt_idx": 33
+        },
+        "GetControllerForGamepadIndex": {
+            "vt_idx": 27
+        },
+        "GetCurrentActionSet": {
+            "vt_idx": 6
+        },
+        "GetDigitalActionData": {
+            "vt_idx": 12
+        },
+        "GetDigitalActionHandle": {
+            "vt_idx": 11
+        },
+        "GetDigitalActionOrigins": {
+            "vt_idx": 13
+        },
+        "GetGamepadIndexForController": {
+            "vt_idx": 28
+        },
+        "GetGlyphForActionOrigin": {
+            "vt_idx": 17
+        },
+        "GetGlyphForXboxOrigin": {
+            "vt_idx": 30
+        },
+        "GetInputTypeForHandle": {
+            "vt_idx": 26
+        },
+        "GetMotionData": {
+            "vt_idx": 20
+        },
+        "GetStringForActionOrigin": {
+            "vt_idx": 18
+        },
+        "GetStringForXboxOrigin": {
+            "vt_idx": 29
+        },
+        "Init": {
+            "vt_idx": 0
+        },
+        "RunFrame": {
+            "vt_idx": 2
+        },
+        "SetLEDColor": {
+            "vt_idx": 24
+        },
+        "ShowBindingPanel": {
+            "vt_idx": 25
+        },
+        "Shutdown": {
+            "vt_idx": 1
+        },
+        "StopAnalogActionMomentum": {
+            "vt_idx": 19
+        },
+        "TranslateActionOrigin": {
+            "vt_idx": 32
+        },
+        "TriggerHapticPulse": {
+            "vt_idx": 21
+        },
+        "TriggerRepeatedHapticPulse": {
+            "vt_idx": 22
+        },
+        "TriggerVibration": {
+            "vt_idx": 23
+        }
+    },
+    "SteamFriends003": {
+        "ActivateGameOverlay": {
+            "vt_idx": 19
+        },
+        "GetClanByIndex": {
+            "vt_idx": 13
+        },
+        "GetClanCount": {
+            "vt_idx": 12
+        },
+        "GetClanName": {
+            "vt_idx": 14
+        },
+        "GetFriendAvatar": {
+            "vt_idx": 8
+        },
+        "GetFriendByIndex": {
+            "vt_idx": 4
+        },
+        "GetFriendCount": {
+            "vt_idx": 3
+        },
+        "GetFriendCountFromSource": {
+            "vt_idx": 15
+        },
+        "GetFriendFromSourceByIndex": {
+            "vt_idx": 16
+        },
+        "GetFriendGamePlayed": {
+            "vt_idx": 9
+        },
+        "GetFriendPersonaName": {
+            "vt_idx": 7
+        },
+        "GetFriendPersonaNameHistory": {
+            "vt_idx": 10
+        },
+        "GetFriendPersonaState": {
+            "vt_idx": 6
+        },
+        "GetFriendRelationship": {
+            "vt_idx": 5
+        },
+        "GetPersonaName": {
+            "vt_idx": 0
+        },
+        "GetPersonaState": {
+            "vt_idx": 2
+        },
+        "HasFriend": {
+            "vt_idx": 11
+        },
+        "IsUserInSource": {
+            "vt_idx": 17
+        },
+        "SetInGameVoiceSpeaking": {
+            "vt_idx": 18
+        },
+        "SetPersonaName": {
+            "vt_idx": 1
+        }
+    },
+    "SteamFriends004": {
+        "ActivateGameOverlay": {
+            "vt_idx": 19
+        },
+        "GetClanByIndex": {
+            "vt_idx": 13
+        },
+        "GetClanCount": {
+            "vt_idx": 12
+        },
+        "GetClanName": {
+            "vt_idx": 14
+        },
+        "GetFriendAvatar": {
+            "vt_idx": 8
+        },
+        "GetFriendByIndex": {
+            "vt_idx": 4
+        },
+        "GetFriendCount": {
+            "vt_idx": 3
+        },
+        "GetFriendCountFromSource": {
+            "vt_idx": 15
+        },
+        "GetFriendFromSourceByIndex": {
+            "vt_idx": 16
+        },
+        "GetFriendGamePlayed": {
+            "vt_idx": 9
+        },
+        "GetFriendPersonaName": {
+            "vt_idx": 7
+        },
+        "GetFriendPersonaNameHistory": {
+            "vt_idx": 10
+        },
+        "GetFriendPersonaState": {
+            "vt_idx": 6
+        },
+        "GetFriendRelationship": {
+            "vt_idx": 5
+        },
+        "GetPersonaName": {
+            "vt_idx": 0
+        },
+        "GetPersonaState": {
+            "vt_idx": 2
+        },
+        "HasFriend": {
+            "vt_idx": 11
+        },
+        "IsUserInSource": {
+            "vt_idx": 17
+        },
+        "SetInGameVoiceSpeaking": {
+            "vt_idx": 18
+        },
+        "SetPersonaName": {
+            "vt_idx": 1
+        }
+    },
+    "SteamFriends018": {
+        "ActivateGameOverlay": {
+            "vt_idx": 27
+        },
+        "ActivateGameOverlayInviteDialog": {
+            "vt_idx": 32
+        },
+        "ActivateGameOverlayInviteDialogConnectString": {
+            "vt_idx": 73
+        },
+        "ActivateGameOverlayRemotePlayTogetherInviteDialog": {
+            "vt_idx": 71
+        },
+        "ActivateGameOverlayToStore": {
+            "vt_idx": 30
+        },
+        "ActivateGameOverlayToUser": {
+            "vt_idx": 28
+        },
+        "ActivateGameOverlayToWebPage": {
+            "vt_idx": 29
+        },
+        "BHasEquippedProfileItem": {
+            "vt_idx": 75
+        },
+        "ClearRichPresence": {
+            "vt_idx": 42
+        },
+        "CloseClanChatWindowInSteam": {
+            "vt_idx": 61
+        },
+        "DownloadClanActivityCounts": {
+            "vt_idx": 22
+        },
+        "EnumerateFollowingList": {
+            "vt_idx": 67
+        },
+        "GetChatMemberByIndex": {
+            "vt_idx": 55
+        },
+        "GetClanActivityCounts": {
+            "vt_idx": 21
+        },
+        "GetClanByIndex": {
+            "vt_idx": 18
+        },
+        "GetClanChatMemberCount": {
+            "vt_idx": 54
+        },
+        "GetClanChatMessage": {
+            "vt_idx": 57
+        },
+        "GetClanCount": {
+            "vt_idx": 17
+        },
+        "GetClanName": {
+            "vt_idx": 19
+        },
+        "GetClanOfficerByIndex": {
+            "vt_idx": 40
+        },
+        "GetClanOfficerCount": {
+            "vt_idx": 39
+        },
+        "GetClanOwner": {
+            "vt_idx": 38
+        },
+        "GetClanTag": {
+            "vt_idx": 20
+        },
+        "GetCoplayFriend": {
+            "vt_idx": 49
+        },
+        "GetCoplayFriendCount": {
+            "vt_idx": 48
+        },
+        "GetFollowerCount": {
+            "vt_idx": 65
+        },
+        "GetFriendByIndex": {
+            "vt_idx": 3
+        },
+        "GetFriendCoplayGame": {
+            "vt_idx": 51
+        },
+        "GetFriendCoplayTime": {
+            "vt_idx": 50
+        },
+        "GetFriendCount": {
+            "vt_idx": 2
+        },
+        "GetFriendCountFromSource": {
+            "vt_idx": 23
+        },
+        "GetFriendFromSourceByIndex": {
+            "vt_idx": 24
+        },
+        "GetFriendGamePlayed": {
+            "vt_idx": 7
+        },
+        "GetFriendMessage": {
+            "vt_idx": 64
+        },
+        "GetFriendPersonaName": {
+            "vt_idx": 6
+        },
+        "GetFriendPersonaNameHistory": {
+            "vt_idx": 8
+        },
+        "GetFriendPersonaState": {
+            "vt_idx": 5
+        },
+        "GetFriendRelationship": {
+            "vt_idx": 4
+        },
+        "GetFriendRichPresence": {
+            "vt_idx": 43
+        },
+        "GetFriendRichPresenceKeyByIndex": {
+            "vt_idx": 45
+        },
+        "GetFriendRichPresenceKeyCount": {
+            "vt_idx": 44
+        },
+        "GetFriendSteamLevel": {
+            "vt_idx": 9
+        },
+        "GetFriendsGroupCount": {
+            "vt_idx": 11
+        },
+        "GetFriendsGroupIDByIndex": {
+            "vt_idx": 12
+        },
+        "GetFriendsGroupMembersCount": {
+            "vt_idx": 14
+        },
+        "GetFriendsGroupMembersList": {
+            "vt_idx": 15
+        },
+        "GetFriendsGroupName": {
+            "vt_idx": 13
+        },
+        "GetLargeFriendAvatar": {
+            "vt_idx": 35
+        },
+        "GetMediumFriendAvatar": {
+            "vt_idx": 34
+        },
+        "GetNumChatsWithUnreadPriorityMessages": {
+            "vt_idx": 70
+        },
+        "GetPersonaName": {
+            "vt_idx": 0
+        },
+        "GetPersonaState": {
+            "vt_idx": 1
+        },
+        "GetPlayerNickname": {
+            "vt_idx": 10
+        },
+        "GetProfileItemPropertyString": {
+            "vt_idx": 76
+        },
+        "GetProfileItemPropertyUint": {
+            "vt_idx": 77
+        },
+        "GetSmallFriendAvatar": {
+            "vt_idx": 33
+        },
+        "HasFriend": {
+            "vt_idx": 16
+        },
+        "InviteUserToGame": {
+            "vt_idx": 47
+        },
+        "IsClanChatAdmin": {
+            "vt_idx": 58
+        },
+        "IsClanChatWindowOpenInSteam": {
+            "vt_idx": 59
+        },
+        "IsClanOfficialGameGroup": {
+            "vt_idx": 69
+        },
+        "IsClanPublic": {
+            "vt_idx": 68
+        },
+        "IsFollowing": {
+            "vt_idx": 66
+        },
+        "IsUserInSource": {
+            "vt_idx": 25
+        },
+        "JoinClanChatRoom": {
+            "vt_idx": 52
+        },
+        "LeaveClanChatRoom": {
+            "vt_idx": 53
+        },
+        "OpenClanChatWindowInSteam": {
+            "vt_idx": 60
+        },
+        "RegisterProtocolInOverlayBrowser": {
+            "vt_idx": 72
+        },
+        "ReplyToFriendMessage": {
+            "vt_idx": 63
+        },
+        "RequestClanOfficerList": {
+            "vt_idx": 37
+        },
+        "RequestEquippedProfileItems": {
+            "vt_idx": 74
+        },
+        "RequestFriendRichPresence": {
+            "vt_idx": 46
+        },
+        "RequestUserInformation": {
+            "vt_idx": 36
+        },
+        "SendClanChatMessage": {
+            "vt_idx": 56
+        },
+        "SetInGameVoiceSpeaking": {
+            "vt_idx": 26
+        },
+        "SetListenForFriendsMessages": {
+            "vt_idx": 62
+        },
+        "SetPlayedWith": {
+            "vt_idx": 31
+        },
+        "SetRichPresence": {
+            "vt_idx": 41
+        }
+    },
+    "SteamGameCoordinator001": {
+        "IsMessageAvailable": {
+            "vt_idx": 1
+        },
+        "RetrieveMessage": {
+            "vt_idx": 2
+        },
+        "SendMessage": {
+            "vt_idx": 0
+        }
+    },
+    "SteamGameServer004": {
+        "BGetUserAchievementStatus": {
+            "vt_idx": 13
+        },
+        "BLoggedOn": {
+            "vt_idx": 2
+        },
+        "BSecure": {
+            "vt_idx": 3
+        },
+        "BSetServerType": {
+            "vt_idx": 9
+        },
+        "BUpdateUserData": {
+            "vt_idx": 8
+        },
+        "CreateUnauthenticatedUserConnection": {
+            "vt_idx": 6
+        },
+        "GetSteamID": {
+            "vt_idx": 4
+        },
+        "LogOff": {
+            "vt_idx": 1
+        },
+        "LogOn": {
+            "vt_idx": 0
+        },
+        "SendUserConnectAndAuthenticate": {
+            "vt_idx": 5
+        },
+        "SendUserDisconnect": {
+            "vt_idx": 7
+        },
+        "SetGameType": {
+            "vt_idx": 12
+        },
+        "UpdateServerStatus": {
+            "vt_idx": 10
+        },
+        "UpdateSpectatorPort": {
+            "vt_idx": 11
+        }
+    },
+    "SteamGameServer005": {
+        "BGetUserAchievementStatus": {
+            "vt_idx": 13
+        },
+        "BLoggedOn": {
+            "vt_idx": 2
+        },
+        "BSecure": {
+            "vt_idx": 3
+        },
+        "BSetServerType": {
+            "vt_idx": 9
+        },
+        "BUpdateUserData": {
+            "vt_idx": 8
+        },
+        "CreateUnauthenticatedUserConnection": {
+            "vt_idx": 6
+        },
+        "GetSteamID": {
+            "vt_idx": 4
+        },
+        "LogOff": {
+            "vt_idx": 1
+        },
+        "LogOn": {
+            "vt_idx": 0
+        },
+        "SendUserConnectAndAuthenticate": {
+            "vt_idx": 5
+        },
+        "SendUserDisconnect": {
+            "vt_idx": 7
+        },
+        "SetGameType": {
+            "vt_idx": 12
+        },
+        "UpdateServerStatus": {
+            "vt_idx": 10
+        },
+        "UpdateSpectatorPort": {
+            "vt_idx": 11
+        }
+    },
+    "SteamGameServer015": {
+        "AssociateWithClan": {
+            "vt_idx": 35
+        },
+        "BLoggedOn": {
+            "vt_idx": 7
+        },
+        "BSecure": {
+            "vt_idx": 8
+        },
+        "BUpdateUserData": {
+            "vt_idx": 40
+        },
+        "BeginAuthSession": {
+            "vt_idx": 25
+        },
+        "CancelAuthTicket": {
+            "vt_idx": 27
+        },
+        "ClearAllKeyValues": {
+            "vt_idx": 18
+        },
+        "ComputeNewPlayerCompatibility": {
+            "vt_idx": 36
+        },
+        "CreateUnauthenticatedUserConnection": {
+            "vt_idx": 38
+        },
+        "EndAuthSession": {
+            "vt_idx": 26
+        },
+        "ForceMasterServerHeartbeat_DEPRECATED": {
+            "vt_idx": 41
+        },
+        "GetAuthSessionTicket": {
+            "vt_idx": 24
+        },
+        "GetGameplayStats": {
+            "vt_idx": 30
+        },
+        "GetNextOutgoingPacket": {
+            "vt_idx": 34
+        },
+        "GetPublicIP": {
+            "vt_idx": 32
+        },
+        "GetServerReputation": {
+            "vt_idx": 31
+        },
+        "GetSteamID": {
+            "vt_idx": 9
+        },
+        "HandleIncomingPacket": {
+            "vt_idx": 33
+        },
+        "LogOff": {
+            "vt_idx": 6
+        },
+        "LogOn": {
+            "vt_idx": 4
+        },
+        "LogOnAnonymous": {
+            "vt_idx": 5
+        },
+        "RequestUserGroupStatus": {
+            "vt_idx": 29
+        },
+        "SendUserConnectAndAuthenticate_DEPRECATED": {
+            "vt_idx": 37
+        },
+        "SendUserDisconnect_DEPRECATED": {
+            "vt_idx": 39
+        },
+        "SetAdvertiseServerActive": {
+            "vt_idx": 23
+        },
+        "SetBotPlayerCount": {
+            "vt_idx": 12
+        },
+        "SetDedicatedServer": {
+            "vt_idx": 3
+        },
+        "SetGameData": {
+            "vt_idx": 21
+        },
+        "SetGameDescription": {
+            "vt_idx": 1
+        },
+        "SetGameTags": {
+            "vt_idx": 20
+        },
+        "SetKeyValue": {
+            "vt_idx": 19
+        },
+        "SetMapName": {
+            "vt_idx": 14
+        },
+        "SetMaxPlayerCount": {
+            "vt_idx": 11
+        },
+        "SetModDir": {
+            "vt_idx": 2
+        },
+        "SetPasswordProtected": {
+            "vt_idx": 15
+        },
+        "SetProduct": {
+            "vt_idx": 0
+        },
+        "SetRegion": {
+            "vt_idx": 22
+        },
+        "SetServerName": {
+            "vt_idx": 13
+        },
+        "SetSpectatorPort": {
+            "vt_idx": 16
+        },
+        "SetSpectatorServerName": {
+            "vt_idx": 17
+        },
+        "UserHasLicenseForApp": {
+            "vt_idx": 28
+        },
+        "WasRestartRequested": {
+            "vt_idx": 10
+        }
+    },
+    "SteamGameServerStats001": {
+        "ClearUserAchievement": {
+            "vt_idx": 8
+        },
+        "GetUserAchievement": {
+            "vt_idx": 3
+        },
+        "GetUserStat": {
+            "vt_idx": 2
+        },
+        "RequestUserStats": {
+            "vt_idx": 0
+        },
+        "SetUserAchievement": {
+            "vt_idx": 7
+        },
+        "SetUserStat": {
+            "vt_idx": 5
+        },
+        "StoreUserStats": {
+            "vt_idx": 9
+        },
+        "UpdateUserAvgRateStat": {
+            "vt_idx": 6
+        }
+    },
+    "SteamInput006": {
+        "ActivateActionSet": {
+            "vt_idx": 10
+        },
+        "ActivateActionSetLayer": {
+            "vt_idx": 12
+        },
+        "BNewDataAvailable": {
+            "vt_idx": 5
+        },
+        "BWaitForData": {
+            "vt_idx": 4
+        },
+        "DeactivateActionSetLayer": {
+            "vt_idx": 13
+        },
+        "DeactivateAllActionSetLayers": {
+            "vt_idx": 14
+        },
+        "EnableActionEventCallbacks": {
+            "vt_idx": 8
+        },
+        "EnableDeviceCallbacks": {
+            "vt_idx": 7
+        },
+        "GetActionOriginFromXboxOrigin": {
+            "vt_idx": 42
+        },
+        "GetActionSetHandle": {
+            "vt_idx": 9
+        },
+        "GetActiveActionSetLayers": {
+            "vt_idx": 15
+        },
+        "GetAnalogActionData": {
+            "vt_idx": 21
+        },
+        "GetAnalogActionHandle": {
+            "vt_idx": 20
+        },
+        "GetAnalogActionOrigins": {
+            "vt_idx": 22
+        },
+        "GetConnectedControllers": {
+            "vt_idx": 6
+        },
+        "GetControllerForGamepadIndex": {
+            "vt_idx": 38
+        },
+        "GetCurrentActionSet": {
+            "vt_idx": 11
+        },
+        "GetDeviceBindingRevision": {
+            "vt_idx": 44
+        },
+        "GetDigitalActionData": {
+            "vt_idx": 17
+        },
+        "GetDigitalActionHandle": {
+            "vt_idx": 16
+        },
+        "GetDigitalActionOrigins": {
+            "vt_idx": 18
+        },
+        "GetGamepadIndexForController": {
+            "vt_idx": 39
+        },
+        "GetGlyphForActionOrigin_Legacy": {
+            "vt_idx": 25
+        },
+        "GetGlyphForXboxOrigin": {
+            "vt_idx": 41
+        },
+        "GetGlyphPNGForActionOrigin": {
+            "vt_idx": 23
+        },
+        "GetGlyphSVGForActionOrigin": {
+            "vt_idx": 24
+        },
+        "GetInputTypeForHandle": {
+            "vt_idx": 37
+        },
+        "GetMotionData": {
+            "vt_idx": 29
+        },
+        "GetRemotePlaySessionID": {
+            "vt_idx": 45
+        },
+        "GetSessionInputConfigurationSettings": {
+            "vt_idx": 46
+        },
+        "GetStringForActionOrigin": {
+            "vt_idx": 26
+        },
+        "GetStringForAnalogActionName": {
+            "vt_idx": 27
+        },
+        "GetStringForDigitalActionName": {
+            "vt_idx": 19
+        },
+        "GetStringForXboxOrigin": {
+            "vt_idx": 40
+        },
+        "Init": {
+            "vt_idx": 0
+        },
+        "Legacy_TriggerHapticPulse": {
+            "vt_idx": 34
+        },
+        "Legacy_TriggerRepeatedHapticPulse": {
+            "vt_idx": 35
+        },
+        "RunFrame": {
+            "vt_idx": 3
+        },
+        "SetDualSenseTriggerEffect": {
+            "vt_idx": 47
+        },
+        "SetInputActionManifestFilePath": {
+            "vt_idx": 2
+        },
+        "SetLEDColor": {
+            "vt_idx": 33
+        },
+        "ShowBindingPanel": {
+            "vt_idx": 36
+        },
+        "Shutdown": {
+            "vt_idx": 1
+        },
+        "StopAnalogActionMomentum": {
+            "vt_idx": 28
+        },
+        "TranslateActionOrigin": {
+            "vt_idx": 43
+        },
+        "TriggerSimpleHapticEvent": {
+            "vt_idx": 32
+        },
+        "TriggerVibration": {
+            "vt_idx": 30
+        },
+        "TriggerVibrationExtended": {
+            "vt_idx": 31
+        }
+    },
+    "SteamMasterServerUpdater001": {
+        "AddMasterServer": {
+            "vt_idx": 10
+        },
+        "ClearAllKeyValues": {
+            "vt_idx": 5
+        },
+        "ForceHeartbeat": {
+            "vt_idx": 9
+        },
+        "GetMasterServerAddress": {
+            "vt_idx": 13
+        },
+        "GetNextOutgoingPacket": {
+            "vt_idx": 3
+        },
+        "GetNumMasterServers": {
+            "vt_idx": 12
+        },
+        "HandleIncomingPacket": {
+            "vt_idx": 2
+        },
+        "NotifyShutdown": {
+            "vt_idx": 7
+        },
+        "RemoveMasterServer": {
+            "vt_idx": 11
+        },
+        "SetActive": {
+            "vt_idx": 0
+        },
+        "SetBasicServerData": {
+            "vt_idx": 4
+        },
+        "SetHeartbeatInterval": {
+            "vt_idx": 1
+        },
+        "SetKeyValue": {
+            "vt_idx": 6
+        },
+        "WasRestartRequested": {
+            "vt_idx": 8
+        }
+    },
+    "SteamMatchMakingServers001": {
+        "AddFavoriteGame": {
+            "vt_idx": 2
+        },
+        "AddPlayerToList": {
+            "vt_idx": 0
+        },
+        "AddRequestLobbyListFilter": {
+            "vt_idx": 5
+        },
+        "AddRequestLobbyListNumericalFilter": {
+            "vt_idx": 6
+        },
+        "AddRequestLobbyListSlotsAvailableFilter": {
+            "vt_idx": 7
+        },
+        "CancelQuery": {
+            "vt_idx": 7
+        },
+        "CancelServerQuery": {
+            "vt_idx": 15
+        },
+        "CreateLobby": {
+            "vt_idx": 9
+        },
+        "GetFavoriteGame": {
+            "vt_idx": 1
+        },
+        "GetFavoriteGameCount": {
+            "vt_idx": 0
+        },
+        "GetLobbyByIndex": {
+            "vt_idx": 8
+        },
+        "GetLobbyChatEntry": {
+            "vt_idx": 20
+        },
+        "GetLobbyData": {
+            "vt_idx": 15
+        },
+        "GetLobbyGameServer": {
+            "vt_idx": 23
+        },
+        "GetLobbyMemberByIndex": {
+            "vt_idx": 14
+        },
+        "GetLobbyMemberData": {
+            "vt_idx": 17
+        },
+        "GetLobbyMemberLimit": {
+            "vt_idx": 25
+        },
+        "GetNumLobbyMembers": {
+            "vt_idx": 13
+        },
+        "GetServerCount": {
+            "vt_idx": 10
+        },
+        "GetServerDetails": {
+            "vt_idx": 6
+        },
+        "InviteUserToLobby": {
+            "vt_idx": 12
+        },
+        "IsRefreshing": {
+            "vt_idx": 9
+        },
+        "JoinLobby": {
+            "vt_idx": 10
+        },
+        "LeaveLobby": {
+            "vt_idx": 11
+        },
+        "PingServer": {
+            "vt_idx": 12
+        },
+        "PlayerDetails": {
+            "vt_idx": 13
+        },
+        "PlayersFailedToRespond": {
+            "vt_idx": 1
+        },
+        "PlayersRefreshComplete": {
+            "vt_idx": 2
+        },
+        "RefreshComplete": {
+            "vt_idx": 2
+        },
+        "RefreshQuery": {
+            "vt_idx": 8
+        },
+        "RefreshServer": {
+            "vt_idx": 11
+        },
+        "RemoveFavoriteGame": {
+            "vt_idx": 3
+        },
+        "RequestFavoritesServerList": {
+            "vt_idx": 3
+        },
+        "RequestFriendsLobbies": {
+            "vt_idx": 26
+        },
+        "RequestFriendsServerList": {
+            "vt_idx": 2
+        },
+        "RequestHistoryServerList": {
+            "vt_idx": 4
+        },
+        "RequestInternetServerList": {
+            "vt_idx": 0
+        },
+        "RequestLANServerList": {
+            "vt_idx": 1
+        },
+        "RequestLobbyData": {
+            "vt_idx": 21
+        },
+        "RequestLobbyList": {
+            "vt_idx": 4
+        },
+        "RequestSpectatorServerList": {
+            "vt_idx": 5
+        },
+        "RulesFailedToRespond": {
+            "vt_idx": 1
+        },
+        "RulesRefreshComplete": {
+            "vt_idx": 2
+        },
+        "RulesResponded": {
+            "vt_idx": 0
+        },
+        "SendLobbyChatMsg": {
+            "vt_idx": 19
+        },
+        "ServerFailedToRespond": {
+            "vt_idx": 1
+        },
+        "ServerResponded": {
+            "vt_idx": 0
+        },
+        "ServerRules": {
+            "vt_idx": 14
+        },
+        "SetLobbyData": {
+            "vt_idx": 16
+        },
+        "SetLobbyGameServer": {
+            "vt_idx": 22
+        },
+        "SetLobbyMemberData": {
+            "vt_idx": 18
+        },
+        "SetLobbyMemberLimit": {
+            "vt_idx": 24
+        }
+    },
+    "SteamNetworking001": {
+        "CreateConnectionSocket": {
+            "vt_idx": 2
+        },
+        "CreateListenSocket": {
+            "vt_idx": 0
+        },
+        "CreateP2PConnectionSocket": {
+            "vt_idx": 1
+        },
+        "DestroyListenSocket": {
+            "vt_idx": 4
+        },
+        "DestroySocket": {
+            "vt_idx": 3
+        },
+        "GetListenSocketInfo": {
+            "vt_idx": 11
+        },
+        "GetSocketInfo": {
+            "vt_idx": 10
+        },
+        "IsDataAvailable": {
+            "vt_idx": 8
+        },
+        "IsDataAvailableOnSocket": {
+            "vt_idx": 6
+        },
+        "RetrieveData": {
+            "vt_idx": 9
+        },
+        "RetrieveDataFromSocket": {
+            "vt_idx": 7
+        },
+        "SendDataOnSocket": {
+            "vt_idx": 5
+        }
+    },
+    "SteamNetworking006": {
+        "AcceptP2PSessionWithUser": {
+            "vt_idx": 3
+        },
+        "AllowP2PPacketRelay": {
+            "vt_idx": 7
+        },
+        "CloseP2PChannelWithUser": {
+            "vt_idx": 5
+        },
+        "CloseP2PSessionWithUser": {
+            "vt_idx": 4
+        },
+        "CreateConnectionSocket": {
+            "vt_idx": 10
+        },
+        "CreateListenSocket": {
+            "vt_idx": 8
+        },
+        "CreateP2PConnectionSocket": {
+            "vt_idx": 9
+        },
+        "DestroyListenSocket": {
+            "vt_idx": 12
+        },
+        "DestroySocket": {
+            "vt_idx": 11
+        },
+        "GetListenSocketInfo": {
+            "vt_idx": 19
+        },
+        "GetMaxPacketSize": {
+            "vt_idx": 21
+        },
+        "GetP2PSessionState": {
+            "vt_idx": 6
+        },
+        "GetSocketConnectionType": {
+            "vt_idx": 20
+        },
+        "GetSocketInfo": {
+            "vt_idx": 18
+        },
+        "IsDataAvailable": {
+            "vt_idx": 16
+        },
+        "IsDataAvailableOnSocket": {
+            "vt_idx": 14
+        },
+        "IsP2PPacketAvailable": {
+            "vt_idx": 1
+        },
+        "ReadP2PPacket": {
+            "vt_idx": 2
+        },
+        "RetrieveData": {
+            "vt_idx": 17
+        },
+        "RetrieveDataFromSocket": {
+            "vt_idx": 15
+        },
+        "SendDataOnSocket": {
+            "vt_idx": 13
+        },
+        "SendP2PPacket": {
+            "vt_idx": 0
+        }
+    },
+    "SteamNetworkingMessages002": {
+        "AcceptSessionWithUser": {
+            "vt_idx": 2
+        },
+        "CloseChannelWithUser": {
+            "vt_idx": 4
+        },
+        "CloseSessionWithUser": {
+            "vt_idx": 3
+        },
+        "GetSessionConnectionInfo": {
+            "vt_idx": 5
+        },
+        "ReceiveMessagesOnChannel": {
+            "vt_idx": 1
+        },
+        "SendMessageToUser": {
+            "vt_idx": 0
+        }
+    },
+    "SteamNetworkingSockets012": {
+        "AcceptConnection": {
+            "vt_idx": 4
+        },
+        "BeginAsyncRequestFakeIP": {
+            "vt_idx": 42
+        },
+        "CloseConnection": {
+            "vt_idx": 5
+        },
+        "CloseListenSocket": {
+            "vt_idx": 6
+        },
+        "ConfigureConnectionLanes": {
+            "vt_idx": 20
+        },
+        "ConnectByIPAddress": {
+            "vt_idx": 1
+        },
+        "ConnectP2P": {
+            "vt_idx": 3
+        },
+        "ConnectP2PCustomSignaling": {
+            "vt_idx": 36
+        },
+        "ConnectToHostedDedicatedServer": {
+            "vt_idx": 30
+        },
+        "CreateFakeUDPPort": {
+            "vt_idx": 46
+        },
+        "CreateHostedDedicatedServerListenSocket": {
+            "vt_idx": 34
+        },
+        "CreateListenSocketIP": {
+            "vt_idx": 0
+        },
+        "CreateListenSocketP2P": {
+            "vt_idx": 2
+        },
+        "CreateListenSocketP2PFakeIP": {
+            "vt_idx": 44
+        },
+        "CreatePollGroup": {
+            "vt_idx": 24
+        },
+        "CreateSocketPair": {
+            "vt_idx": 19
+        },
+        "DestroyPollGroup": {
+            "vt_idx": 25
+        },
+        "FindRelayAuthTicketForServer": {
+            "vt_idx": 29
+        },
+        "FlushMessagesOnConnection": {
+            "vt_idx": 13
+        },
+        "GetAuthenticationStatus": {
+            "vt_idx": 23
+        },
+        "GetCertificateRequest": {
+            "vt_idx": 38
+        },
+        "GetConnectionInfo": {
+            "vt_idx": 15
+        },
+        "GetConnectionName": {
+            "vt_idx": 10
+        },
+        "GetConnectionRealTimeStatus": {
+            "vt_idx": 16
+        },
+        "GetConnectionUserData": {
+            "vt_idx": 8
+        },
+        "GetDetailedConnectionStatus": {
+            "vt_idx": 17
+        },
+        "GetFakeIP": {
+            "vt_idx": 43
+        },
+        "GetGameCoordinatorServerLogin": {
+            "vt_idx": 35
+        },
+        "GetHostedDedicatedServerAddress": {
+            "vt_idx": 33
+        },
+        "GetHostedDedicatedServerPOPID": {
+            "vt_idx": 32
+        },
+        "GetHostedDedicatedServerPort": {
+            "vt_idx": 31
+        },
+        "GetIdentity": {
+            "vt_idx": 21
+        },
+        "GetListenSocketAddress": {
+            "vt_idx": 18
+        },
+        "GetRemoteFakeIPForConnection": {
+            "vt_idx": 45
+        },
+        "InitAuthentication": {
+            "vt_idx": 22
+        },
+        "ReceiveMessagesOnConnection": {
+            "vt_idx": 14
+        },
+        "ReceiveMessagesOnPollGroup": {
+            "vt_idx": 27
+        },
+        "ReceivedP2PCustomSignal": {
+            "vt_idx": 37
+        },
+        "ReceivedRelayAuthTicket": {
+            "vt_idx": 28
+        },
+        "ResetIdentity": {
+            "vt_idx": 40
+        },
+        "RunCallbacks": {
+            "vt_idx": 41
+        },
+        "SendMessageToConnection": {
+            "vt_idx": 11
+        },
+        "SendMessages": {
+            "vt_idx": 12
+        },
+        "SetCertificate": {
+            "vt_idx": 39
+        },
+        "SetConnectionName": {
+            "vt_idx": 9
+        },
+        "SetConnectionPollGroup": {
+            "vt_idx": 26
+        },
+        "SetConnectionUserData": {
+            "vt_idx": 7
+        }
+    },
+    "SteamNetworkingUtils004": {
+        "AllocateMessage": {
+            "vt_idx": 0
+        },
+        "CheckPingDataUpToDate": {
+            "vt_idx": 7
+        },
+        "ConvertPingLocationToString": {
+            "vt_idx": 5
+        },
+        "EstimatePingTimeBetweenTwoLocations": {
+            "vt_idx": 3
+        },
+        "EstimatePingTimeFromLocalHost": {
+            "vt_idx": 4
+        },
+        "GetConfigValue": {
+            "vt_idx": 17
+        },
+        "GetConfigValueInfo": {
+            "vt_idx": 18
+        },
+        "GetDirectPingToPOP": {
+            "vt_idx": 9
+        },
+        "GetIPv4FakeIPType": {
+            "vt_idx": 14
+        },
+        "GetLocalPingLocation": {
+            "vt_idx": 2
+        },
+        "GetLocalTimestamp": {
+            "vt_idx": 12
+        },
+        "GetPOPCount": {
+            "vt_idx": 10
+        },
+        "GetPOPList": {
+            "vt_idx": 11
+        },
+        "GetPingToDataCenter": {
+            "vt_idx": 8
+        },
+        "GetRealIdentityForFakeIP": {
+            "vt_idx": 15
+        },
+        "GetRelayNetworkStatus": {
+            "vt_idx": 1
+        },
+        "IterateGenericEditableConfigValues": {
+            "vt_idx": 19
+        },
+        "ParsePingLocationString": {
+            "vt_idx": 6
+        },
+        "SetConfigValue": {
+            "vt_idx": 16
+        },
+        "SetDebugOutputFunction": {
+            "vt_idx": 13
+        },
+        "SteamNetworkingIPAddr_GetFakeIPType": {
+            "vt_idx": 22
+        },
+        "SteamNetworkingIPAddr_ParseString": {
+            "vt_idx": 21
+        },
+        "SteamNetworkingIPAddr_ToString": {
+            "vt_idx": 20
+        },
+        "SteamNetworkingIdentity_ParseString": {
+            "vt_idx": 24
+        },
+        "SteamNetworkingIdentity_ToString": {
+            "vt_idx": 23
+        }
+    },
+    "SteamParties002": {
+        "AcceptGame": {
+            "vt_idx": 3
+        },
+        "AddFavoriteGame": {
+            "vt_idx": 2
+        },
+        "AddGameSearchParams": {
+            "vt_idx": 0
+        },
+        "AddPlayerToList": {
+            "vt_idx": 0
+        },
+        "AddRequestLobbyListCompatibleMembersFilter": {
+            "vt_idx": 11
+        },
+        "AddRequestLobbyListDistanceFilter": {
+            "vt_idx": 9
+        },
+        "AddRequestLobbyListFilterSlotsAvailable": {
+            "vt_idx": 8
+        },
+        "AddRequestLobbyListNearValueFilter": {
+            "vt_idx": 7
+        },
+        "AddRequestLobbyListNumericalFilter": {
+            "vt_idx": 6
+        },
+        "AddRequestLobbyListResultCountFilter": {
+            "vt_idx": 10
+        },
+        "AddRequestLobbyListStringFilter": {
+            "vt_idx": 5
+        },
+        "CancelQuery": {
+            "vt_idx": 8
+        },
+        "CancelRequestPlayersForGame": {
+            "vt_idx": 11
+        },
+        "CancelReservation": {
+            "vt_idx": 8
+        },
+        "CancelServerQuery": {
+            "vt_idx": 16
+        },
+        "ChangeNumOpenSlots": {
+            "vt_idx": 9
+        },
+        "CreateBeacon": {
+            "vt_idx": 6
+        },
+        "CreateLobby": {
+            "vt_idx": 13
+        },
+        "DeclineGame": {
+            "vt_idx": 4
+        },
+        "DeleteLobbyData": {
+            "vt_idx": 23
+        },
+        "DestroyBeacon": {
+            "vt_idx": 10
+        },
+        "EndGame": {
+            "vt_idx": 13
+        },
+        "EndGameSearch": {
+            "vt_idx": 6
+        },
+        "GetAvailableBeaconLocations": {
+            "vt_idx": 5
+        },
+        "GetBeaconByIndex": {
+            "vt_idx": 1
+        },
+        "GetBeaconDetails": {
+            "vt_idx": 2
+        },
+        "GetBeaconLocationData": {
+            "vt_idx": 11
+        },
+        "GetFavoriteGame": {
+            "vt_idx": 1
+        },
+        "GetFavoriteGameCount": {
+            "vt_idx": 0
+        },
+        "GetLobbyByIndex": {
+            "vt_idx": 12
+        },
+        "GetLobbyChatEntry": {
+            "vt_idx": 27
+        },
+        "GetLobbyData": {
+            "vt_idx": 19
+        },
+        "GetLobbyDataByIndex": {
+            "vt_idx": 22
+        },
+        "GetLobbyDataCount": {
+            "vt_idx": 21
+        },
+        "GetLobbyGameServer": {
+            "vt_idx": 30
+        },
+        "GetLobbyMemberByIndex": {
+            "vt_idx": 18
+        },
+        "GetLobbyMemberData": {
+            "vt_idx": 24
+        },
+        "GetLobbyMemberLimit": {
+            "vt_idx": 32
+        },
+        "GetLobbyOwner": {
+            "vt_idx": 35
+        },
+        "GetNumActiveBeacons": {
+            "vt_idx": 0
+        },
+        "GetNumAvailableBeaconLocations": {
+            "vt_idx": 4
+        },
+        "GetNumLobbyMembers": {
+            "vt_idx": 17
+        },
+        "GetServerCount": {
+            "vt_idx": 11
+        },
+        "GetServerDetails": {
+            "vt_idx": 7
+        },
+        "HostConfirmGameStart": {
+            "vt_idx": 10
+        },
+        "InviteUserToLobby": {
+            "vt_idx": 16
+        },
+        "IsRefreshing": {
+            "vt_idx": 10
+        },
+        "JoinLobby": {
+            "vt_idx": 14
+        },
+        "JoinParty": {
+            "vt_idx": 3
+        },
+        "LeaveLobby": {
+            "vt_idx": 15
+        },
+        "OnReservationCompleted": {
+            "vt_idx": 7
+        },
+        "PingServer": {
+            "vt_idx": 13
+        },
+        "PlayerDetails": {
+            "vt_idx": 14
+        },
+        "PlayersFailedToRespond": {
+            "vt_idx": 1
+        },
+        "PlayersRefreshComplete": {
+            "vt_idx": 2
+        },
+        "RefreshComplete": {
+            "vt_idx": 2
+        },
+        "RefreshQuery": {
+            "vt_idx": 9
+        },
+        "RefreshServer": {
+            "vt_idx": 12
+        },
+        "ReleaseRequest": {
+            "vt_idx": 6
+        },
+        "RemoveFavoriteGame": {
+            "vt_idx": 3
+        },
+        "RequestFavoritesServerList": {
+            "vt_idx": 3
+        },
+        "RequestFriendsServerList": {
+            "vt_idx": 2
+        },
+        "RequestHistoryServerList": {
+            "vt_idx": 4
+        },
+        "RequestInternetServerList": {
+            "vt_idx": 0
+        },
+        "RequestLANServerList": {
+            "vt_idx": 1
+        },
+        "RequestLobbyData": {
+            "vt_idx": 28
+        },
+        "RequestLobbyList": {
+            "vt_idx": 4
+        },
+        "RequestPlayersForGame": {
+            "vt_idx": 9
+        },
+        "RequestSpectatorServerList": {
+            "vt_idx": 5
+        },
+        "RetrieveConnectionDetails": {
+            "vt_idx": 5
+        },
+        "RulesFailedToRespond": {
+            "vt_idx": 1
+        },
+        "RulesRefreshComplete": {
+            "vt_idx": 2
+        },
+        "RulesResponded": {
+            "vt_idx": 0
+        },
+        "SearchForGameSolo": {
+            "vt_idx": 2
+        },
+        "SearchForGameWithLobby": {
+            "vt_idx": 1
+        },
+        "SendLobbyChatMsg": {
+            "vt_idx": 26
+        },
+        "ServerFailedToRespond": {
+            "vt_idx": 1
+        },
+        "ServerResponded": {
+            "vt_idx": 0
+        },
+        "ServerRules": {
+            "vt_idx": 15
+        },
+        "SetConnectionDetails": {
+            "vt_idx": 8
+        },
+        "SetGameHostParams": {
+            "vt_idx": 7
+        },
+        "SetLinkedLobby": {
+            "vt_idx": 37
+        },
+        "SetLobbyData": {
+            "vt_idx": 20
+        },
+        "SetLobbyGameServer": {
+            "vt_idx": 29
+        },
+        "SetLobbyJoinable": {
+            "vt_idx": 34
+        },
+        "SetLobbyMemberData": {
+            "vt_idx": 25
+        },
+        "SetLobbyMemberLimit": {
+            "vt_idx": 31
+        },
+        "SetLobbyOwner": {
+            "vt_idx": 36
+        },
+        "SetLobbyType": {
+            "vt_idx": 33
+        },
+        "SubmitPlayerResult": {
+            "vt_idx": 12
+        }
+    },
+    "SteamUser009": {
+        "BLoggedOn": {
+            "vt_idx": 1
+        },
+        "GetHSteamUser": {
+            "vt_idx": 0
+        },
+        "GetSteamID": {
+            "vt_idx": 2
+        },
+        "InitiateGameConnection": {
+            "vt_idx": 3
+        },
+        "RefreshSteam2Login": {
+            "vt_idx": 6
+        },
+        "TerminateGameConnection": {
+            "vt_idx": 4
+        },
+        "TrackAppUsageEvent": {
+            "vt_idx": 5
+        }
+    },
+    "SteamUser010": {
+        "BLoggedOn": {
+            "vt_idx": 1
+        },
+        "GetHSteamUser": {
+            "vt_idx": 0
+        },
+        "GetSteamID": {
+            "vt_idx": 2
+        },
+        "InitiateGameConnection": {
+            "vt_idx": 3
+        },
+        "TerminateGameConnection": {
+            "vt_idx": 4
+        },
+        "TrackAppUsageEvent": {
+            "vt_idx": 5
+        }
+    },
+    "SteamUser011": {
+        "BLoggedOn": {
+            "vt_idx": 1
+        },
+        "DecompressVoice": {
+            "vt_idx": 10
+        },
+        "GetCompressedVoice": {
+            "vt_idx": 9
+        },
+        "GetHSteamUser": {
+            "vt_idx": 0
+        },
+        "GetSteamID": {
+            "vt_idx": 2
+        },
+        "GetUserDataFolder": {
+            "vt_idx": 6
+        },
+        "InitiateGameConnection": {
+            "vt_idx": 3
+        },
+        "StartVoiceRecording": {
+            "vt_idx": 7
+        },
+        "StopVoiceRecording": {
+            "vt_idx": 8
+        },
+        "TerminateGameConnection": {
+            "vt_idx": 4
+        },
+        "TrackAppUsageEvent": {
+            "vt_idx": 5
+        }
+    },
+    "SteamUser023": {
+        "AdvertiseGame": {
+            "vt_idx": 20
+        },
+        "BIsBehindNAT": {
+            "vt_idx": 19
+        },
+        "BIsPhoneIdentifying": {
+            "vt_idx": 28
+        },
+        "BIsPhoneRequiringVerification": {
+            "vt_idx": 29
+        },
+        "BIsPhoneVerified": {
+            "vt_idx": 26
+        },
+        "BIsTwoFactorEnabled": {
+            "vt_idx": 27
+        },
+        "BLoggedOn": {
+            "vt_idx": 1
+        },
+        "BSetDurationControlOnlineState": {
+            "vt_idx": 32
+        },
+        "BeginAuthSession": {
+            "vt_idx": 15
+        },
+        "CancelAuthTicket": {
+            "vt_idx": 17
+        },
+        "DecompressVoice": {
+            "vt_idx": 11
+        },
+        "EndAuthSession": {
+            "vt_idx": 16
+        },
+        "GetAuthSessionTicket": {
+            "vt_idx": 13
+        },
+        "GetAuthTicketForWebApi": {
+            "vt_idx": 14
+        },
+        "GetAvailableVoice": {
+            "vt_idx": 9
+        },
+        "GetDurationControl": {
+            "vt_idx": 31
+        },
+        "GetEncryptedAppTicket": {
+            "vt_idx": 22
+        },
+        "GetGameBadgeLevel": {
+            "vt_idx": 23
+        },
+        "GetHSteamUser": {
+            "vt_idx": 0
+        },
+        "GetMarketEligibility": {
+            "vt_idx": 30
+        },
+        "GetPlayerSteamLevel": {
+            "vt_idx": 24
+        },
+        "GetSteamID": {
+            "vt_idx": 2
+        },
+        "GetUserDataFolder": {
+            "vt_idx": 6
+        },
+        "GetVoice": {
+            "vt_idx": 10
+        },
+        "GetVoiceOptimalSampleRate": {
+            "vt_idx": 12
+        },
+        "InitiateGameConnection_DEPRECATED": {
+            "vt_idx": 3
+        },
+        "RequestEncryptedAppTicket": {
+            "vt_idx": 21
+        },
+        "RequestStoreAuthURL": {
+            "vt_idx": 25
+        },
+        "StartVoiceRecording": {
+            "vt_idx": 7
+        },
+        "StopVoiceRecording": {
+            "vt_idx": 8
+        },
+        "TerminateGameConnection_DEPRECATED": {
+            "vt_idx": 4
+        },
+        "TrackAppUsageEvent": {
+            "vt_idx": 5
+        },
+        "UserHasLicenseForApp": {
+            "vt_idx": 18
+        }
+    },
+    "SteamUtils002": {
+        "GetAppID": {
+            "vt_idx": 9
+        },
+        "GetCSERIPPort": {
+            "vt_idx": 7
+        },
+        "GetConnectedUniverse": {
+            "vt_idx": 2
+        },
+        "GetCurrentBatteryPower": {
+            "vt_idx": 8
+        },
+        "GetIPCountry": {
+            "vt_idx": 4
+        },
+        "GetImageRGBA": {
+            "vt_idx": 6
+        },
+        "GetImageSize": {
+            "vt_idx": 5
+        },
+        "GetSecondsSinceAppActive": {
+            "vt_idx": 0
+        },
+        "GetSecondsSinceComputerActive": {
+            "vt_idx": 1
+        },
+        "GetServerRealTime": {
+            "vt_idx": 3
+        },
+        "SetOverlayNotificationPosition": {
+            "vt_idx": 10
+        }
+    },
+    "SteamUtils010": {
+        "BOverlayNeedsPresent": {
+            "vt_idx": 16
+        },
+        "CheckFileSignature": {
+            "vt_idx": 17
+        },
+        "DismissFloatingGamepadTextInput": {
+            "vt_idx": 35
+        },
+        "DismissGamepadTextInput": {
+            "vt_idx": 36
+        },
+        "FilterText": {
+            "vt_idx": 30
+        },
+        "GetAPICallFailureReason": {
+            "vt_idx": 11
+        },
+        "GetAPICallResult": {
+            "vt_idx": 12
+        },
+        "GetAppID": {
+            "vt_idx": 8
+        },
+        "GetConnectedUniverse": {
+            "vt_idx": 2
+        },
+        "GetCurrentBatteryPower": {
+            "vt_idx": 7
+        },
+        "GetEnteredGamepadTextInput": {
+            "vt_idx": 20
+        },
+        "GetEnteredGamepadTextLength": {
+            "vt_idx": 19
+        },
+        "GetIPCCallCount": {
+            "vt_idx": 13
+        },
+        "GetIPCountry": {
+            "vt_idx": 4
+        },
+        "GetIPv6ConnectivityState": {
+            "vt_idx": 31
+        },
+        "GetImageRGBA": {
+            "vt_idx": 6
+        },
+        "GetImageSize": {
+            "vt_idx": 5
+        },
+        "GetSecondsSinceAppActive": {
+            "vt_idx": 0
+        },
+        "GetSecondsSinceComputerActive": {
+            "vt_idx": 1
+        },
+        "GetServerRealTime": {
+            "vt_idx": 3
+        },
+        "GetSteamUILanguage": {
+            "vt_idx": 21
+        },
+        "InitFilterText": {
+            "vt_idx": 29
+        },
+        "IsAPICallCompleted": {
+            "vt_idx": 10
+        },
+        "IsOverlayEnabled": {
+            "vt_idx": 15
+        },
+        "IsSteamChinaLauncher": {
+            "vt_idx": 28
+        },
+        "IsSteamInBigPictureMode": {
+            "vt_idx": 24
+        },
+        "IsSteamRunningInVR": {
+            "vt_idx": 22
+        },
+        "IsSteamRunningOnSteamDeck": {
+            "vt_idx": 32
+        },
+        "IsVRHeadsetStreamingEnabled": {
+            "vt_idx": 26
+        },
+        "SetGameLauncherMode": {
+            "vt_idx": 34
+        },
+        "SetOverlayNotificationInset": {
+            "vt_idx": 23
+        },
+        "SetOverlayNotificationPosition": {
+            "vt_idx": 9
+        },
+        "SetVRHeadsetStreamingEnabled": {
+            "vt_idx": 27
+        },
+        "SetWarningMessageHook": {
+            "vt_idx": 14
+        },
+        "ShowFloatingGamepadTextInput": {
+            "vt_idx": 33
+        },
+        "ShowGamepadTextInput": {
+            "vt_idx": 18
+        },
+        "StartVRDashboard": {
+            "vt_idx": 25
+        }
+    }
+}
