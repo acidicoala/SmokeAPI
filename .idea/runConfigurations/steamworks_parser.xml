@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="steamworks_parser" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" WORKING_DIR="file://$ProjectFileDir$/res/" PASS_PARENT_ENVS_2="true" PROJECT_NAME="SmokeAPI" TARGET_NAME="steamworks_parser" CONFIG_NAME="Debug [64]" RUN_TARGET_PROJECT_NAME="SmokeAPI" RUN_TARGET_NAME="steamworks_parser">
+    <method v="2">
+      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+    </method>
+  </configuration>
+</component>
