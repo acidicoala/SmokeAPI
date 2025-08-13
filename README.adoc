@@ -1,5 +1,7 @@
 = 🐨 SmokeAPI ♨
 
+IMPORTANT: Steam has started checking for presence of SmokeAPI in its client, hence do not try to use store mode. Otherwise, there is a real possibility of getting your account banSned.
+
 _Legit DLC Unlocker for Steamworks_
 
 image::https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u1f428/u1f428_u2615.png[,128,align="center"]
