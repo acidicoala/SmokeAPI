@@ -14,22 +14,16 @@ configure_version_resource("Free DLC for everyone ʕ ᵔᴥᵔʔ")
 
 # Setup linker exports
 
-set_32_and_64(DLL_SUFFIX steam_api win64/steam_api64)
-file(GLOB DLL_INPUT "res/dll/*/sdk/redistributable_bin/${DLL_SUFFIX}.dll")
+set_32_and_64(STEAM_API_DLL steam_api.dll steam_api64.dll)
 
 set(
     STEAM_API_EXPORTS
-    "src/game_mode/exports/steam_api_flat.cpp"
-    "src/game_mode/exports/steam_api_internal.cpp"
-    "src/game_mode/exports/steam_api_unversioned.cpp"
+    src/game_mode/exports/steam_api.cpp
+    src/game_mode/exports/steam_api_flat.cpp
+    src/game_mode/exports/steam_api_internal.cpp
+    src/game_mode/exports/steam_api_unversioned.cpp
 )
 
-configure_linker_exports(
-    FORWARDED_DLL "${STEAMAPI_DLL}_o"
-    INPUT_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/game_mode/exports"
-    INPUT_DLLS "${DLL_INPUT}"
-    DEP_SOURCES "${STEAM_API_EXPORTS}"
-)
 
 configure_build_config(extra_build_config)
 
@@ -98,6 +92,13 @@ if (CMAKE_SIZEOF_VOID_P EQUAL 4)
 endif ()
 
 add_library(SmokeAPI SHARED ${SMOKE_API_SOURCES} ${VERSION_RESOURCE})
+
+configure_linker_exports(
+    TARGET SmokeAPI
+    FORWARDED_DLL "${STEAMAPI_DLL}_o"
+    INPUT_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/game_mode/exports"
+    DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${STEAM_API_DLL}"
+)
 
 configure_output_name(${STEAMAPI_DLL})
 

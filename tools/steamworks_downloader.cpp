@@ -182,7 +182,6 @@ namespace {
 
 }
 
-
 /**
  * A tool for downloading Steamworks SDK and unpacking its headers and binaries
  * for further processing by other tools.
@@ -190,17 +189,18 @@ namespace {
 int main(const int argc, const char** argv) {
     if (argc == 1) {
         print_help();
-    } else {
-        const auto streamworks_dir = std::filesystem::current_path() / "steamworks";
+        return 0;
+    }
 
-        for (auto i = 1; i < argc; i++) {
-            try {
-                download_sdk(streamworks_dir, argv[i]);
-            } catch (const std::exception& e) {
-                std::cerr
-                    << std::format("Error downloading SDK '{}'. Reason: {}", argv[i], e.what())
-                    << std::endl;
-            }
+    const auto streamworks_dir = std::filesystem::current_path() / "steamworks";
+
+    for (auto i = 1; i < argc; i++) {
+        try {
+            download_sdk(streamworks_dir, argv[i]);
+        } catch (const std::exception& e) {
+            std::cerr
+                << std::format("Error downloading SDK '{}'. Reason: {}", argv[i], e.what())
+                << std::endl;
         }
     }
 }

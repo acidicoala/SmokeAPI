@@ -48,7 +48,7 @@ namespace {
         queue.push_back(root);
         auto first_visit = true;
 
-        while (!queue.empty()) {
+        while (not queue.empty()) {
             const auto node = queue.front();
             queue.pop_front();
 
@@ -62,7 +62,7 @@ namespace {
             }
 
             for (uint32_t i = 0, count = node.getNumNamedChildren(); i < count; ++i) {
-                if (const auto child = node.getNamedChild(i); !child.isNull()) {
+                if (const auto child = node.getNamedChild(i); not child.isNull()) {
                     queue.push_back(child);
                 }
             }
@@ -145,7 +145,7 @@ namespace {
         });
 
         // Save the findings
-        if (!interface_version.empty()) {
+        if (not interface_version.empty()) {
             lookup[interface_version] = current_lookup;
         }
     }
@@ -153,7 +153,7 @@ namespace {
     void parse_sdk(const fs::path& sdk_path, json& lookup) {
         const auto headers_dir = sdk_path / "headers";
 
-        if (!fs::exists(headers_dir)) {
+        if (not fs::exists(headers_dir)) {
             std::cout << "Warning: SDK missing 'headers' directory: " << headers_dir << std::endl;
             return;
         }
@@ -181,7 +181,7 @@ namespace {
 
         // Go over each steamworks sdk version
         for (const auto& entry : fs::directory_iterator(steamworks_dir)) {
-            if (!entry.is_directory()) {
+            if (not entry.is_directory()) {
                 continue;
             }
 
