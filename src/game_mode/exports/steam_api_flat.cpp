@@ -18,7 +18,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsSubscribedApp(void* self, AppId_t dlcID)
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
         return false;
     }
 }
@@ -34,7 +34,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsDlcInstalled(void* self, AppId_t dlcID) 
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
         return false;
     }
 }
@@ -50,7 +50,7 @@ DLL_EXPORT(int) SteamAPI_ISteamApps_GetDLCCount(void* self) {
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
         return 0;
     }
 }
@@ -78,7 +78,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamApps_BGetDLCDataByIndex(
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
         return false;
     }
 }
@@ -99,7 +99,7 @@ DLL_EXPORT(void*) SteamAPI_ISteamClient_GetISteamGenericInterface(
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
         return nullptr;
     }
 }
@@ -247,7 +247,7 @@ DLL_EXPORT(EUserHasLicenseForAppResult) SteamAPI_ISteamUser_UserHasLicenseForApp
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
         return k_EUserHasLicenseResultDoesNotHaveLicense;
     }
 

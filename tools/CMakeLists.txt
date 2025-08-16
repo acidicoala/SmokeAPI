@@ -4,7 +4,7 @@ project(smoke-api-tools LANGUAGES CXX)
 
 ### Install CPM package manager
 
-include(../KoalaBox/cmake/get_cpm.cmake)
+#include(../KoalaBox/cmake/get_cpm.cmake)
 
 ### Install parser library
 
@@ -54,6 +54,7 @@ CPMAddPackage(
 
 add_executable(steamworks_downloader steamworks_downloader.cpp)
 target_link_libraries(steamworks_downloader PRIVATE
+    KoalaBox
     cpr # HTTP client
     miniz # ZIP library
 )

@@ -14,7 +14,7 @@ VIRTUAL(EUserHasLicenseForAppResult) ISteamUser_UserHasLicenseForApp(PARAMS(CSte
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
         return k_EUserHasLicenseResultDoesNotHaveLicense;
     }
 }

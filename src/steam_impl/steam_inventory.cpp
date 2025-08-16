@@ -11,7 +11,7 @@ namespace steam_inventory {
     ) {
         const auto status = original_function();
 
-        LOG_DEBUG("{} -> handle: {}, status: {}", function_name, resultHandle, (int) status)
+        LOG_DEBUG("{} -> handle: {}, status: {}", function_name, resultHandle, (int) status);
 
         return status;
     }
@@ -33,23 +33,23 @@ namespace steam_inventory {
             LOG_DEBUG(
                 "  [{}] definitionId: {}, itemId: {}, quantity: {}, flags: {}",
                 tag, item.m_iDefinition, item.m_itemId, item.m_unQuantity, item.m_unFlags
-            )
+            );
         };
 
         if (not success) {
-            LOG_DEBUG("{} -> original result is false", function_name)
+            LOG_DEBUG("{} -> original result is false", function_name);
             return success;
         }
 
         if (punOutItemsArraySize == nullptr) {
-            LOG_ERROR("{} -> arraySize pointer is null", function_name)
+            LOG_ERROR("{} -> arraySize pointer is null", function_name);
             return success;
         }
 
         LOG_DEBUG(
             "{} -> handle: {}, pOutItemsArray: {}, arraySize: {}",
             function_name, resultHandle, fmt::ptr(pOutItemsArray), *punOutItemsArraySize
-        )
+        );
 
         static uint32_t original_count = 0;
         const auto injected_count = smoke_api::config::instance.extra_inventory_items.size();
@@ -75,7 +75,7 @@ namespace steam_inventory {
             LOG_DEBUG(
                 "{} -> Original count: {}, Total count: {}",
                 function_name, original_count, *punOutItemsArraySize
-            )
+            );
         } else {
             // Otherwise, we modify the array
             for (int i = 0; i < original_count; i++) {
@@ -129,11 +129,11 @@ namespace steam_inventory {
         const auto success = original_function();
 
         if (!success) {
-            LOG_WARN("{}, Result is false", common_info)
+            LOG_WARN("{}, Result is false", common_info);
             return false;
         }
 
-        LOG_DEBUG("{}, Buffer: '{}'", common_info, String(pchValueBuffer, *punValueBufferSizeOut - 1))
+        LOG_DEBUG("{}, Buffer: '{}'", common_info, String(pchValueBuffer, *punValueBufferSizeOut - 1));
 
         return success;
     }
@@ -145,7 +145,7 @@ namespace steam_inventory {
     ) {
         const auto success = original_function();
 
-        LOG_DEBUG("{} -> Handle: {}", function_name, fmt::ptr(pResultHandle))
+        LOG_DEBUG("{} -> Handle: {}", function_name, fmt::ptr(pResultHandle));
 
         return success;
     }
@@ -160,11 +160,11 @@ namespace steam_inventory {
     ) {
         const auto success = original_function();
 
-        LOG_DEBUG("{} -> Handle: {}", function_name, fmt::ptr(pResultHandle))
+        LOG_DEBUG("{} -> Handle: {}", function_name, fmt::ptr(pResultHandle));
 
         if (success && pInstanceIDs != nullptr) {
             for (int i = 0; i < unCountInstanceIDs; i++) {
-                LOG_DEBUG("  Index: {}, ItemId: {}", i, pInstanceIDs[i])
+                LOG_DEBUG("  Index: {}, ItemId: {}", i, pInstanceIDs[i]);
             }
         }
 
@@ -182,9 +182,9 @@ namespace steam_inventory {
 
         if (pOutBuffer != nullptr) {
             String buffer((char*) pOutBuffer, *punOutBufferSize);
-            LOG_DEBUG("{} -> Handle: {}, Buffer: '{}'", function_name, resultHandle, buffer)
+            LOG_DEBUG("{} -> Handle: {}, Buffer: '{}'", function_name, resultHandle, buffer);
         } else {
-            LOG_DEBUG("{} -> Handle: {}, Size: '{}'", function_name, resultHandle, *punOutBufferSize)
+            LOG_DEBUG("{} -> Handle: {}, Size: '{}'", function_name, resultHandle, *punOutBufferSize);
         }
 
         return success;
@@ -199,18 +199,18 @@ namespace steam_inventory {
         const auto success = original_function();
 
         if (!success) {
-            LOG_WARN("{} -> Result is false", function_name)
+            LOG_WARN("{} -> Result is false", function_name);
             return false;
         }
 
         if (punItemDefIDsArraySize) {
-            LOG_DEBUG("{} -> Size: {}", function_name, *punItemDefIDsArraySize)
+            LOG_DEBUG("{} -> Size: {}", function_name, *punItemDefIDsArraySize);
         }
 
         if (pItemDefIDs) { // Definitions were copied
             for (int i = 0; i < *punItemDefIDsArraySize; i++) {
                 const auto& def = pItemDefIDs[i];
-                LOG_DEBUG("  Index: {}, ID: {}", i, def)
+                LOG_DEBUG("  Index: {}, ID: {}", i, def);
             }
         }
 
@@ -228,7 +228,7 @@ namespace steam_inventory {
         LOG_DEBUG(
             "{} -> handle: {}, steamID: {}, original result: {}",
             function_name, resultHandle, steamIDExpected, result
-        )
+        );
 
         return true;
     }

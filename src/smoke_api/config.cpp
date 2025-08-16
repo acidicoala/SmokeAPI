@@ -17,7 +17,7 @@ namespace smoke_api::config {
 
                 instance = Json::parse(config_str).get<Config>();
 
-                LOG_DEBUG("Parsed config:\n{}", Json(instance).dump(2))
+                LOG_DEBUG("Parsed config:\n{}", Json(instance).dump(2));
             } catch (const Exception& e) {
                 const auto message = fmt::format("Error parsing config file: {}", e.what());
                 koalabox::util::error_box("SmokeAPI Error", message);
@@ -59,13 +59,13 @@ namespace smoke_api::config {
         LOG_TRACE(
             "App ID: {}, DLC ID: {}, Status: {}, Original: {}, Unlocked: {}",
             app_id_str, dlc_id_str, Json(status).dump(), original_function(), is_unlocked
-        )
+        );
 
         return is_unlocked;
     }
 
     DLL_EXPORT(void) ReloadConfig() {
-        LOG_INFO("Reloading config")
+        LOG_INFO("Reloading config");
 
         init_config();
     }

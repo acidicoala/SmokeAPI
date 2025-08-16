@@ -11,3 +11,6 @@ ContinuationIndentWidth: 4
 NamespaceIndentation: All
 UseTab: Never
 PointerAlignment: Left
+SortIncludes: true
+AllowShortFunctionsOnASingleLine: Empty
+FixNamespaceComments: false

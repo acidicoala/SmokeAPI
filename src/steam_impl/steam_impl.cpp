@@ -91,20 +91,20 @@ namespace steam_impl {
         const int min_version,
         const int max_version
     ) {
-        LOG_DEBUG("Hooking interface '{}'", version_string)
+        LOG_DEBUG("Hooking interface '{}'", version_string);
 
         try {
             const auto version_number = stoi(version_string.substr(prefix.length()));
 
             if (version_number < min_version) {
-                LOG_WARN("Legacy version of {}: {}", version_string, version_number)
+                LOG_WARN("Legacy version of {}: {}", version_string, version_number);
             }
 
             if (version_number > max_version) {
                 LOG_WARN(
                     "Unsupported new version of {}: {}. Fallback version {} will be used",
                     version_string, version_number, max_version
-                )
+                );
             }
 
             return version_number;
@@ -157,7 +157,7 @@ namespace steam_impl {
         static Set<void*> hooked_interfaces;
 
         if (hooked_interfaces.contains(interface)) {
-            LOG_DEBUG("Interface {} at {} has already been hooked.", version_string, interface)
+            LOG_DEBUG("Interface {} at {} has already been hooked.", version_string, interface);
         }
 
         static Mutex section;
@@ -230,7 +230,7 @@ namespace steam_impl {
             GetHSteamPipe_address = (void*)koalabox::win_util::get_proc_address_or_throw(
                 steam_api_module, "SteamAPI_GetHSteamPipe"
             );
-        } catch (const Exception& ex) {
+        } catch (...) {
             GetHSteamPipe_address = (void*)koalabox::win_util::get_proc_address_or_throw(
                 steam_api_module, "GetHSteamPipe"
             );

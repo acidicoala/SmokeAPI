@@ -27,7 +27,7 @@ String get_versioned_interface(const String& version_prefix, const String& fallb
             LOG_ERROR(
                 "Failed to get versioned interface: {}."
                 "Falling back to version {}", ex.what(), fallback
-            )
+            );
 
             version_map[version_prefix] = version_prefix + fallback;
         }

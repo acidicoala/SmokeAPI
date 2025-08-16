@@ -20,7 +20,7 @@ namespace api {
 
             return DLC::get_dlcs_from_apps(response, app_id);
         } catch (const Json::exception& e) {
-            LOG_ERROR("Failed to fetch dlc list from GitHub: {}", e.what())
+            LOG_ERROR("Failed to fetch dlc list from GitHub: {}", e.what());
             return std::nullopt;
         }
     }
@@ -40,7 +40,7 @@ namespace api {
 
             return response.dlcs;
         } catch (const Exception& e) {
-            LOG_ERROR("Failed to fetch dlc list from Steam: {}", e.what())
+            LOG_ERROR("Failed to fetch dlc list from Steam: {}", e.what());
             return std::nullopt;
         }
     }

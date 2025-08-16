@@ -11,7 +11,7 @@ namespace steam_client {
     ) {
         auto* const interface = original_function();
 
-        LOG_DEBUG("{} -> '{}' @ {}", function_name, interface_version, interface)
+        LOG_DEBUG("{} -> '{}' @ {}", function_name, interface_version, interface);
 
         steam_impl::hook_virtuals(interface, interface_version);
 

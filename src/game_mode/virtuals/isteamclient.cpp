@@ -16,7 +16,7 @@ VIRTUAL(void*) ISteamClient_GetISteamApps(
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
         return nullptr;
     }
 }
@@ -37,7 +37,7 @@ VIRTUAL(void*) ISteamClient_GetISteamUser(
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
         return nullptr;
     }
 }
@@ -58,7 +58,7 @@ VIRTUAL(void*) ISteamClient_GetISteamGenericInterface(
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
         return nullptr;
     }
 }
@@ -79,7 +79,7 @@ VIRTUAL(void*) ISteamClient_GetISteamInventory(
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
         return nullptr;
     }
 }

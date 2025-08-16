@@ -13,7 +13,7 @@ VIRTUAL(bool) ISteamApps_BIsSubscribedApp(PARAMS(AppId_t dlc_id)) {
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
 
         return false;
     }
@@ -29,7 +29,7 @@ VIRTUAL(bool) ISteamApps_BIsDlcInstalled(PARAMS(AppId_t dlc_id)) {
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
 
         return false;
     }
@@ -45,7 +45,7 @@ VIRTUAL(int) ISteamApps_GetDLCCount(PARAMS()) {
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
 
         return 0;
     }
@@ -75,7 +75,7 @@ VIRTUAL(bool) ISteamApps_BGetDLCDataByIndex(
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
         return false;
     }
 }
