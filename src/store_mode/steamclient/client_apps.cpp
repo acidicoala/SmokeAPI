@@ -11,7 +11,7 @@ VIRTUAL(int) IClientApps_GetDLCCount(PARAMS(AppId_t appId)) {
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
         return 0;
     }
 }
@@ -36,7 +36,7 @@ VIRTUAL(bool) IClientApps_BGetDLCDataByIndex(
                     ARGS(appID, iDLC, pDlcID, pbAvailable, pchName, cchNameBufferSize)
                 );
             },
-            [&](AppId_t dlc_id) {
+            [&](const AppId_t dlc_id) {
                 const auto* app_manager_interface = store::steamclient::interface_name_to_address_map["IClientAppManager"];
                 if (app_manager_interface) {
                     IClientAppManager_IsAppDlcInstalled(app_manager_interface, EDX, appID, dlc_id);
@@ -48,7 +48,7 @@ VIRTUAL(bool) IClientApps_BGetDLCDataByIndex(
             }
         );
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
         return false;
     }
 }

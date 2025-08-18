@@ -5,6 +5,7 @@
 #include <koalabox/hook.hpp>
 #include <koalabox/loader.hpp>
 #include <koalabox/logger.hpp>
+#include <koalabox/str.hpp>
 #include <koalabox/util.hpp>
 #include <koalabox/win_util.hpp>
 
@@ -40,8 +41,9 @@
 namespace {
     void override_app_id() {
         const auto override_app_id = smoke_api::config::instance.override_app_id;
-        if (override_app_id == 0)
+        if (override_app_id == 0) {
             return;
+        }
 
         spdlog::default_logger_raw();
         LOG_DEBUG("Overriding app id to {}", override_app_id);
@@ -74,7 +76,7 @@ namespace {
 
     bool is_valve_steam(const String& exe_name) noexcept {
         try {
-            if (exe_name < not_equals > "steam.exe") {
+            if (not koalabox::str::eq(exe_name, "steam.exe")) {
                 return false;
             }
 
@@ -85,7 +87,7 @@ namespace {
             const auto manifest = koalabox::win_util::get_module_manifest(steam_handle);
 
             // Steam.exe manifest is expected to contain this string
-            return manifest < contains > "valvesoftware.steam.steam";
+            return manifest.contains("valvesoftware.steam.steam");
         } catch (const Exception& e) {
             LOG_ERROR("{} -> {}", __func__, e.what());
 

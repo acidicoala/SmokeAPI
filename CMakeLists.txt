@@ -24,7 +24,6 @@ set(
     src/game_mode/exports/steam_api_unversioned.cpp
 )
 
-
 configure_build_config(extra_build_config)
 
 set(
@@ -70,6 +69,7 @@ set(
 
 # Include store_mode mode sources only in 32-bit builds
 if (CMAKE_SIZEOF_VOID_P EQUAL 4)
+    # TODO: Use list(APPEND ...) ?
     set(
         SMOKE_API_SOURCES ${SMOKE_API_SOURCES}
         src/store_mode/steamclient/client_app_manager.cpp

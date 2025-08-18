@@ -2,10 +2,6 @@ cmake_minimum_required(VERSION 3.24)
 
 project(smoke-api-tools LANGUAGES CXX)
 
-### Install CPM package manager
-
-#include(../KoalaBox/cmake/get_cpm.cmake)
-
 ### Install parser library
 
 CPMAddPackage(
@@ -24,11 +20,11 @@ add_grammar_from_repo(tree-sitter-cpp                  # Library name
 
 ### Install JSON library
 
-CPMAddPackage(
-    NAME nlohmann_json
-    GIT_REPOSITORY https://github.com/nlohmann/json.git
-    GIT_TAG v3.12.0
-)
+#CPMAddPackage(
+#    NAME nlohmann_json
+#    GIT_REPOSITORY https://github.com/nlohmann/json.git
+#    GIT_TAG v3.12.0
+#)
 
 ### Install HTTP client library
 
@@ -43,12 +39,15 @@ CPMAddPackage(
     GIT_TAG 1.12.0
 )
 
-### Install ZIP library https://github.com/richgel999/miniz
 CPMAddPackage(
-    NAME miniz
-    GIT_REPOSITORY https://github.com/richgel999/miniz.git
-    GIT_TAG c883286f1a6443720e7705450f59e579a4bbb8e2
+    NAME BS_thread_pool
+    GITHUB_REPOSITORY bshoshany/thread-pool
+    VERSION 5.0.0
+    EXCLUDE_FROM_ALL
+    SYSTEM
 )
+add_library(BS_thread_pool INTERFACE)
+target_include_directories(BS_thread_pool INTERFACE ${BS_thread_pool_SOURCE_DIR}/include)
 
 ### Steamworks Downloader executable
 
@@ -56,14 +55,16 @@ add_executable(steamworks_downloader steamworks_downloader.cpp)
 target_link_libraries(steamworks_downloader PRIVATE
     KoalaBox
     cpr # HTTP client
-    miniz # ZIP library
+    miniz # ZIP library TODO: Use koalabox instead
 )
 
 ### Steamworks Parser executable
 
 add_executable(steamworks_parser steamworks_parser.cpp)
 target_link_libraries(steamworks_parser PRIVATE
-    nlohmann_json   # JSON parser
-    tree-sitter-cpp # C++ grammar
-    cpp-tree-sitter # C++ bindings for tree-sitter
+    KoalaBox
+    BS_thread_pool
+#    nlohmann_json   # JSON parser
+#    tree-sitter-cpp # C++ grammar
+#    cpp-tree-sitter # C++ bindings for tree-sitter
 )

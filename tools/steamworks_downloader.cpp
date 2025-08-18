@@ -2,6 +2,7 @@
 #include <iostream>
 #include <random>
 #include <string>
+#include <ranges>
 
 #include <cpr/cpr.h>
 
@@ -11,8 +12,7 @@ namespace {
     namespace fs = std::filesystem;
     namespace zip = koalabox::zip;
 
-    // ReSharper disable once CppDFAConstantParameter
-    std::string generate_random_string(const size_t length) {
+    std::string generate_random_string() {
         static constexpr char charset[] = "0123456789"
                                           "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
                                           "abcdefghijklmnopqrstuvwxyz";
@@ -20,6 +20,7 @@ namespace {
         thread_local std::mt19937_64 rng{std::random_device{}()};
         thread_local std::uniform_int_distribution<std::size_t> dist(0, sizeof(charset) - 2);
 
+        constexpr auto length = 16;
         std::string result;
         result.reserve(length);
         for (std::size_t i = 0; i < length; ++i) {
@@ -59,7 +60,7 @@ namespace {
         );
 
         const auto zip_file_path =
-            fs::temp_directory_path() / (generate_random_string(16) + ".zip");
+            fs::temp_directory_path() / (generate_random_string() + ".zip");
 
         std::cout << "Downloading " << download_url << " to " << zip_file_path << std::endl;
 
@@ -87,7 +88,7 @@ namespace {
  * A tool for downloading Steamworks SDK and unpacking its headers and binaries
  * for further processing by other tools.
  */
-int main(const int argc, const char** argv) {
+int main(const int argc, const char** argv) { // NOLINT(*-exception-escape)
     if (argc == 1) {
         print_help();
         return 0;

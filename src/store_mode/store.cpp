@@ -1,13 +1,15 @@
-#include <store_mode/store.hpp>
-#include <store_mode/vstdlib/vstdlib.hpp>
-#include <store_mode/store_cache.hpp>
-#include <store_mode/store_api.hpp>
-#include <smoke_api/config.hpp>
+#include "koalabox/str.hpp"
+
 #include <build_config.h>
-#include <koalabox/dll_monitor.hpp>
-#include <koalabox/logger.hpp>
-#include <koalabox/ipc.hpp>
 #include <common/steamclient_exports.hpp>
+#include <koalabox/dll_monitor.hpp>
+#include <koalabox/ipc.hpp>
+#include <koalabox/logger.hpp>
+#include <smoke_api/config.hpp>
+#include <store_mode/store.hpp>
+#include <store_mode/store_api.hpp>
+#include <store_mode/store_cache.hpp>
+#include <store_mode/vstdlib/vstdlib.hpp>
 
 namespace store {
 
@@ -18,7 +20,7 @@ namespace store {
     */
     void init_store_config() {
         const auto print_source = [](const String& source) {
-            LOG_INFO("Loaded Store config from the {}", source)
+            LOG_INFO("Loaded Store config from the {}", source);
         };
 
         // First try to read a local config override
@@ -30,7 +32,7 @@ namespace store {
                 print_source("local config override");
                 return;
             } catch (const Exception& ex) {
-                LOG_ERROR("Failed to get local store_mode config: {}", ex.what())
+                LOG_ERROR("Failed to get local store_mode config: {}", ex.what());
             }
         }
 
@@ -40,7 +42,7 @@ namespace store {
 
             print_source("disk cache");
         } catch (const Exception& ex) {
-            LOG_ERROR("Failed to get cached store_mode config: {}", ex.what())
+            LOG_ERROR("Failed to get cached store_mode config: {}", ex.what());
 
             print_source("default config bundled in the binary");
 
@@ -62,7 +64,7 @@ namespace store {
                 store_cache::save_store_config(github_config);
 
                 if (github_config == config) {
-                    LOG_DEBUG("Fetched Store config is equal to existing config")
+                    LOG_DEBUG("Fetched Store config is equal to existing config");
 
                     return;
                 }
@@ -79,7 +81,7 @@ namespace store {
                     MB_SETFOREGROUND | MB_ICONINFORMATION | MB_OK
                 );
             } catch (const Exception& ex) {
-                LOG_ERROR("Failed to get remote store_mode config: {}", ex.what())
+                LOG_ERROR("Failed to get remote store_mode config: {}", ex.what());
             }
         })
     }
@@ -90,7 +92,7 @@ namespace store {
         koalabox::dll_monitor::init_listener(
             {VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& module_handle, const String& name) {
                 try {
-                    if (name < equals > VSTDLIB_DLL) {
+                    if (koalabox::str::eq(name, VSTDLIB_DLL)) {
                         // VStdLib DLL handles Family Sharing functions
 
                         globals::vstdlib_module = module_handle;
@@ -98,7 +100,7 @@ namespace store {
                         if (smoke_api::config::instance.unlock_family_sharing) {
                             DETOUR_VSTDLIB(Coroutine_Create)
                         }
-                    } else if (name < equals > STEAMCLIENT_DLL) {
+                    } else if (koalabox::str::eq(name, STEAMCLIENT_DLL)) {
                         // SteamClient DLL handles unlocking functions
 
                         globals::steamclient_module = module_handle;
@@ -113,7 +115,7 @@ namespace store {
                     LOG_ERROR(
                         "Error listening to DLL load events. Module: '{}', Message: {}",
                         name, ex.what()
-                    )
+                    );
                 }
             }
         );

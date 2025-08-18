@@ -14,3 +14,9 @@ PointerAlignment: Left
 SortIncludes: true
 AllowShortFunctionsOnASingleLine: Empty
 FixNamespaceComments: false
+
+ExperimentalAutoDetectBinPacking: false
+BinPackParameters: OnePerLine
+AllowAllParametersOfDeclarationOnNextLine: true
+BinPackArguments: false
+AllowAllArgumentsOnNextLine: true

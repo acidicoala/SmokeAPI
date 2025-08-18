@@ -91,7 +91,7 @@ namespace store::steamclient {
     }
 
     void detour_interface_selector(const String& interface_name, uintptr_t function_selector_address) {
-        LOG_DEBUG("Detected interface: '{}'", interface_name)
+        LOG_DEBUG("Detected interface: '{}'", interface_name);
 
         DETOUR_SELECTOR(IClientAppManager)
         DETOUR_SELECTOR(IClientApps)
@@ -198,10 +198,10 @@ namespace store::steamclient {
             const std::list<ZydisDecodedInstruction>& instruction_list
         )>& callback
     ) {
-        LOG_TRACE("{} -> start_address: {}", __func__, (void*) start_address)
+        LOG_TRACE("{} -> start_address: {}", __func__, (void*) start_address);
 
         if (visited_addresses.contains(start_address)) {
-            LOG_TRACE("Breaking recursion due to visited address")
+            LOG_TRACE("Breaking recursion due to visited address");
             return;
         }
 
@@ -222,7 +222,7 @@ namespace store::steamclient {
             LOG_TRACE(
                 "{} -> visiting {} │ {}",
                 __func__, (void*) current_address, *get_instruction_string(instruction, current_address)
-            )
+            );
 
             const auto operand = instruction.operands[0];
 
@@ -239,7 +239,7 @@ namespace store::steamclient {
                 visit_code(visited_addresses, jump_taken_destination, context, callback);
                 visit_code(visited_addresses, jump_not_taken_destination, context, callback);
 
-                LOG_TRACE("{} -> Breaking recursion due to a conditional branch", __func__)
+                LOG_TRACE("{} -> Breaking recursion due to a conditional branch", __func__);
                 return;
             }
 
@@ -266,12 +266,12 @@ namespace store::steamclient {
                     table_entry++;
                 }
 
-                LOG_TRACE("{} -> Breaking recursion due to a jump table", __func__)
+                LOG_TRACE("{} -> Breaking recursion due to a jump table", __func__);
                 return;
             }
 
             if (instruction.mnemonic == ZYDIS_MNEMONIC_RET) {
-                LOG_TRACE("{} -> Breaking recursion due to return instruction", __func__)
+                LOG_TRACE("{} -> Breaking recursion due to return instruction", __func__);
                 return;
             }
 
@@ -385,7 +385,7 @@ namespace store::steamclient {
                         if (offset && is_derived_from_base_reg) {
                             const auto ordinal = *offset / sizeof(uintptr_t);
 
-                            LOG_DEBUG("Found function ordinal {}::{}@{}", target_interface, function_name, ordinal)
+                            LOG_DEBUG("Found function ordinal {}::{}@{}", target_interface, function_name, ordinal);
 
                             function_name_to_ordinal_map[function_name] = ordinal;
                             return true;
@@ -410,7 +410,7 @@ namespace store::steamclient {
                 const auto&
             ) {
                 if (instruction.mnemonic == ZYDIS_MNEMONIC_CALL && operand.type == ZYDIS_OPERAND_TYPE_IMMEDIATE) {
-                    LOG_TRACE("Found call instruction at {}", (void*) current_address)
+                    LOG_TRACE("Found call instruction at {}", (void*) current_address);
 
                     const auto function_selector_address = get_absolute_address(instruction, current_address);
 
@@ -436,15 +436,15 @@ namespace store::steamclient {
             store::config.steam_client_internal_interface_selector_ordinal
         ];
 
-        LOG_DEBUG("Found interface selector at: {}", (void*) interface_selector_address)
+        LOG_DEBUG("Found interface selector at: {}", (void*) interface_selector_address);
 
-        if (ZYAN_FAILED(ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LEGACY_32, ZYDIS_ADDRESS_WIDTH_32))) {
-            LOG_ERROR("Failed to initialize zydis decoder")
+        if (ZYAN_FAILED(ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LEGACY_32, ZYDIS_STACK_WIDTH_32))) {
+            LOG_ERROR("Failed to initialize zydis decoder");
             return;
         }
 
         if (ZYAN_FAILED(ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL))) {
-            LOG_ERROR("Failed to initialize zydis formatter")
+            LOG_ERROR("Failed to initialize zydis formatter");
             return;
         }
 

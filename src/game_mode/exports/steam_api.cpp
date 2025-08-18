@@ -1,5 +1,18 @@
 #include <smoke_api/config.hpp>
 
+
+// DLL_EXPORT(void) SteamAPI_Shutdown1() {
+//     LOG_INFO("{} -> Game requested shutdown", __func__);
+//
+//     ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_Shutdown)();
+// }
+
+/*DLL_EXPORT(void) SteamAPI_Shutdown2() {
+    LOG_INFO("{} -> Game requested shutdown", __func__);
+
+    ORIGINAL_FUNCTION_STEAMAPI(SteamAPI_Shutdown)();
+}*/
+
 // TODO: Detour in hook mode
 DLL_EXPORT(bool) SteamAPI_RestartAppIfNecessary(
     [[maybe_unused]] const uint32_t unOwnAppID

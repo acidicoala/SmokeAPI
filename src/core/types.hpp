@@ -1,10 +1,10 @@
 #pragma once
 
-#include <nlohmann/json.hpp>
 #include <core/globals.hpp>
 #include <koalabox/core.hpp>
 #include <koalabox/hook.hpp>
 #include <koalabox/logger.hpp>
+#include <nlohmann/json.hpp>
 
 /**
  * By default, virtual functions are declared with __thiscall
@@ -30,35 +30,39 @@
  * The macros below implement the above-mentioned considerations.
  */
 #ifdef _WIN64
-#define PARAMS(...) void* RCX, __VA_ARGS__
+#define PARAMS(...) void *RCX, __VA_ARGS__
 #define ARGS(...) RCX, __VA_ARGS__
 #define THIS RCX
 #else
-#define PARAMS(...) const void* ECX, const void* EDX, __VA_ARGS__
+#define PARAMS(...) const void *ECX, const void *EDX, __VA_ARGS__
 #define ARGS(...) ECX, EDX, __VA_ARGS__
 #define THIS ECX
 #endif
 
-// Names beginning with $ designate macros that are not meant to be used directly by the sources consuming this file
+// Names beginning with $ designate macros that are not meant to be used directly by the sources
+// consuming this file
 
-#define DLL_EXPORT(TYPE) extern "C" [[maybe_unused]] __declspec( dllexport ) TYPE __cdecl
+// IMPORTANT: DLL_EXPORT is hardcoded in exports_generator.cpp,
+// so any name changes here must be reflected there as well.
+#define DLL_EXPORT(TYPE) extern "C" [[maybe_unused]] __declspec(dllexport) TYPE __cdecl
+
 #define VIRTUAL(TYPE) __declspec(noinline) TYPE __fastcall
 
 // TODO: Replace with direct call
-#define GET_ORIGINAL_HOOKED_FUNCTION(FUNC) \
+#define GET_ORIGINAL_HOOKED_FUNCTION(FUNC)                                                         \
     static const auto FUNC##_o = koalabox::hook::get_original_hooked_function(#FUNC, FUNC);
 
-#define ORIGINAL_FUNCTION_STEAMAPI(FUNC) \
+#define ORIGINAL_FUNCTION_STEAMAPI(FUNC)                                                           \
     koalabox::hook::get_original_function(globals::steamapi_module, #FUNC, FUNC)
 
 // TODO: Rename to DEFINE_ORIGINAL_FUNCTION_STEAMAPI
-#define GET_ORIGINAL_FUNCTION_STEAMAPI(FUNC) \
+#define GET_ORIGINAL_FUNCTION_STEAMAPI(FUNC)                                                       \
     static const auto FUNC##_o = ORIGINAL_FUNCTION_STEAMAPI(FUNC);
 
-#define DETOUR_ADDRESS(FUNC, ADDRESS) \
+#define DETOUR_ADDRESS(FUNC, ADDRESS)                                                              \
     koalabox::hook::detour_or_warn(ADDRESS, #FUNC, reinterpret_cast<uintptr_t>(FUNC));
 
-#define $DETOUR(FUNC, NAME, MODULE_HANDLE) \
+#define $DETOUR(FUNC, NAME, MODULE_HANDLE)                                                         \
     koalabox::hook::detour_or_warn(MODULE_HANDLE, NAME, reinterpret_cast<uintptr_t>(FUNC));
 
 #define DETOUR_STEAMCLIENT(FUNC) $DETOUR(FUNC, #FUNC, globals::steamclient_module)
@@ -116,16 +120,15 @@ struct App {
 using AppDlcNameMap = Map<AppIdKey, App>;
 
 class DLC {
-private:
+  private:
     // These 2 names must match the property names from Steam API
     String appid;
     String name;
 
-public:
+  public:
     explicit DLC() = default;
 
-    explicit DLC(String appid, String name) : appid{std::move(appid)}, name{std::move(name)} {
-    }
+    explicit DLC(String appid, String name) : appid{std::move(appid)}, name{std::move(name)} {}
 
     [[nodiscard]] String get_id_str() const {
         return appid;
@@ -141,7 +144,7 @@ public:
 
     NLOHMANN_DEFINE_TYPE_INTRUSIVE(DLC, appid, name)
 
-    static Vector<DLC> get_dlcs_from_apps(const AppDlcNameMap &apps, AppId_t app_id);
+    static Vector<DLC> get_dlcs_from_apps(const AppDlcNameMap& apps, AppId_t app_id);
 
-    static DlcNameMap get_dlc_map_from_vector(const Vector<DLC> &vector);
+    static DlcNameMap get_dlc_map_from_vector(const Vector<DLC>& vector);
 };

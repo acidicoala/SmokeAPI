@@ -1,4 +1,3 @@
-# Generated from CLion Inspection settings
 ---
 Checks: '-*,
 cppcoreguidelines-interfaces-global-init,
@@ -69,4 +68,5 @@ misc-*,
 -readability-identifier-length,
 -readability-named-parameter,
 -readability-function-cognitive-complexity,
--misc-include-cleaner'
+-*-include-cleaner,
+-*-lambda-function-name'
