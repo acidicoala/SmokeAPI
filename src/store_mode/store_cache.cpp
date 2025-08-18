@@ -9,7 +9,7 @@ namespace store::store_cache {
         try {
             return koalabox::cache::get(KEY_KG_CONFIG, Json(nullptr)).get<StoreConfig>();
         } catch (const Exception& e) {
-            LOG_ERROR("Failed to get cached store_mode config: {}", e.what())
+            LOG_ERROR("Failed to get cached store_mode config: {}", e.what());
 
             return std::nullopt;
         }
@@ -17,11 +17,11 @@ namespace store::store_cache {
 
     bool save_store_config(const StoreConfig& config) {
         try {
-            LOG_DEBUG("Caching store_mode config")
+            LOG_DEBUG("Caching store_mode config");
 
             return koalabox::cache::put(KEY_KG_CONFIG, Json(config));
         } catch (const Exception& e) {
-            LOG_ERROR("Failed to cache store_mode config: {}", e.what())
+            LOG_ERROR("Failed to cache store_mode config: {}", e.what());
 
             return false;
         }

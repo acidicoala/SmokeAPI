@@ -1,9 +1,11 @@
+#include <koalabox/logger.hpp>
+
+#include <core/globals.hpp>
 #include <steam_impl/steam_apps.hpp>
 #include <steam_impl/steam_client.hpp>
 #include <steam_impl/steam_inventory.hpp>
 #include <steam_impl/steam_user.hpp>
 #include <steam_impl/steam_impl.hpp>
-#include <koalabox/logger.hpp>
 
 // ISteamApps
 

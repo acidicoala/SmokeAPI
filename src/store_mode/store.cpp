@@ -10,14 +10,14 @@
 #include <store_mode/store_api.hpp>
 #include <store_mode/store_cache.hpp>
 #include <store_mode/vstdlib/vstdlib.hpp>
+#include <core/globals.hpp>
 
-namespace store {
-
-    StoreConfig config; // NOLINT(cert-err58-cpp)
+namespace {
+    using namespace store;
 
     /**
-    * @return A string representing the source of the config.
-    */
+     * @return A string representing the source of the config.
+     */
     void init_store_config() {
         const auto print_source = [](const String& source) {
             LOG_INFO("Loaded Store config from the {}", source);
@@ -50,47 +50,62 @@ namespace store {
             config = {};
         }
 
-        // Finally, fetch the remote config from GitHub, and inform user about the need to restart Steam,
-        // if a new config has been fetched
-        NEW_THREAD({
+        // Finally, fetch the remote config from GitHub, and inform user about the need to restart
+        // Steam, if a new config has been fetched
+        std::thread([] {
             try {
                 const auto github_config_opt = api::fetch_store_config();
                 if (!github_config_opt) {
                     return;
                 }
-
                 const auto github_config = *github_config_opt;
-
                 store_cache::save_store_config(github_config);
-
                 if (github_config == config) {
-                    LOG_DEBUG("Fetched Store config is equal to existing config");
-
+                    (spdlog::default_logger_raw())
+                        ->log(
+                            spdlog::source_loc{
+                                "store.cpp", 66, static_cast<const char*>(__FUNCTION__)
+                            },
+                            spdlog::level::debug,
+                            "Fetched Store config is equal to existing config"
+                        );
                     return;
                 }
-
-                LOG_DEBUG("Fetched a new Store config")
-
-                ::MessageBox(
+                (spdlog::default_logger_raw())
+                    ->log(
+                        spdlog::source_loc{"store.cpp", 66, static_cast<const char*>(__FUNCTION__)},
+                        spdlog::level::debug,
+                        "Fetched a new Store config"
+                    );
+                MessageBoxW(
                     nullptr,
-                    TEXT(
-                        "SmokeAPI has downloaded an updated config for Store mode. "
-                        "Please restart Steam in order to apply the new Store config. "
-                    ),
-                    TEXT("SmokeAPI - Store"),
-                    MB_SETFOREGROUND | MB_ICONINFORMATION | MB_OK
+                    L"SmokeAPI has downloaded an updated config for Store mode. "
+                    "Please restart Steam in order to apply the new Store config. ",
+                    L"SmokeAPI - Store",
+                    0x00010000L | 0x00000040L | 0x00000000L
                 );
             } catch (const Exception& ex) {
-                LOG_ERROR("Failed to get remote store_mode config: {}", ex.what());
+                (spdlog::default_logger_raw())
+                    ->log(
+                        spdlog::source_loc{"store.cpp", 66, static_cast<const char*>(__FUNCTION__)},
+                        spdlog::level::err,
+                        "Failed to get remote store_mode config: {}",
+                        ex.what()
+                    );
             }
-        })
+        }).detach();
     }
+}
+
+namespace store {
+    StoreConfig config; // NOLINT(cert-err58-cpp)
 
     void init_store_mode() {
         init_store_config();
 
         koalabox::dll_monitor::init_listener(
-            {VSTDLIB_DLL, STEAMCLIENT_DLL}, [](const HMODULE& module_handle, const String& name) {
+            {VSTDLIB_DLL, STEAMCLIENT_DLL},
+            [](const HMODULE& module_handle, const String& name) {
                 try {
                     if (koalabox::str::eq(name, VSTDLIB_DLL)) {
                         // VStdLib DLL handles Family Sharing functions
@@ -108,32 +123,35 @@ namespace store {
                         DETOUR_STEAMCLIENT(CreateInterface)
                     }
 
-                    if (globals::vstdlib_module != nullptr && globals::steamclient_module != nullptr) {
+                    if (globals::vstdlib_module != nullptr &&
+                        globals::steamclient_module != nullptr) {
                         koalabox::dll_monitor::shutdown_listener();
                     }
                 } catch (const Exception& ex) {
                     LOG_ERROR(
                         "Error listening to DLL load events. Module: '{}', Message: {}",
-                        name, ex.what()
+                        name,
+                        ex.what()
                     );
                 }
             }
         );
 
-        NEW_THREAD({
-            koalabox::ipc::init_pipe_server("smokeapi.store.steam", [](const koalabox::ipc::Request& request) {
-                koalabox::ipc::Response response;
-
-                if (request.name < equals > "config::reload") {
-                    smoke_api::config::ReloadConfig();
-                    response.success = true;
-                } else {
-                    response.success = false;
-                    response.data["error_message"] = "Invalid request name: " + request.name;
+        std::thread([=] {
+            koalabox::ipc::init_pipe_server(
+                "smokeapi.store.steam",
+                [](const koalabox::ipc::Request& request) {
+                    koalabox::ipc::Response response;
+                    if (koalabox::str::eq(request.name, "config::reload")) {
+                        smoke_api::config::ReloadConfig();
+                        response.success = true;
+                    } else {
+                        response.success = false;
+                        response.data["error_message"] = "Invalid request name: " + request.name;
+                    }
+                    return response;
                 }
-
-                return response;
-            });
-        })
+            );
+        }).detach();
     }
 }

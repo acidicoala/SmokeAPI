@@ -1,8 +1,8 @@
 #pragma once
 
-#include <core/globals.hpp>
 #include <koalabox/core.hpp>
-#include <koalabox/hook.hpp>
+// ReSharper disable once CppUnusedIncludeDirective
+#include <koalabox/hook.hpp> // Used by several macros
 #include <koalabox/logger.hpp>
 #include <nlohmann/json.hpp>
 

@@ -1,8 +1,11 @@
-#include <steam_impl/steam_client.hpp>
+#include <regex>
+
 #include <koalabox/logger.hpp>
 #include <koalabox/win_util.hpp>
 #include <koalabox/util.hpp>
-#include <regex>
+
+#include <core/globals.hpp>
+#include <steam_impl/steam_client.hpp>
 
 /**
  * Searches the `.rdata` section of the original dll for the full interface version string
@@ -40,7 +43,7 @@ DLL_EXPORT(void*) SteamClient() {
     static auto version = get_versioned_interface(STEAM_CLIENT, "006");
 
     return steam_client::GetGenericInterface(
-        __func__, version, [&]() {
+        __func__, version, [&] {
             GET_ORIGINAL_FUNCTION_STEAMAPI(SteamClient)
 
             return SteamClient_o();
@@ -64,7 +67,7 @@ DLL_EXPORT(void*) SteamUser() {
     static auto version = get_versioned_interface(STEAM_USER, "012");
 
     return steam_client::GetGenericInterface(
-        __func__, version, [&]() {
+        __func__, version, [&] {
             GET_ORIGINAL_FUNCTION_STEAMAPI(SteamUser)
 
             return SteamUser_o();
@@ -76,7 +79,7 @@ DLL_EXPORT(void*) SteamInventory() {
     static auto version = get_versioned_interface(STEAM_INVENTORY, "001");
 
     return steam_client::GetGenericInterface(
-        __func__, version, [&]() {
+        __func__, version, [&] {
             GET_ORIGINAL_FUNCTION_STEAMAPI(SteamInventory)
 
             return SteamInventory_o();

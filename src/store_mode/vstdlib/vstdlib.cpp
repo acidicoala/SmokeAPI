@@ -2,13 +2,13 @@
 
 namespace store::vstdlib {
     VIRTUAL(bool) SharedLicensesLockStatus(PARAMS(void* arg)) {
-        LOG_DEBUG("{}(this={}, arg={})", __func__, THIS, arg)
+        LOG_DEBUG("{}(this={}, arg={})", __func__, THIS, arg);
         ARGS();
         return true;
     }
 
     VIRTUAL(bool) SharedLibraryStopPlaying(PARAMS(void* arg)) {
-        LOG_DEBUG("{}(this={}, arg={})", __func__, THIS, arg)
+        LOG_DEBUG("{}(this={}, arg={})", __func__, THIS, arg);
         ARGS();
         return true;
     }
@@ -28,7 +28,7 @@ namespace store::vstdlib {
 
         if (data && data->get_callback_name()) {
             const auto name = String(data->get_callback_name());
-            LOG_TRACE("{}(ecx={}, edx={}, name='{}')", __func__, ARGS(), name)
+            LOG_TRACE("{}(ecx={}, edx={}, name='{}')", __func__, ARGS(), name);
             if (name == "SharedLicensesLockStatus" && !lock_status_hooked) {
                 DETOUR_ADDRESS(SharedLicensesLockStatus, data->get_callback_data()->get_callback_address())
                 lock_status_hooked = true;

@@ -93,6 +93,11 @@ endif ()
 
 add_library(SmokeAPI SHARED ${SMOKE_API_SOURCES} ${VERSION_RESOURCE})
 
+# There is a weird bug where c++23 features are not enabled in x64 builds,
+# while they are available in x86. I've no idea what causes this discrepancy,
+# but manually setting the MSVC compiler option fixes this issue.
+target_compile_options(SmokeAPI PRIVATE /std:c++latest)
+
 configure_linker_exports(
     TARGET SmokeAPI
     FORWARDED_DLL "${STEAMAPI_DLL}_o"

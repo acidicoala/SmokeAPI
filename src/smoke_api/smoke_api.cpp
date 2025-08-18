@@ -80,8 +80,8 @@ namespace {
                 return false;
             }
 
-            // Verify that it's steam from valve, and not some other executable coincidentally named
-            // steam
+            // Verify that it's steam from valve,
+            // and not some other executable coincidentally named steam
 
             const HMODULE steam_handle = koalabox::win_util::get_module_handle_or_throw(nullptr);
             const auto manifest = koalabox::win_util::get_module_manifest(steam_handle);

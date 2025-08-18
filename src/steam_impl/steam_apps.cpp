@@ -6,7 +6,7 @@
 #include <core/types.hpp>
 #include <core/api.hpp>
 
-namespace steam_apps {
+namespace {
     /// Steamworks may max GetDLCCount value at 64, depending on how much unowned DLCs the user has.
     /// Despite this limit, some games with more than 64 DLCs still keep using this method.
     /// This means we have to get extra DLC IDs from local config, remote config, or cache.
@@ -43,9 +43,10 @@ namespace steam_apps {
         // by aggregating results from all the sources into a single set.
         Vector<DLC> aggregated_dlcs;
 
-        const auto append_dlcs = [&](const Vector<DLC>& source, const String& source_name) {
-            LOG_DEBUG("App ID {} has {} DLCs defined in {}", app_id, source.size(), source_name);
-            aggregated_dlcs < append > source;
+        const auto append_dlcs = [&](const Vector<DLC>& dlc_list, const String& source_name) {
+            LOG_DEBUG("App ID {} has {} DLCs defined in {}", app_id, dlc_list.size(), source_name);
+            // Append DLCs to aggregated DLCs
+            std::ranges::copy(dlc_list, std::back_inserter(aggregated_dlcs));
         };
 
         append_dlcs(smoke_api::config::get_extra_dlcs(app_id), "local config");
@@ -71,6 +72,9 @@ namespace steam_apps {
 
         smoke_api::app_cache::save_dlcs(app_id, aggregated_dlcs);
     }
+}
+
+namespace steam_apps {
 
     bool IsDlcUnlocked(
         const String& function_name,
@@ -114,7 +118,7 @@ namespace steam_apps {
 
             return total_count(static_cast<int>(app_dlcs[app_id].size()));
         } catch (const Exception& e) {
-            LOG_ERROR(" Uncaught exception: {}", function_name, e.what());
+            LOG_ERROR("Uncaught exception: {}", function_name, e.what());
             return 0;
         }
     }

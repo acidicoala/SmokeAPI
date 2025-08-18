@@ -11,7 +11,7 @@ namespace store::api {
 
             return kg_config_json.get<StoreConfig>();
         } catch (const Exception& e) {
-            LOG_ERROR("Failed to fetch Store config from GitHub: {}", e.what())
+            LOG_ERROR("Failed to fetch Store config from GitHub: {}", e.what());
             return std::nullopt;
         }
     }

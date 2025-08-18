@@ -13,7 +13,7 @@ VIRTUAL(bool) IClientUser_BIsSubscribedApp(PARAMS(AppId_t dlc_id)) {
             return IClientUser_BIsSubscribedApp_o(ARGS(dlc_id));
         });
     } catch (const Exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what())
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
         return false;
     }
 }

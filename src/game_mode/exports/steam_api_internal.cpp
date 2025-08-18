@@ -1,3 +1,4 @@
+#include <core/globals.hpp>
 #include <steam_impl/steam_client.hpp>
 
 DLL_EXPORT(void*) SteamInternal_FindOrCreateUserInterface(HSteamUser hSteamUser, const char* version) {
