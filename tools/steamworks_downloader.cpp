@@ -1,16 +1,17 @@
 #include <filesystem>
 #include <iostream>
 #include <random>
+#include <regex>
 #include <string>
-#include <ranges>
 
-#include <cpr/cpr.h>
-
+#include <koalabox/http_client.hpp>
+#include <koalabox/logger.hpp>
+#include <koalabox/str.hpp>
 #include <koalabox/zip.hpp>
 
 namespace {
     namespace fs = std::filesystem;
-    namespace zip = koalabox::zip;
+    namespace kb = koalabox;
 
     std::string generate_random_string() {
         static constexpr char charset[] = "0123456789"
@@ -34,14 +35,15 @@ namespace {
         std::cout << "Steamworks SDK downloader for SmokeAPI v1.0" << std::endl
                   << "Usage:   steamworks_downloader version1 version2 ... versionN" << std::endl
                   << "Example: steamworks_downloader 100 158a 162" << std::endl
+                  << "Alternative usage: steamworks_downloader C:/path/to/downloaded_sdk/"
                   << "SDK version list available at: "
                   << "https://partner.steamgames.com/downloads/list" << std::endl;
     }
 
     void unzip_sdk(const fs::path& zip_file_path, const fs::path& unzip_dir) {
-        zip::extract_files(zip_file_path, [&](const std::string& name, const bool) {
+        kb::zip::extract_files(zip_file_path, [&](const std::string& name, const bool) {
             if (name.starts_with("sdk/public/steam/") && name.ends_with(".h")) {
-                return unzip_dir / "headers" / fs::path(name).filename();
+                return unzip_dir / "headers/steam" / fs::path(name).filename();
             }
 
             if (name.starts_with("sdk/redistributable_bin/") && name.ends_with(".dll") &&
@@ -59,18 +61,9 @@ namespace {
             version
         );
 
-        const auto zip_file_path =
-            fs::temp_directory_path() / (generate_random_string() + ".zip");
+        const auto zip_file_path = fs::temp_directory_path() / (generate_random_string() + ".zip");
 
-        std::cout << "Downloading " << download_url << " to " << zip_file_path << std::endl;
-
-        std::ofstream of(zip_file_path, std::ios::binary);
-        if (const auto res = cpr::Download(of, cpr::Url{download_url});
-            res.error.code != cpr::ErrorCode::OK) {
-            std::cerr << "Download error: " << res.error.message << std::endl;
-            return;
-        }
-        of.close();
+        kb::http_client::download_file(download_url, zip_file_path);
 
         try {
             const auto unzip_dir = steamworks_dir / version;
@@ -88,20 +81,39 @@ namespace {
  * A tool for downloading Steamworks SDK and unpacking its headers and binaries
  * for further processing by other tools.
  */
-int main(const int argc, const char** argv) { // NOLINT(*-exception-escape)
+int wmain(const int argc, const wchar_t** argv) { // NOLINT(*-use-internal-linkage)
     if (argc == 1) {
         print_help();
         return 0;
     }
 
-    const auto streamworks_dir = std::filesystem::current_path() / "steamworks";
+    const auto steamworks_dir = std::filesystem::current_path() / "steamworks";
+
+    if (argc == 2) {
+        if (const auto cdn_dir = kb::str::to_str(argv[1]); fs::is_directory(cdn_dir)) {
+            for (const auto& entry : fs::directory_iterator(cdn_dir)) {
+                const auto filename = entry.path().filename().string();
+                const std::regex re(R"(steamworks_sdk_(.+)\.zip)");
+
+                if (std::smatch match; std::regex_match(filename, match, re)) {
+                    if (match.size() > 1) {
+                        const auto& version = match[1].str();
+                        unzip_sdk(entry.path(), steamworks_dir / version);
+                    }
+                }
+            }
+
+            return 0;
+        }
+    }
 
     for (auto i = 1; i < argc; i++) {
+        const auto version = kb::str::to_str(argv[i]);
+
         try {
-            download_sdk(streamworks_dir, argv[i]);
+            download_sdk(steamworks_dir, version);
         } catch (const std::exception& e) {
-            std::cerr << std::format("Error downloading SDK '{}'. Reason: {}", argv[i], e.what())
-                      << std::endl;
+            LOG_ERROR("Error downloading SDK '{}'. Reason: {}", version, e.what());
         }
     }
 }

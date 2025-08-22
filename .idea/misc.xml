@@ -10,6 +10,7 @@
     </libraryRoots>
     <excludeRoots>
       <file path="$PROJECT_DIR$/build" />
+      <file path="$PROJECT_DIR$/res/steamworks" />
       <file path="$PROJECT_DIR$/sdk" />
       <file path="$PROJECT_DIR$/vcpkg" />
     </excludeRoots>

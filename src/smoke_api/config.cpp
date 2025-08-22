@@ -1,35 +1,23 @@
-#include <smoke_api/config.hpp>
-#include <core/paths.hpp>
-#include <koalabox/util.hpp>
+#include <koalabox/config.hpp>
 #include <koalabox/io.hpp>
 #include <koalabox/logger.hpp>
+#include <koalabox/util.hpp>
+
+#include "smoke_api/config.hpp"
 
 namespace smoke_api::config {
+    namespace kb = koalabox;
+    namespace fs = std::filesystem;
+
     Config instance; // NOLINT(cert-err58-cpp)
 
-    // TODO: Refactor to Koalabox
-    void init_config() {
-        const auto path = paths::get_config_path();
-
-        if (exists(path)) {
-            try {
-                const auto config_str = koalabox::io::read_file(path);
-
-                instance = Json::parse(config_str).get<Config>();
-
-                LOG_DEBUG("Parsed config:\n{}", Json(instance).dump(2));
-            } catch (const Exception& e) {
-                const auto message = fmt::format("Error parsing config file: {}", e.what());
-                koalabox::util::error_box("SmokeAPI Error", message);
-            }
-        }
-    }
-
-    Vector<DLC> get_extra_dlcs(AppId_t app_id) {
+    std::vector<DLC> get_extra_dlcs(const AppId_t app_id) {
         return DLC::get_dlcs_from_apps(instance.extra_dlcs, app_id);
     }
 
-    bool is_dlc_unlocked(AppId_t app_id, AppId_t dlc_id, const Function<bool()>& original_function) {
+    bool is_dlc_unlocked(
+        AppId_t app_id, AppId_t dlc_id, const std::function<bool()>& original_function
+    ) {
         auto status = instance.default_app_status;
 
         const auto app_id_str = std::to_string(app_id);
@@ -44,21 +32,25 @@ namespace smoke_api::config {
 
         bool is_unlocked;
         switch (status) {
-            case AppStatus::UNLOCKED:
-                is_unlocked = true;
-                break;
-            case AppStatus::LOCKED:
-                is_unlocked = false;
-                break;
-            case AppStatus::ORIGINAL:
-            case AppStatus::UNDEFINED:
-                is_unlocked = original_function();
-                break;
+        case AppStatus::UNLOCKED:
+            is_unlocked = true;
+            break;
+        case AppStatus::LOCKED:
+            is_unlocked = false;
+            break;
+        case AppStatus::ORIGINAL:
+        case AppStatus::UNDEFINED:
+            is_unlocked = original_function();
+            break;
         }
 
         LOG_TRACE(
             "App ID: {}, DLC ID: {}, Status: {}, Original: {}, Unlocked: {}",
-            app_id_str, dlc_id_str, Json(status).dump(), original_function(), is_unlocked
+            app_id_str,
+            dlc_id_str,
+            nlohmann::json(status).dump(),
+            original_function(),
+            is_unlocked
         );
 
         return is_unlocked;
@@ -67,6 +59,6 @@ namespace smoke_api::config {
     DLL_EXPORT(void) ReloadConfig() {
         LOG_INFO("Reloading config");
 
-        init_config();
+        instance = kb::config::parse<Config>();
     }
 }

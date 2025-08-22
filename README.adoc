@@ -1,21 +1,15 @@
-= 🐨 SmokeAPI ♨
-
-IMPORTANT: Steam has started checking for presence of SmokeAPI in its client, hence do not try to use store mode. Otherwise, there is a real possibility of getting your account banSned.
+= SmokeAPI
 
 _Legit DLC Unlocker for Steamworks_
-
-image::https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u1f428/u1f428_u2615.png[,128,align="center"]
 
 == ✨ Features
 
 * 🔓 Legit DLC Unlocking
 * 🛅 Inventory emulation
 * 📝 Config-less operation
-* Multiple installation methods:
-** 🛍️ Store mode
-** 🎮 Game mode
-*** 🪝 Hook mode
-*** 🔀 Proxy mode
+* 2️⃣ installation methods:
+** 🪝 Hook mode
+** 🔀 Proxy mode
 
 == 🔗 Links
 
@@ -30,8 +24,14 @@ image::https://www.gstatic.com/android/keyboard/emojikitchen/20201001/u1f428/u1f
 === What is SmokeAPI?
 
 SmokeAPI is a DLC unlocker for the games that are legitimately owned in your Steam account.
-It attempts to spoof games that use Steamworks SDK into believing that you own desired DLCs.
+It attempts to fool games that use Steamworks SDK into believing that you own desired DLCs.
 However, SmokeAPI does not modify the rest of the Steamworks SDK, hence features like multiplayer, achievements, etc. remain fully functional.
+
+IMPORTANT: DLC unlocking is possible only in games that specifically use Steamworks SDK for ownership verification.
+But games may implement additional ownership checks, which may require custom solutions.
+If the check is server-side, as is the case in online-only games, then SmokeAPI cannot help in any way.
+Finally, even if you unlock the DLCs, games might still require additional DLC files, which would have to be downloaded from somewhere else.
+Check corresponding game topic in the forum for possible download links.
 
 .Supported versions
 [%collapsible]
@@ -40,76 +40,56 @@ SmokeAPI aims to support all released SteamAPI versions.
 When it encountered a new, unsupported interface version, it will fall back on the latest supported version.
 Below is a list of supported interface versions:
 
-* ISteamClient v6 — v20. (Versions before 6 did not contain any DLC related interfaces)
+* ISteamClient v6 — v21. (Versions before 6 did not contain any DLC related interfaces)
 * ISteamApps v2 — v8. (Version 1 did not contain any DLC related functions)
-* ISteamUser v12 — v21. (Versions before 12 did not contain any DLC related functions)
+* ISteamUser v12 — v23. (Versions before 12 did not contain any DLC related functions)
 * ISteamInventory v1 — v3.
 
 Steam inventory does not work in all games with steam inventory because of custom implementation, and online checks.
-A list of games where inventory emulation has been shown to work is as follows:
 
-* Project Winter
-* Euro Truck Simulator 2
-* Hero Siege (if you bypass EAC)
 ====
 
 == 🛠 Installation Instructions
 
 WARNING: Please proceed with installation at your own risk.
-Usage of this unlocker entails breaking one or more terms of service, which might result in a permanent loss of your account.
+Usage of this unlocker entails breaking one or more terms of service, which might result in a permanent ban/deactivation of your account.
 
+:koaloader: https://github.com/acidicoala/Koaloader[Koaloader]
 :smokeapi_release: https://github.com/acidicoala/SmokeAPI/releases/latest[SmokeAPI Releases]
 
-SmokeAPI supports 2 main modes of installation: *Store* mode and *Game* mode, which are described in the next section.
+SmokeAPI is loaded into a game process, which limits it to that particular game only.
+SmokeAPI supports 2 installation modes: hook mode and proxy mode.
 
-=== 🛍️ Store mode
+|===
+|Mode |Advantages |Disadvantages
 
-NOTE: It is worth noting that the following instructions describe a _manual_ installation method.
-You can benefit from _automatic_ installation and GUI configuration by using https://github.com/acidicoala/Koalageddon2#readme[Koalageddon v2].
+|🪝 Hook mode
+|Persists after game updates
+|Might need an additional DLL (Koaloader)
 
-In this installation mode, SmokeAPI is loaded into the Steam process, which makes it able to affect all Steam games.
+|🔀 Proxy mode
+|Guaranteed to load
+|Might need reinstallation if Steam updates affected DLL files
 
-:steam-dir: the Steam directoryfootnote:fn-steam-dir[The root directory where Steam is installed]
+|===
 
-. Download the latest Koaloader release zip from https://github.com/acidicoala/Koaloader/releases/latest[Koaloader Releases].
-. From Koaloader archive unpack `version.dll` from `version-32`, and place it in {steam-dir}.
-. In {steam-dir} create the following Koaloader configuration file:
-+
-.`Koaloader.config.json`
-[%collapsible]
-====
-[source,json]
-----
-{
-  "auto_load": false,
-  "targets": [
-    "Steam.exe"
-  ],
-  "modules": [
-    {
-      "path": "SmokeAPI.dll",
-      "required": true
-    }
-  ]
-}
-----
-====
-. Download the latest SmokeAPI release zip from {smokeapi_release}.
-. From SmokeAPI archive unpack `steam_api.dll`, rename it to `SmokeAPI.dll`, and place it in {steam-dir}.
 
-=== 🎮 Game mode
-
-In this installation mode, SmokeAPI is loaded into a game process, which limits it to that particular game only.
-This mode itself supports 2 modes: hook mode and proxy mode.
 Try installing the unlocker in hook mode first.
 If it doesn't work, try installing it in proxy mode.
 
 ==== 🪝 Hook mode
 
-. Download the latest Koaloader release zip from https://github.com/acidicoala/Koaloader/releases/latest[Koaloader Releases].
-. From Koaloader archive unpack `version.dll` from version-32/64, depending on the game bitness, and place it next to the game exe file.
 . Download the latest SmokeAPI release zip from {smokeapi_release}.
-. From SmokeAPI archive unpack `steam_api.dll`/`steam_api64.dll`, depending on the game bitness, rename it to `SmokeAPI.dll`, and place it next to the game exe file.
+. From SmokeAPI archive unpack `steam_api.dll` or `steam_api64.dll`, depending on the game bitness, rename it to `version.dll`, and place it next to the game exe file.
+
+==== 🪝 Hook mode (Alternative)
+
+If a game doesn't load `version.dll`, you can use one of the {koaloader} DLLs that the game does in fact load. For example, assuming that the game loads `d3d9.dll`:
+
+. Download the latest Koaloader release zip from https://github.com/acidicoala/Koaloader/releases/latest[Koaloader Releases].
+. From Koaloader archive unpack `d3d9.dll` from `d3d9-32` or `d3d9-64`, depending on the game bitness, and place it next to the game exe file.
+. Download the latest SmokeAPI release zip from {smokeapi_release}.
+. From SmokeAPI archive unpack `steam_api.dll` or `steam_api64.dll`, depending on the game bitness, rename it to `SmokeAPI.dll`, and place it next to the game exe file.
 
 ==== 🔀 Proxy mode
 
@@ -121,10 +101,9 @@ If the unlocker is not working as expected, then please fully read the https://g
 
 == ⚙ Configuration
 
-NOTE: This document describes configuration for version 2 of SmokeAPI.
-You can find the version 1 documentation https://github.com/acidicoala/SmokeAPI/blob/v1.0.3/README.md#-configuration[here].
+NOTE: This document describes configuration for version 3 of SmokeAPI.
+You can find the version 2 documentation https://github.com/acidicoala/SmokeAPI/blob/v2.0.5/README.md#-configuration[here].
 
-:steam_config: https://github.com/acidicoala/public-entitlements/blob/main/steam/v2/store_config.json
 :fn-app-id: footnote:fn-app-id[App/DLC IDs can be obtained from https://steamdb.info[SteamDB] or https://steambase.io[Steambase]. Keep in mind that you need to be signed in with a steam account in order to see accurate inventory item IDs on that website.]
 
 SmokeAPI does not require any manual configuration.
@@ -132,7 +111,7 @@ By default, it uses the most reasonable options and tries to unlock all DLCs tha
 However, there might be circumstances in which you need more custom-tailored behaviour, such as disabling certain DLCs, or selectively enabling just a few of them.
 In this case you can use a configuration file link:res/SmokeAPI.config.json[SmokeAPI.config.json] that you can find here in this repository or in the release zip.
 To use it, simply place it next to the SmokeAPI DLL.
-It will be read upon each launch of a game or the store.
+It will be read upon each launch of the game.
 In the absence of the config file, default values specified below will be used.
 The configuration file is expected to conform to the Json standard.
 
@@ -141,13 +120,6 @@ The configuration file is expected to conform to the Json standard.
 [horizontal]
 Type::: Boolean
 Default::: `false`
-
-`unlock_family_sharing`:: *_Store mode only_*.
-Toggles Family Sharing bypass, which enables the borrower of a shared library to start and continue playing games when library owner is playing as well.
-+
-[horizontal]
-Type::: Boolean
-Default::: `true`
 
 `default_app_status`:: This option sets the default DLC unlocking behaviour.
 +
@@ -196,7 +168,7 @@ Do not modify this value.
 +
 [horizontal]
 Type::: Integer
-Default::: `2`
+Default::: `3`
 
 `extra_dlcs`:: See <<How SmokeAPI works in games with large number of DLCs>> to understand the use case for this option.
 +
@@ -206,25 +178,14 @@ The format is the same as in the aforementioned GitHub config.
 Type::: Object
 Default::: `{}`
 
-`store_config`:: *_Store mode only_*.
-An object that specifies offsets required for store mode operation.
-It will override the config fetched from {steam_config}[remote source] or local cache.
-Do not modify this value unless you know what you are doing.
-+
-[horizontal]
-Type::: Object
-Default::: See {steam_config}[online config]
-
 .Complete example
-
 [%collapsible]
 ====
 [source,json]
 ----
 {
-  "$version": 2,
+  "$version": 3,
   "logging": true,
-  "unlock_family_sharing": true,
   "default_app_status": "unlocked",
   "override_app_status": {
     "1234": "original",
@@ -249,14 +210,6 @@ Default::: See {steam_config}[online config]
         "98766": "Example DLC 3"
       }
     }
-  },
-  "store_config": {
-      "client_engine_steam_client_internal_ordinal": 12,
-      "steam_client_internal_interface_selector_ordinal": 18,
-      "vstdlib_callback_address_offset": 20,
-      "vstdlib_callback_data_offset": 0,
-      "vstdlib_callback_interceptor_address_offset": 1,
-      "vstdlib_callback_name_offset": 4
   }
 }
 ----
@@ -286,11 +239,11 @@ They will be added to the list of missing DLC IDs to facilitate config-less oper
 
 === 🚦 Requirements
 
-:fn-lower-ver: footnote:lower-versions[Older versions may be supported as well.]
+:vs-bt-2022: https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022[Visual Studio Build Tools 2022]
 
 * CMake v3.24 (Make sure that cmake is available from powershell)
-* Visual Studio 2022{fn-lower-ver}.
-* Tested on Windows 11 SDK (10.0.22621.0){fn-lower-ver}.
+* {vs-bt-2022} with `Desktop Development for C++` workload installed
+** Tested on Windows 11 SDK (10.0.26100.4188)
 
 === 👨‍💻 Commands
 
@@ -314,7 +267,7 @@ For example:
 
 == 📚 Open-Source libraries
 
-This project makes use of the open source projects specified in the https://github.com/acidicoala/KoalaBox#-open-source-libraries[KoalaBox Readme]
+TODO
 
 == 📄 License
 

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(SmokeAPI VERSION 2.0.5)
+project(SmokeAPI VERSION 3.0.0)
 
 include(KoalaBox/cmake/KoalaBox.cmake)
 
@@ -28,81 +28,64 @@ configure_build_config(extra_build_config)
 
 set(
     SMOKE_API_SOURCES
-    src/common/app_cache.cpp
-    src/common/app_cache.hpp
-    src/common/steamclient_exports.cpp
-    src/common/steamclient_exports.hpp
-    src/core/api.cpp
-    src/core/api.hpp
-    src/core/globals.cpp
-    src/core/globals.hpp
-    src/core/paths.cpp
-    src/core/paths.hpp
-    src/core/types.cpp
-    src/core/types.hpp
-    src/game_mode/exports/steam_api.cpp
-    src/game_mode/exports/steam_api_flat.cpp
-    src/game_mode/exports/steam_api_internal.cpp
-    src/game_mode/exports/steam_api_unversioned.cpp
-    src/game_mode/virtuals/isteamapps.cpp
-    src/game_mode/virtuals/isteamclient.cpp
-    src/game_mode/virtuals/isteaminventory.cpp
-    src/game_mode/virtuals/isteamuser.cpp
-    src/game_mode/virtuals/steam_api_virtuals.hpp
+    src/exports/steamclient.cpp
+    src/exports/steamclient.hpp
+    src/exports/steam_api.cpp
+    src/exports/steam_api_flat.cpp
+    src/exports/steam_api_internal.cpp
+    src/exports/steam_api_unversioned.cpp
+    src/virtuals/isteamapps.cpp
+    src/virtuals/isteamclient.cpp
+    src/virtuals/isteaminventory.cpp
+    src/virtuals/isteamuser.cpp
+    src/virtuals/steam_api_virtuals.hpp
+    src/smoke_api/cache.cpp
+    src/smoke_api/cache.hpp
     src/smoke_api/config.cpp
     src/smoke_api/config.hpp
     src/smoke_api/smoke_api.cpp
     src/smoke_api/smoke_api.hpp
-    src/steam_impl/steam_apps.cpp
-    src/steam_impl/steam_apps.hpp
-    src/steam_impl/steam_client.cpp
-    src/steam_impl/steam_client.hpp
-    src/steam_impl/steam_impl.cpp
-    src/steam_impl/steam_impl.hpp
-    src/steam_impl/steam_inventory.cpp
-    src/steam_impl/steam_inventory.hpp
-    src/steam_impl/steam_user.cpp
-    src/steam_impl/steam_user.hpp
+    src/smoke_api/api.cpp
+    src/smoke_api/api.hpp
+    src/smoke_api/globals.cpp
+    src/smoke_api/globals.hpp
+    src/smoke_api/types.cpp
+    src/smoke_api/types.hpp
+    src/steam_interface/steam_apps.cpp
+    src/steam_interface/steam_apps.hpp
+    src/steam_interface/steam_client.cpp
+    src/steam_interface/steam_client.hpp
+    src/steam_interface/steam_interface.cpp
+    src/steam_interface/steam_interface.hpp
+    src/steam_interface/steam_inventory.cpp
+    src/steam_interface/steam_inventory.hpp
+    src/steam_interface/steam_user.cpp
+    src/steam_interface/steam_user.hpp
     src/main.cpp
     ${GENERATED_LINKER_EXPORTS}
 )
 
-# Include store_mode mode sources only in 32-bit builds
-if (CMAKE_SIZEOF_VOID_P EQUAL 4)
-    # TODO: Use list(APPEND ...) ?
-    set(
-        SMOKE_API_SOURCES ${SMOKE_API_SOURCES}
-        src/store_mode/steamclient/client_app_manager.cpp
-        src/store_mode/steamclient/client_apps.cpp
-        src/store_mode/steamclient/client_inventory.cpp
-        src/store_mode/steamclient/client_user.cpp
-        src/store_mode/steamclient/client_utils.cpp
-        src/store_mode/steamclient/steamclient.cpp
-        src/store_mode/steamclient/steamclient.hpp
-        src/store_mode/vstdlib/vstdlib.cpp
-        src/store_mode/vstdlib/vstdlib.hpp
-        src/store_mode/store.cpp
-        src/store_mode/store.hpp
-        src/store_mode/store_api.cpp
-        src/store_mode/store_api.hpp
-        src/store_mode/store_cache.cpp
-        src/store_mode/store_cache.hpp
-        src/game_mode/exports/steam_api.cpp
-    )
-endif ()
-
 add_library(SmokeAPI SHARED ${SMOKE_API_SOURCES} ${VERSION_RESOURCE})
 
-# There is a weird bug where c++23 features are not enabled in x64 builds,
+# There is a weird MSVC bug where c++23 features are not enabled in x64 builds,
 # while they are available in x86. I've no idea what causes this discrepancy,
 # but manually setting the MSVC compiler option fixes this issue.
 target_compile_options(SmokeAPI PRIVATE /std:c++latest)
 
 configure_linker_exports(
     TARGET SmokeAPI
+    HEADER_NAME "linker_exports_for_steam_api"
     FORWARDED_DLL "${STEAMAPI_DLL}_o"
-    INPUT_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/game_mode/exports"
+    INPUT_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/exports"
     DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${STEAM_API_DLL}"
+)
+
+configure_linker_exports(
+    TARGET SmokeAPI
+    HEADER_NAME "linker_exports_for_version"
+    FORWARDED_DLL "C:/Windows/System32/version.dll"
+    INPUT_SOURCES_DIR ""
+    DLL_FILES_GLOB "C:/Windows/System32/version.dll"
 )
 
 configure_output_name(${STEAMAPI_DLL})
@@ -110,5 +93,10 @@ configure_output_name(${STEAMAPI_DLL})
 configure_include_directories()
 
 target_link_libraries(SmokeAPI PRIVATE KoalaBox)
+target_precompile_headers(SmokeAPI REUSE_FROM KoalaBox)
+
+set(B_PRODUCTION_MODE ON)
+CPMAddPackage("gh:batterycenter/embed@1.2.19")
+b_embed(SmokeAPI "res/interface_lookup.json")
 
 add_subdirectory(tools)

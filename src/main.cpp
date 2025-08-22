@@ -1,8 +1,8 @@
-#include <Windows.h>
 #include <smoke_api/smoke_api.hpp>
 
 // This header will be populated at build time
-#include <linker_exports.h>
+#include "linker_exports_for_steam_api.h"
+#include "linker_exports_for_version.h"
 
 EXTERN_C [[maybe_unused]] BOOL WINAPI
 DllMain(const HMODULE module_handle, const DWORD reason, LPVOID) {

@@ -1,13 +1,11 @@
 {
-  "$version": 2,
+  "$version": 3,
   "logging": true,
-  "unlock_family_sharing": true,
   "default_app_status": "unlocked",
   "override_app_id": 0,
   "override_app_status": {},
   "override_dlc_status": {},
   "auto_inject_inventory": true,
   "extra_inventory_items": [],
-  "extra_dlcs": {},
-  "store_config": null
+  "extra_dlcs": {}
 }

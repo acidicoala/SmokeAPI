@@ -1,6 +1,6 @@
 #pragma once
 
-#include <core/types.hpp>
+#include "smoke_api/types.hpp"
 
 namespace smoke_api::config {
 
@@ -21,40 +21,33 @@ namespace smoke_api::config {
     struct Config {
         uint32_t $version = 2;
         bool logging = false;
-        bool unlock_family_sharing = true;
         AppStatus default_app_status = AppStatus::UNLOCKED;
         uint32_t override_app_id = 0;
-        Map<String, AppStatus> override_app_status;
-        Map<String, AppStatus> override_dlc_status;
+        std::map<std::string, AppStatus> override_app_status;
+        std::map<std::string, AppStatus> override_dlc_status;
         AppDlcNameMap extra_dlcs;
         bool auto_inject_inventory = true;
-        Vector<uint32_t> extra_inventory_items;
-        // We have to use general json type here since the library doesn't support std::optional
-        Json store_config;
+        std::vector<uint32_t> extra_inventory_items;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(
             Config, // NOLINT(misc-const-correctness)
             $version,
             logging,
-            unlock_family_sharing,
             default_app_status,
             override_app_id,
             override_app_status,
             override_dlc_status,
             extra_dlcs,
             auto_inject_inventory,
-            extra_inventory_items,
-            store_config
+            extra_inventory_items
         )
     };
 
     extern Config instance;
 
-    void init_config();
+    std::vector<DLC> get_extra_dlcs(AppId_t app_id);
 
-    Vector<DLC> get_extra_dlcs(AppId_t app_id);
-
-    bool is_dlc_unlocked(uint32_t app_id, uint32_t dlc_id, const Function<bool()>& original_function);
+    bool is_dlc_unlocked(uint32_t app_id, uint32_t dlc_id, const std::function<bool()>& original_function);
 
     DLL_EXPORT(void) ReloadConfig();
 }

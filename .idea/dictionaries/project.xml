@@ -3,8 +3,13 @@
     <words>
       <w>abcdefghijklmnopqrstuvwxyz</w>
       <w>indicies</w>
+      <w>isteamapps</w>
+      <w>isteamclient</w>
+      <w>isteaminventory</w>
+      <w>isteamuser</w>
       <w>koalabox</w>
       <w>koaloader</w>
+      <w>steamapps</w>
       <w>wstr</w>
     </words>
   </dictionary>

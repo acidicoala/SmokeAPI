@@ -1,24 +1,19 @@
-#include "koalabox/paths.hpp"
-
+#include <koalabox/config.hpp>
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/globals.hpp>
 #include <koalabox/hook.hpp>
 #include <koalabox/loader.hpp>
 #include <koalabox/logger.hpp>
-#include <koalabox/str.hpp>
+#include <koalabox/paths.hpp>
 #include <koalabox/util.hpp>
 #include <koalabox/win_util.hpp>
 
-#include <build_config.h>
-#include <common/steamclient_exports.hpp>
-#include <core/globals.hpp>
-#include <core/paths.hpp>
-#include <smoke_api/config.hpp>
-#include <smoke_api/smoke_api.hpp>
+#include "build_config.h"
 
-#if COMPILE_STORE_MODE
-#include <store_mode/store.hpp>
-#endif
+#include "exports/steamclient.hpp"
+#include "smoke_api/config.hpp"
+#include "smoke_api/globals.hpp"
+#include "smoke_api/smoke_api.hpp"
 
 // Hooking steam_api has shown itself to be less desirable than steamclient
 // for the reasons outlined below:
@@ -39,6 +34,12 @@
 // the support for it has been dropped from this project.
 
 namespace {
+    namespace kb = koalabox;
+    namespace fs = std::filesystem;
+
+#define DETOUR_STEAMCLIENT(FUNC)                                                                   \
+    kb::hook::detour_or_warn(globals::steamclient_module, #FUNC, reinterpret_cast<uintptr_t>(FUNC));
+
     void override_app_id() {
         const auto override_app_id = smoke_api::config::instance.override_app_id;
         if (override_app_id == 0) {
@@ -54,107 +55,72 @@ namespace {
     void init_proxy_mode() {
         LOG_INFO("Detected proxy mode");
 
-        override_app_id();
-
-        globals::steamapi_module =
-            koalabox::loader::load_original_library(paths::get_self_path(), STEAMAPI_DLL);
+        const auto self_path = kb::paths::get_self_path();
+        globals::steamapi_module = kb::loader::load_original_library(self_path, STEAMAPI_DLL);
     }
 
     void init_hook_mode() {
-        LOG_INFO("🪝 Detected hook mode");
+        LOG_INFO("Detected hook mode");
 
-        override_app_id();
+        kb::hook::init(true);
 
-        koalabox::dll_monitor::init_listener(STEAMCLIENT_DLL, [](const HMODULE& library) {
+        kb::dll_monitor::init_listener(STEAMCLIENT_DLL, [](const HMODULE& library) {
             globals::steamclient_module = library;
 
             DETOUR_STEAMCLIENT(CreateInterface)
 
-            koalabox::dll_monitor::shutdown_listener();
+            kb::dll_monitor::shutdown_listener();
         });
-    }
-
-    bool is_valve_steam(const String& exe_name) noexcept {
-        try {
-            if (not koalabox::str::eq(exe_name, "steam.exe")) {
-                return false;
-            }
-
-            // Verify that it's steam from valve,
-            // and not some other executable coincidentally named steam
-
-            const HMODULE steam_handle = koalabox::win_util::get_module_handle_or_throw(nullptr);
-            const auto manifest = koalabox::win_util::get_module_manifest(steam_handle);
-
-            // Steam.exe manifest is expected to contain this string
-            return manifest.contains("valvesoftware.steam.steam");
-        } catch (const Exception& e) {
-            LOG_ERROR("{} -> {}", __func__, e.what());
-
-            return false;
-        }
     }
 }
 namespace smoke_api {
     void init(const HMODULE module_handle) {
         // FIXME: IMPORTANT! Non ascii paths in directories will result in init errors
         try {
-            DisableThreadLibraryCalls(module_handle);
+            kb::globals::init_globals(module_handle, PROJECT_NAME);
 
-            koalabox::globals::init_globals(module_handle, PROJECT_NAME);
-
-            globals::smokeapi_handle = module_handle;
-
-            config::init_config();
+            config::instance = kb::config::parse<config::Config>();
 
             if (config::instance.logging) {
-                koalabox::logger::init_file_logger(koalabox::paths::get_log_path());
+                kb::logger::init_file_logger(kb::paths::get_log_path());
             }
 
             // This kind of timestamp is reliable only for CI builds, as it will reflect the
             // compilation time stamp only when this file gets recompiled.
             LOG_INFO("{} v{} | Compiled at '{}'", PROJECT_NAME, PROJECT_VERSION, __TIMESTAMP__);
 
-            const Path exe_path = koalabox::win_util::get_module_file_name_or_throw(nullptr);
+            const fs::path exe_path = kb::win_util::get_module_file_name_or_throw(nullptr);
             const auto exe_name = exe_path.filename().string();
 
-            LOG_DEBUG("Process name: '{}' [{}-bit]", exe_name, BITNESS);
+            LOG_DEBUG("Process name: '{}' [{}-bit]", exe_name, kb::util::BITNESS);
 
-            const bool is_hook_mode =
-                koalabox::hook::is_hook_mode(globals::smokeapi_handle, STEAMAPI_DLL);
+            override_app_id();
 
-            if (is_hook_mode) {
-                koalabox::hook::init(true);
-
-                if (is_valve_steam(exe_name)) {
-#if COMPILE_STORE_MODE
-                    LOG_INFO("Detected Store mode");
-                    store::init_store_mode();
-#endif
-                } else {
-                    init_hook_mode();
-                }
+            if (kb::hook::is_hook_mode(module_handle, STEAMAPI_DLL)) {
+                init_hook_mode();
             } else {
                 init_proxy_mode();
             }
 
             LOG_INFO("Initialization complete");
-        } catch (const Exception& ex) {
-            koalabox::util::panic(fmt::format("Initialization error: {}", ex.what()));
+        } catch (const std::exception& ex) {
+            kb::util::panic(fmt::format("Initialization error: {}", ex.what()));
         }
     }
 
     void shutdown() {
         try {
             if (globals::steamapi_module != nullptr) {
-                koalabox::win_util::free_library(globals::steamapi_module);
+                kb::win_util::free_library(globals::steamapi_module);
+                globals::steamapi_module = nullptr;
             }
 
             LOG_INFO("Shutdown complete");
-        } catch (const Exception& ex) {
-            LOG_ERROR("Shutdown error: {}", ex.what());
+        } catch (const std::exception& e) {
+            const auto msg = std::format("Shutdown error: {}", e.what());
+            LOG_ERROR(msg);
         }
 
-        koalabox::logger::shutdown();
+        kb::logger::shutdown();
     }
 }
