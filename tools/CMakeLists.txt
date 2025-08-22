@@ -2,11 +2,6 @@ cmake_minimum_required(VERSION 3.24)
 
 project(smoke-api-tools LANGUAGES CXX)
 
-### C++ preprocessor library
-
-CPMAddPackage("gh:danmar/simplecpp#1.5.2")
-target_include_directories(simplecpp_obj INTERFACE ${simplecpp_SOURCE_DIR})
-
 ### Thread pool library
 
 CPMAddPackage(
@@ -34,5 +29,4 @@ add_executable(steamworks_parser steamworks_parser.cpp)
 target_link_libraries(steamworks_parser PRIVATE
     KoalaBox
     BS_thread_pool
-    simplecpp_obj
 )

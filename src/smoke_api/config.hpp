@@ -3,7 +3,6 @@
 #include "smoke_api/types.hpp"
 
 namespace smoke_api::config {
-
     enum class AppStatus {
         UNDEFINED,
         ORIGINAL,
@@ -11,12 +10,17 @@ namespace smoke_api::config {
         LOCKED,
     };
 
-    NLOHMANN_JSON_SERIALIZE_ENUM(AppStatus, {
-        { AppStatus::UNDEFINED, nullptr },
-        { AppStatus::ORIGINAL, "original" },
-        { AppStatus::UNLOCKED, "unlocked" },
-        { AppStatus::LOCKED, "locked" },
-    })
+    NLOHMANN_JSON_SERIALIZE_ENUM(
+        AppStatus,
+        // @formatter:off
+        {
+            {AppStatus::UNDEFINED, nullptr},
+            {AppStatus::ORIGINAL, "original"},
+            {AppStatus::UNLOCKED, "unlocked"},
+            {AppStatus::LOCKED, "locked"},
+        }
+        // @formatter:on
+    )
 
     struct Config {
         uint32_t $version = 2;
@@ -30,7 +34,8 @@ namespace smoke_api::config {
         std::vector<uint32_t> extra_inventory_items;
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(
-            Config, // NOLINT(misc-const-correctness)
+            Config,
+            // NOLINT(misc-const-correctness)
             $version,
             logging,
             default_app_status,
@@ -47,7 +52,13 @@ namespace smoke_api::config {
 
     std::vector<DLC> get_extra_dlcs(AppId_t app_id);
 
-    bool is_dlc_unlocked(uint32_t app_id, uint32_t dlc_id, const std::function<bool()>& original_function);
+    bool is_dlc_unlocked(
+        uint32_t app_id,
+        uint32_t dlc_id,
+        const std::function<bool()>& original_function
+    );
 
-    DLL_EXPORT(void) ReloadConfig();
+    DLL_EXPORT(void) ReloadConfig
+    (
+    );
 }

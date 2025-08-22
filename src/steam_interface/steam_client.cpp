@@ -4,7 +4,6 @@
 #include "steam_interface/steam_interface.hpp"
 
 namespace steam_client {
-
     void* GetGenericInterface(
         const std::string& function_name,
         const std::string& interface_version,
@@ -18,5 +17,4 @@ namespace steam_client {
 
         return interface;
     }
-
 }

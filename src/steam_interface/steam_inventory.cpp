@@ -4,7 +4,6 @@
 #include "steam_interface/steam_inventory.hpp"
 
 namespace steam_inventory {
-
     EResult GetResultStatus(
         const std::string& function_name,
         const SteamInventoryResult_t resultHandle,
@@ -13,7 +12,10 @@ namespace steam_inventory {
         const auto status = original_function();
 
         LOG_DEBUG(
-            "{} -> handle: {}, status: {}", function_name, resultHandle, static_cast<int>(status)
+            "{} -> handle: {}, status: {}",
+            function_name,
+            resultHandle,
+            static_cast<int>(status)
         );
 
         return status;
@@ -25,7 +27,7 @@ namespace steam_inventory {
         SteamItemDetails_t* pOutItemsArray,
         uint32_t* punOutItemsArraySize,
         const std::function<bool()>& original_function,
-        const std::function<bool(SteamItemDef_t*, uint32_t*)>& get_item_definition_ids
+        const std::function<bool(SteamItemDef_t *, uint32_t *)>& get_item_definition_ids
     ) {
         static std::mutex section;
         const std::lock_guard<std::mutex> guard(section);
@@ -43,12 +45,12 @@ namespace steam_inventory {
             );
         };
 
-        if (not success) {
+        if(not success) {
             LOG_DEBUG("{} -> original result is false", function_name);
             return success;
         }
 
-        if (punOutItemsArraySize == nullptr) {
+        if(punOutItemsArraySize == nullptr) {
             LOG_ERROR("{} -> arraySize pointer is null", function_name);
             return success;
         }
@@ -66,20 +68,23 @@ namespace steam_inventory {
 
         // Automatically get inventory items from steam
         static std::vector<SteamItemDef_t> auto_inventory_items;
-        if (smoke_api::config::instance.auto_inject_inventory) {
+        if(smoke_api::config::instance.auto_inject_inventory) {
             static std::once_flag inventory_inject_flag;
-            std::call_once(inventory_inject_flag, [&] {
-                uint32_t count = 0;
-                if (get_item_definition_ids(nullptr, &count)) {
-                    auto_inventory_items.resize(count);
-                    get_item_definition_ids(auto_inventory_items.data(), &count);
+            std::call_once(
+                inventory_inject_flag,
+                [&] {
+                    uint32_t count = 0;
+                    if(get_item_definition_ids(nullptr, &count)) {
+                        auto_inventory_items.resize(count);
+                        get_item_definition_ids(auto_inventory_items.data(), &count);
+                    }
                 }
-            });
+            );
         }
 
         const auto auto_injected_count = auto_inventory_items.size();
 
-        if (not pOutItemsArray) {
+        if(not pOutItemsArray) {
             // If pOutItemsArray is NULL then we must set the array size.
             original_count = *punOutItemsArraySize;
             *punOutItemsArraySize += auto_injected_count + injected_count;
@@ -91,7 +96,7 @@ namespace steam_inventory {
             );
         } else {
             // Otherwise, we modify the array
-            for (int i = 0; i < original_count; i++) {
+            for(int i = 0; i < original_count; i++) {
                 print_item("original", pOutItemsArray[i]);
             }
 
@@ -104,7 +109,7 @@ namespace steam_inventory {
                 };
             };
 
-            for (int i = 0; i < auto_injected_count; i++) {
+            for(int i = 0; i < auto_injected_count; i++) {
                 auto& item = pOutItemsArray[original_count + i];
                 const auto item_def_id = auto_inventory_items[i];
 
@@ -113,7 +118,7 @@ namespace steam_inventory {
                 print_item("auto-injected", item);
             }
 
-            for (int i = 0; i < injected_count; i++) {
+            for(int i = 0; i < injected_count; i++) {
                 auto& item = pOutItemsArray[original_count + auto_injected_count + i];
                 const auto item_def_id = smoke_api::config::instance.extra_inventory_items[i];
 
@@ -145,13 +150,15 @@ namespace steam_inventory {
 
         const auto success = original_function();
 
-        if (!success) {
+        if(!success) {
             LOG_WARN("{}, Result is false", common_info);
             return false;
         }
 
         LOG_DEBUG(
-            "{}, Buffer: '{}'", common_info, std::string(pchValueBuffer, *punValueBufferSizeOut - 1)
+            "{}, Buffer: '{}'",
+            common_info,
+            std::string(pchValueBuffer, *punValueBufferSizeOut - 1)
         );
 
         return success;
@@ -180,8 +187,8 @@ namespace steam_inventory {
 
         LOG_DEBUG("{} -> Handle: {}", function_name, fmt::ptr(pResultHandle));
 
-        if (success && pInstanceIDs != nullptr) {
-            for (int i = 0; i < unCountInstanceIDs; i++) {
+        if(success && pInstanceIDs != nullptr) {
+            for(int i = 0; i < unCountInstanceIDs; i++) {
                 LOG_DEBUG("  Index: {}, ItemId: {}", i, pInstanceIDs[i]);
             }
         }
@@ -198,12 +205,15 @@ namespace steam_inventory {
     ) {
         const auto success = original_function();
 
-        if (pOutBuffer != nullptr) {
-            std::string buffer((char*)pOutBuffer, *punOutBufferSize);
+        if(pOutBuffer != nullptr) {
+            std::string buffer((char*) pOutBuffer, *punOutBufferSize);
             LOG_DEBUG("{} -> Handle: {}, Buffer: '{}'", function_name, resultHandle, buffer);
         } else {
             LOG_DEBUG(
-                "{} -> Handle: {}, Size: '{}'", function_name, resultHandle, *punOutBufferSize
+                "{} -> Handle: {}, Size: '{}'",
+                function_name,
+                resultHandle,
+                *punOutBufferSize
             );
         }
 
@@ -218,19 +228,19 @@ namespace steam_inventory {
     ) {
         const auto success = original_function();
 
-        if (!success) {
+        if(!success) {
             LOG_WARN("{} -> Result is false", function_name);
             return false;
         }
 
-        if (punItemDefIDsArraySize) {
+        if(punItemDefIDsArraySize) {
             LOG_DEBUG("{} -> Size: {}", function_name, *punItemDefIDsArraySize);
         } else {
             return success;
         }
 
-        if (pItemDefIDs) { // Definitions were copied
-            for (int i = 0; i < *punItemDefIDsArraySize; i++) {
+        if(pItemDefIDs) { // Definitions were copied
+            for(int i = 0; i < *punItemDefIDsArraySize; i++) {
                 const auto& def = pItemDefIDs[i];
                 LOG_DEBUG("  Index: {}, ID: {}", i, def);
             }

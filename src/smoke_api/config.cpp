@@ -7,7 +7,6 @@
 
 namespace smoke_api::config {
     namespace kb = koalabox;
-    namespace fs = std::filesystem;
 
     Config instance; // NOLINT(cert-err58-cpp)
 
@@ -16,22 +15,25 @@ namespace smoke_api::config {
     }
 
     bool is_dlc_unlocked(
-        AppId_t app_id, AppId_t dlc_id, const std::function<bool()>& original_function
+        AppId_t app_id,
+        AppId_t dlc_id,
+        const std::function<bool()>& original_function
     ) {
         auto status = instance.default_app_status;
 
         const auto app_id_str = std::to_string(app_id);
-        if (instance.override_app_status.contains(app_id_str)) {
+        if(instance.override_app_status.contains(app_id_str)) {
             status = instance.override_app_status[app_id_str];
         }
 
         const auto dlc_id_str = std::to_string(dlc_id);
-        if (instance.override_dlc_status.contains(dlc_id_str)) {
+        if(instance.override_dlc_status.contains(dlc_id_str)) {
             status = instance.override_dlc_status[dlc_id_str];
         }
 
         bool is_unlocked;
-        switch (status) {
+
+        switch(status) {
         case AppStatus::UNLOCKED:
             is_unlocked = true;
             break;
@@ -56,7 +58,10 @@ namespace smoke_api::config {
         return is_unlocked;
     }
 
-    DLL_EXPORT(void) ReloadConfig() {
+    DLL_EXPORT(void) ReloadConfig
+    (
+    )
+ {
         LOG_INFO("Reloading config");
 
         instance = kb::config::parse<Config>();

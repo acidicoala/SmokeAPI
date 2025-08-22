@@ -3,7 +3,6 @@
 #include "smoke_api/types.hpp"
 
 namespace steam_inventory {
-
     EResult GetResultStatus(
         const std::string& function_name,
         SteamInventoryResult_t resultHandle,
@@ -16,7 +15,7 @@ namespace steam_inventory {
         SteamItemDetails_t* pOutItemsArray,
         uint32_t* punOutItemsArraySize,
         const std::function<bool()>& original_function,
-        const std::function<bool(SteamItemDef_t*, uint32_t*)>& get_item_definition_ids
+        const std::function<bool(SteamItemDef_t *, uint32_t *)>& get_item_definition_ids
     );
 
     bool GetResultItemProperty(

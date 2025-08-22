@@ -3,11 +3,11 @@
 #include <koalabox/logger.hpp>
 #include <koalabox/util.hpp>
 
+#include "steam_interface/steam_apps.hpp"
 #include "smoke_api/api.hpp"
 #include "smoke_api/cache.hpp"
 #include "smoke_api/config.hpp"
 #include "smoke_api/types.hpp"
-#include "steam_interface/steam_apps.hpp"
 
 namespace {
     /// Steamworks may max GetDLCCount value at 64, depending on how much unowned DLCs the user has.
@@ -30,7 +30,7 @@ namespace {
         static std::mutex section;
         const std::lock_guard lock(section);
 
-        if (app_id == 0) {
+        if(app_id == 0) {
             LOG_ERROR("{} -> App ID is 0", __func__);
             app_dlcs[app_id] = {}; // Dummy value to avoid checking for presence on each access
             return;
@@ -38,7 +38,7 @@ namespace {
 
         // We want to fetch data only once. However, if any of the remote sources have failed
         // previously, we want to attempt fetching again.
-        if (fully_fetched.contains(app_id)) {
+        if(fully_fetched.contains(app_id)) {
             return;
         }
 
@@ -46,7 +46,10 @@ namespace {
         // by aggregating results from all the sources into a single set.
         std::vector<DLC> aggregated_dlcs;
 
-        const auto append_dlcs = [&](const std::vector<DLC>& dlc_list, const std::string& source_name) {
+        const auto append_dlcs = [&](
+            const std::vector<DLC>& dlc_list,
+            const std::string& source_name
+        ) {
             LOG_DEBUG("App ID {} has {} DLCs defined in {}", app_id, dlc_list.size(), source_name);
             // Append DLCs to aggregated DLCs
             std::ranges::copy(dlc_list, std::back_inserter(aggregated_dlcs));
@@ -55,16 +58,16 @@ namespace {
         append_dlcs(smoke_api::config::get_extra_dlcs(app_id), "local config");
 
         const auto github_dlcs_opt = api::fetch_dlcs_from_github(app_id);
-        if (github_dlcs_opt) {
+        if(github_dlcs_opt) {
             append_dlcs(*github_dlcs_opt, "GitHub repository");
         }
 
         const auto steam_dlcs_opt = api::fetch_dlcs_from_steam(app_id);
-        if (steam_dlcs_opt) {
+        if(steam_dlcs_opt) {
             append_dlcs(*steam_dlcs_opt, "Steam API");
         }
 
-        if (github_dlcs_opt && steam_dlcs_opt) {
+        if(github_dlcs_opt && steam_dlcs_opt) {
             fully_fetched.insert(app_id);
         } else {
             append_dlcs(smoke_api::cache::get_dlcs(app_id), "disk cache");
@@ -78,7 +81,6 @@ namespace {
 }
 
 namespace steam_apps {
-
     bool IsDlcUnlocked(
         const std::string& function_name,
         AppId_t app_id,
@@ -86,41 +88,58 @@ namespace steam_apps {
         const std::function<bool()>& original_function
     ) {
         try {
-            const auto unlocked = smoke_api::config::is_dlc_unlocked(app_id, dlc_id, original_function);
+            const auto unlocked = smoke_api::config::is_dlc_unlocked(
+                app_id,
+                dlc_id,
+                original_function
+            );
 
-            LOG_INFO("{} -> {}DLC ID: {:>8}, Unlocked: {}", function_name, get_app_id_log(app_id), dlc_id, unlocked);
+            LOG_INFO(
+                "{} -> {}DLC ID: {:>8}, Unlocked: {}",
+                function_name,
+                get_app_id_log(app_id),
+                dlc_id,
+                unlocked
+            );
 
             return unlocked;
-        } catch (const std::exception& e) {
+        } catch(const std::exception& e) {
             LOG_ERROR("Uncaught exception: {}", e.what());
             return false;
         }
     }
 
-    int GetDLCCount(const std::string& function_name, const AppId_t app_id, const std::function<int()>& original_function) {
+    int GetDLCCount(
+        const std::string& function_name,
+        const AppId_t app_id,
+        const std::function<int()>& original_function
+    ) {
         try {
             const auto total_count = [&](int count) {
                 LOG_INFO("{} -> Responding with DLC count: {}", function_name, count);
                 return count;
             };
 
-            if (app_id != 0) {
+            if(app_id != 0) {
                 LOG_DEBUG("{} -> App ID: {}", function_name, app_id);
             }
 
             const auto original_count = original_function();
             LOG_DEBUG("{} -> Original DLC count: {}", function_name, original_count);
 
-            if (original_count < MAX_DLC) {
+            if(original_count < MAX_DLC) {
                 return total_count(original_count);
             }
 
-            LOG_DEBUG("Game has {} or more DLCs. Fetching DLCs from remote sources.", original_count);
+            LOG_DEBUG(
+                "Game has {} or more DLCs. Fetching DLCs from remote sources.",
+                original_count
+            );
 
             fetch_and_cache_dlcs(app_id);
 
             return total_count(static_cast<int>(app_dlcs[app_id].size()));
-        } catch (const std::exception& e) {
+        } catch(const std::exception& e) {
             LOG_ERROR("Uncaught exception: {}", function_name, e.what());
             return 0;
         }
@@ -143,7 +162,13 @@ namespace steam_apps {
             const auto print_dlc_info = [&](const std::string& tag) {
                 LOG_INFO(
                     R"({} -> [{:^12}] {}index: {:>3}, DLC ID: {:>8}, available: {:5}, name: "{}")",
-                    function_name, tag, get_app_id_log(app_id), iDLC, *pDlcId, *pbAvailable, pchName
+                    function_name,
+                    tag,
+                    get_app_id_log(app_id),
+                    iDLC,
+                    *pDlcId,
+                    *pbAvailable,
+                    pchName
                 );
             };
 
@@ -151,7 +176,9 @@ namespace steam_apps {
                 // Fill the output pointers
                 *pDlcId = dlc.get_id();
                 *pbAvailable = smoke_api::config::is_dlc_unlocked(
-                    app_id, *pDlcId, [&]() {
+                    app_id,
+                    *pDlcId,
+                    [&]() {
                         return is_originally_unlocked(*pDlcId);
                     }
                 );
@@ -161,10 +188,10 @@ namespace steam_apps {
                 memcpy_s(pchName, cchNameBufferSize, name.c_str(), name.size());
             };
 
-            if (app_dlcs.contains(app_id)) {
+            if(app_dlcs.contains(app_id)) {
                 const auto& dlcs = app_dlcs[app_id];
 
-                if (iDLC >= 0 && iDLC < dlcs.size()) {
+                if(iDLC >= 0 && iDLC < dlcs.size()) {
                     inject_dlc(dlcs[iDLC]);
                     print_dlc_info("injected");
                     return true;
@@ -176,9 +203,13 @@ namespace steam_apps {
 
             const auto success = original_function();
 
-            if (success) {
+            if(success) {
                 *pbAvailable = smoke_api::config::is_dlc_unlocked(
-                    app_id, *pDlcId, [&]() { return *pbAvailable; }
+                    app_id,
+                    *pDlcId,
+                    [&]() {
+                        return *pbAvailable;
+                    }
                 );
                 print_dlc_info("original");
             } else {
@@ -186,10 +217,9 @@ namespace steam_apps {
             }
 
             return success;
-        } catch (const std::exception& e) {
+        } catch(const std::exception& e) {
             LOG_ERROR("{} -> Uncaught exception: {}", function_name, e.what());
             return false;
         }
     }
-
 }

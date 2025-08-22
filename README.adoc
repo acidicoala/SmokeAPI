@@ -262,7 +262,7 @@ config::: `Debug` or `Release`
 For example:
 
 ----
-.\build.ps1 32 Debug
+.\build.ps1 64 Release
 ----
 
 == 📚 Open-Source libraries

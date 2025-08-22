@@ -1,1 +1,0 @@
-This directory contains dummy headers used by the `simplecpp` preprocessor

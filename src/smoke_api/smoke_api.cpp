@@ -10,10 +10,10 @@
 
 #include "build_config.h"
 
+#include "smoke_api/smoke_api.hpp"
 #include "exports/steamclient.hpp"
 #include "smoke_api/config.hpp"
 #include "smoke_api/globals.hpp"
-#include "smoke_api/smoke_api.hpp"
 
 // Hooking steam_api has shown itself to be less desirable than steamclient
 // for the reasons outlined below:
@@ -37,12 +37,12 @@ namespace {
     namespace kb = koalabox;
     namespace fs = std::filesystem;
 
-#define DETOUR_STEAMCLIENT(FUNC)                                                                   \
+#define DETOUR_STEAMCLIENT(FUNC) \
     kb::hook::detour_or_warn(globals::steamclient_module, #FUNC, reinterpret_cast<uintptr_t>(FUNC));
 
     void override_app_id() {
         const auto override_app_id = smoke_api::config::instance.override_app_id;
-        if (override_app_id == 0) {
+        if(override_app_id == 0) {
             return;
         }
 
@@ -64,15 +64,19 @@ namespace {
 
         kb::hook::init(true);
 
-        kb::dll_monitor::init_listener(STEAMCLIENT_DLL, [](const HMODULE& library) {
-            globals::steamclient_module = library;
+        kb::dll_monitor::init_listener(
+            STEAMCLIENT_DLL,
+            [](const HMODULE& library) {
+                globals::steamclient_module = library;
 
-            DETOUR_STEAMCLIENT(CreateInterface)
+                DETOUR_STEAMCLIENT(CreateInterface)
 
-            kb::dll_monitor::shutdown_listener();
-        });
+                kb::dll_monitor::shutdown_listener();
+            }
+        );
     }
 }
+
 namespace smoke_api {
     void init(const HMODULE module_handle) {
         // FIXME: IMPORTANT! Non ascii paths in directories will result in init errors
@@ -81,7 +85,7 @@ namespace smoke_api {
 
             config::instance = kb::config::parse<config::Config>();
 
-            if (config::instance.logging) {
+            if(config::instance.logging) {
                 kb::logger::init_file_logger(kb::paths::get_log_path());
             }
 
@@ -96,27 +100,27 @@ namespace smoke_api {
 
             override_app_id();
 
-            if (kb::hook::is_hook_mode(module_handle, STEAMAPI_DLL)) {
+            if(kb::hook::is_hook_mode(module_handle, STEAMAPI_DLL)) {
                 init_hook_mode();
             } else {
                 init_proxy_mode();
             }
 
             LOG_INFO("Initialization complete");
-        } catch (const std::exception& ex) {
+        } catch(const std::exception& ex) {
             kb::util::panic(fmt::format("Initialization error: {}", ex.what()));
         }
     }
 
     void shutdown() {
         try {
-            if (globals::steamapi_module != nullptr) {
+            if(globals::steamapi_module != nullptr) {
                 kb::win_util::free_library(globals::steamapi_module);
                 globals::steamapi_module = nullptr;
             }
 
             LOG_INFO("Shutdown complete");
-        } catch (const std::exception& e) {
+        } catch(const std::exception& e) {
             const auto msg = std::format("Shutdown error: {}", e.what());
             LOG_ERROR(msg);
         }

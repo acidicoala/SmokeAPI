@@ -15,8 +15,8 @@ namespace {
 
     std::string generate_random_string() {
         static constexpr char charset[] = "0123456789"
-                                          "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                                          "abcdefghijklmnopqrstuvwxyz";
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            "abcdefghijklmnopqrstuvwxyz";
 
         thread_local std::mt19937_64 rng{std::random_device{}()};
         thread_local std::uniform_int_distribution<std::size_t> dist(0, sizeof(charset) - 2);
@@ -24,7 +24,7 @@ namespace {
         constexpr auto length = 16;
         std::string result;
         result.reserve(length);
-        for (std::size_t i = 0; i < length; ++i) {
+        for(std::size_t i = 0; i < length; ++i) {
             result += charset[dist(rng)];
         }
 
@@ -33,26 +33,29 @@ namespace {
 
     void print_help() {
         std::cout << "Steamworks SDK downloader for SmokeAPI v1.0" << std::endl
-                  << "Usage:   steamworks_downloader version1 version2 ... versionN" << std::endl
-                  << "Example: steamworks_downloader 100 158a 162" << std::endl
-                  << "Alternative usage: steamworks_downloader C:/path/to/downloaded_sdk/"
-                  << "SDK version list available at: "
-                  << "https://partner.steamgames.com/downloads/list" << std::endl;
+            << "Usage:   steamworks_downloader version1 version2 ... versionN" << std::endl
+            << "Example: steamworks_downloader 100 158a 162" << std::endl
+            << "Alternative usage: steamworks_downloader C:/path/to/downloaded_sdk/"
+            << "SDK version list available at: "
+            << "https://partner.steamgames.com/downloads/list" << std::endl;
     }
 
     void unzip_sdk(const fs::path& zip_file_path, const fs::path& unzip_dir) {
-        kb::zip::extract_files(zip_file_path, [&](const std::string& name, const bool) {
-            if (name.starts_with("sdk/public/steam/") && name.ends_with(".h")) {
-                return unzip_dir / "headers/steam" / fs::path(name).filename();
-            }
+        kb::zip::extract_files(
+            zip_file_path,
+            [&](const std::string& name, const bool) {
+                if(name.starts_with("sdk/public/steam/") && name.ends_with(".h")) {
+                    return unzip_dir / "headers/steam" / fs::path(name).filename();
+                }
 
-            if (name.starts_with("sdk/redistributable_bin/") && name.ends_with(".dll") &&
-                name.find("steam_api") != std::string::npos) {
-                return unzip_dir / "binaries" / fs::path(name).filename();
-            }
+                if(name.starts_with("sdk/redistributable_bin/") && name.ends_with(".dll") &&
+                   name.find("steam_api") != std::string::npos) {
+                    return unzip_dir / "binaries" / fs::path(name).filename();
+                }
 
-            return fs::path();
-        });
+                return fs::path();
+            }
+        );
     }
 
     void download_sdk(const fs::path& steamworks_dir, const std::string_view& version) {
@@ -68,13 +71,12 @@ namespace {
         try {
             const auto unzip_dir = steamworks_dir / version;
             unzip_sdk(zip_file_path, unzip_dir);
-        } catch (std::exception& e) {
+        } catch(std::exception& e) {
             std::cerr << "Unzip error: " << e.what() << std::endl;
         }
 
         fs::remove(zip_file_path);
     }
-
 } // namespace
 
 /**
@@ -82,21 +84,21 @@ namespace {
  * for further processing by other tools.
  */
 int wmain(const int argc, const wchar_t** argv) { // NOLINT(*-use-internal-linkage)
-    if (argc == 1) {
+    if(argc == 1) {
         print_help();
         return 0;
     }
 
     const auto steamworks_dir = std::filesystem::current_path() / "steamworks";
 
-    if (argc == 2) {
-        if (const auto cdn_dir = kb::str::to_str(argv[1]); fs::is_directory(cdn_dir)) {
-            for (const auto& entry : fs::directory_iterator(cdn_dir)) {
+    if(argc == 2) {
+        if(const auto cdn_dir = kb::str::to_str(argv[1]); fs::is_directory(cdn_dir)) {
+            for(const auto& entry : fs::directory_iterator(cdn_dir)) {
                 const auto filename = entry.path().filename().string();
                 const std::regex re(R"(steamworks_sdk_(.+)\.zip)");
 
-                if (std::smatch match; std::regex_match(filename, match, re)) {
-                    if (match.size() > 1) {
+                if(std::smatch match; std::regex_match(filename, match, re)) {
+                    if(match.size() > 1) {
                         const auto& version = match[1].str();
                         unzip_sdk(entry.path(), steamworks_dir / version);
                     }
@@ -107,12 +109,12 @@ int wmain(const int argc, const wchar_t** argv) { // NOLINT(*-use-internal-linka
         }
     }
 
-    for (auto i = 1; i < argc; i++) {
+    for(auto i = 1; i < argc; i++) {
         const auto version = kb::str::to_str(argv[i]);
 
         try {
             download_sdk(steamworks_dir, version);
-        } catch (const std::exception& e) {
+        } catch(const std::exception& e) {
             LOG_ERROR("Error downloading SDK '{}'. Reason: {}", version, e.what());
         }
     }

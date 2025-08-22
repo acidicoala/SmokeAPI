@@ -3,7 +3,6 @@
 #include "smoke_api/types.hpp"
 
 namespace steam_apps {
-
     bool IsDlcUnlocked(
         const std::string& function_name,
         AppId_t app_id,
@@ -26,7 +25,7 @@ namespace steam_apps {
         char* pchName,
         int cchNameBufferSize,
         const std::function<bool()>& original_function,
-        const std::function<bool(AppId_t)>& is_originally_unlocked // Aux function to resolve original dlc status
+        const std::function<bool(AppId_t)>& is_originally_unlocked
+        // Aux function to resolve original dlc status
     );
-
 }

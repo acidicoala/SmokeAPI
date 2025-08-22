@@ -72,6 +72,8 @@ add_library(SmokeAPI SHARED ${SMOKE_API_SOURCES} ${VERSION_RESOURCE})
 # but manually setting the MSVC compiler option fixes this issue.
 target_compile_options(SmokeAPI PRIVATE /std:c++latest)
 
+target_include_directories(SmokeAPI PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>")
+
 configure_linker_exports(
     TARGET SmokeAPI
     HEADER_NAME "linker_exports_for_steam_api"
@@ -93,7 +95,6 @@ configure_output_name(${STEAMAPI_DLL})
 configure_include_directories()
 
 target_link_libraries(SmokeAPI PRIVATE KoalaBox)
-target_precompile_headers(SmokeAPI REUSE_FROM KoalaBox)
 
 set(B_PRODUCTION_MODE ON)
 CPMAddPackage("gh:batterycenter/embed@1.2.19")

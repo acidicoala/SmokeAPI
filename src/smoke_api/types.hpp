@@ -71,9 +71,6 @@ constexpr auto STEAM_CLIENT = "SteamClient";
 constexpr auto STEAM_USER = "SteamUser";
 constexpr auto STEAM_INVENTORY = "STEAMINVENTORY_INTERFACE_V";
 
-// TODO: Delete
-constexpr auto CLIENT_ENGINE = "CLIENTENGINE_INTERFACE_VERSION";
-
 using AppId_t = uint32_t;
 using SteamInventoryResult_t = uint32_t;
 using SteamItemInstanceID_t = uint64_t;
@@ -92,7 +89,7 @@ struct SteamItemDetails_t {
 
 // results from UserHasLicenseForApp
 enum EUserHasLicenseForAppResult {
-    k_EUserHasLicenseResultHasLicense = 0, // User has a license for specified app
+    k_EUserHasLicenseResultHasLicense         = 0, // User has a license for specified app
     k_EUserHasLicenseResultDoesNotHaveLicense = 1,
     // User does not have a license for the specified app
     k_EUserHasLicenseResultNoAuth = 2, // User has not been authenticated
@@ -118,11 +115,11 @@ class DLC {
     std::string appid;
     std::string name;
 
-  public:
+public:
     explicit DLC() = default;
 
-    explicit DLC(std::string appid, std::string name)
-        : appid{std::move(appid)}, name{std::move(name)} {}
+    explicit DLC(std::string appid, std::string name) : appid{std::move(appid)},
+                                                        name{std::move(name)} {}
 
     [[nodiscard]] std::string get_id_str() const {
         return appid;
