@@ -1,0 +1,168 @@
+#include <ranges>
+#include <set>
+
+#include <battery/embed.hpp>
+
+#include <koalabox/hook.hpp>
+#include <koalabox/logger.hpp>
+#include <koalabox/util.hpp>
+#include <koalabox/win_util.hpp>
+
+#include "smoke_api.hpp"
+#include "virtuals/steam_api_virtuals.hpp"
+
+namespace {
+    struct interface_entry {
+        // function_name must match the function identifier to be able to call original functions
+        std::string function_name; // e.g. "ISteamClient_GetISteamApps"
+        uintptr_t function_address; // e.g. ISteamClient_GetISteamApps
+    };
+
+    struct interface_data {
+        std::string fallback_version; // e.g. "SteamClient021"
+        std::map<std::string, interface_entry> entry_map;
+        // e.g. {ENTRY(ISteamClient, GetISteamApps), ...}
+    };
+
+    std::map<std::string, interface_data> get_virtual_hook_map() {
+#define ENTRY(INTERFACE, FUNC)                                                                     \
+    {                                                                                              \
+        #FUNC, {                                                                                   \
+            #INTERFACE "_" #FUNC, reinterpret_cast<uintptr_t>(INTERFACE##_##FUNC)                  \
+        }                                                                                          \
+    }
+
+        return {
+            {
+                STEAM_CLIENT,
+                interface_data{
+                    .fallback_version = "SteamClient021",
+                    .entry_map = {
+                        ENTRY(ISteamClient, GetISteamApps),
+                        ENTRY(ISteamClient, GetISteamUser),
+                        ENTRY(ISteamClient, GetISteamGenericInterface),
+                        ENTRY(ISteamClient, GetISteamInventory),
+                    }
+                }
+            },
+            {
+                STEAM_APPS,
+                interface_data{
+                    .fallback_version = "STEAMAPPS_INTERFACE_VERSION008",
+                    .entry_map = {
+                        ENTRY(ISteamApps, BIsSubscribedApp),
+                        ENTRY(ISteamApps, BIsDlcInstalled),
+                        ENTRY(ISteamApps, GetDLCCount),
+                        ENTRY(ISteamApps, BGetDLCDataByIndex),
+                    }
+                }
+            },
+            {
+                STEAM_USER,
+                interface_data{
+                    .fallback_version = "SteamUser023",
+                    .entry_map = {
+                        ENTRY(ISteamUser, UserHasLicenseForApp),
+                    }
+                }
+            },
+            {
+                STEAM_INVENTORY,
+                interface_data{
+                    .fallback_version = "STEAMINVENTORY_INTERFACE_V003",
+                    .entry_map = {
+                        ENTRY(ISteamInventory, GetResultStatus),
+                        ENTRY(ISteamInventory, GetResultItems),
+                        ENTRY(ISteamInventory, CheckResultSteamID),
+                        ENTRY(ISteamInventory, GetAllItems),
+                        ENTRY(ISteamInventory, GetItemsByID),
+                        ENTRY(ISteamInventory, SerializeResult),
+                        ENTRY(ISteamInventory, GetItemDefinitionIDs),
+                    }
+                }
+            },
+        };
+    }
+
+    nlohmann::json read_interface_lookup() {
+        const auto lookup_str = b::embed<"res/interface_lookup.json">().str();
+        return nlohmann::json::parse(lookup_str);
+    }
+
+    const nlohmann::json& find_lookup(
+        const std::string& interface_version,
+        const std::string& fallback_version
+    ) {
+        static const auto lookup = read_interface_lookup();
+
+        if(lookup.contains(interface_version)) {
+            return lookup[interface_version];
+        }
+
+        LOG_WARN(
+            "Interface version '{}' not found in lookup map. Using fallback: '{}'",
+            interface_version,
+            fallback_version
+        );
+
+        return lookup[fallback_version];
+    }
+}
+
+namespace steam_interface {
+    namespace kb = koalabox;
+
+    AppId_t get_app_id_or_throw() {
+        const auto app_id_str = kb::win_util::get_env_var("SteamAppId");
+        return std::stoi(app_id_str);
+    }
+
+    AppId_t get_app_id() {
+        try {
+            static const auto app_id = get_app_id_or_throw();
+            return app_id;
+        } catch(const std::exception& e) {
+            LOG_ERROR("Failed to get app id: {}", e.what());
+            return 0;
+        }
+    }
+
+    void hook_virtuals(void* interface, const std::string& version_string) {
+        if(interface == nullptr) {
+            // Game has tried to use an interface before initializing steam api
+            return;
+        }
+
+        static std::set<void*> processed_interfaces;
+
+        if(processed_interfaces.contains(interface)) {
+            LOG_DEBUG("Interface {} at {} has already been processed.", version_string, interface);
+            return;
+        }
+
+        static std::mutex section;
+        const std::lock_guard guard(section);
+
+        static const auto virtual_hook_map = get_virtual_hook_map();
+        for(const auto& [prefix, data] : virtual_hook_map) {
+            if(version_string.starts_with(prefix)) {
+                const auto& lookup = find_lookup(version_string, data.fallback_version);
+
+                for(const auto& [function, entry] : data.entry_map) {
+                    if(lookup.contains(function)) {
+                        kb::hook::swap_virtual_func(
+                            interface,
+                            entry.function_name,
+                            lookup[function],
+                            entry.function_address
+                        );
+                    }
+                }
+
+                break;
+            }
+        }
+
+        processed_interfaces.insert(interface);
+    }
+}
