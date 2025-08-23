@@ -23,7 +23,7 @@ namespace smoke_api::config {
     )
 
     struct Config {
-        uint32_t $version = 2;
+        uint32_t $version = 3;
         bool logging = false;
         AppStatus default_app_status = AppStatus::UNLOCKED;
         uint32_t override_app_id = 0;

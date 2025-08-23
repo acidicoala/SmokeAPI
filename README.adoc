@@ -113,7 +113,7 @@ In this case you can use a configuration file link:res/SmokeAPI.config.json[Smok
 To use it, simply place it next to the SmokeAPI DLL.
 It will be read upon each launch of the game.
 In the absence of the config file, default values specified below will be used.
-The configuration file is expected to conform to the Json standard.
+The configuration file is expected to conform to the JSON standard.
 
 `logging`:: Toggles generation of a `SmokeAPI.log.log` file.
 +

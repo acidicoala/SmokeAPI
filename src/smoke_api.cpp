@@ -12,7 +12,7 @@
 
 #include "smoke_api.hpp"
 #include "smoke_api/config.hpp"
-#include "steamclient/steamclient.hpp"
+#include "smoke_api/steamclient/steamclient.hpp"
 
 // Hooking steam_api has shown itself to be less desirable than steamclient
 // for the reasons outlined below:

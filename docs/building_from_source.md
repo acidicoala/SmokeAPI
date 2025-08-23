@@ -1,3 +1,0 @@
-# Building from source
-
-TODO

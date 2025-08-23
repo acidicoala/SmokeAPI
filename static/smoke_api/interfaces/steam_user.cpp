@@ -17,7 +17,7 @@ namespace smoke_api::steam_user {
             return result;
         }
 
-        const auto has_license = smoke_api::config::is_dlc_unlocked(
+        const auto has_license = config::is_dlc_unlocked(
             appId,
             dlcId,
             [&] {

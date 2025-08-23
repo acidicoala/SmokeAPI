@@ -1,4 +1,5 @@
 {
+  "$schema": "https://raw.githubusercontent.com/acidicoala/SmokeAPI/refs/heads/master/res/SmokeAPI.schema.json",
   "$version": 3,
   "logging": true,
   "default_app_status": "unlocked",

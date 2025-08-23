@@ -28,6 +28,7 @@ set(SMOKE_API_STATIC_SOURCES
     static/smoke_api/config.cpp
     static/smoke_api/types.hpp
     static/smoke_api/types.cpp
+    static/smoke_api/steamclient/steamclient.hpp
 )
 
 set(SMOKE_API_SOURCES
@@ -45,8 +46,7 @@ set(SMOKE_API_SOURCES
     src/steam_api/steam_client.cpp
     src/steam_api/steam_interface.cpp
     src/steam_api/steam_interface.hpp
-    src/steamclient/steamclient.cpp
-    src/steamclient/steamclient.hpp
+    src/steamclient.cpp
     src/main.cpp
     src/smoke_api.cpp
     src/smoke_api.hpp
@@ -62,7 +62,7 @@ add_library(SmokeAPI_interface INTERFACE)
 #target_compile_options(SmokeAPI_interface PUBLIC /std:c++latest)
 
 target_include_directories(SmokeAPI_interface INTERFACE
-    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>"
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/static>"
 )
 target_link_libraries(SmokeAPI_interface INTERFACE KoalaBox $<TARGET_OBJECTS:KoalaBox>)
 
@@ -71,7 +71,7 @@ target_link_libraries(SmokeAPI_interface INTERFACE KoalaBox $<TARGET_OBJECTS:Koa
 
 add_library(SmokeAPI_static STATIC ${SMOKE_API_STATIC_SOURCES})
 target_link_libraries(SmokeAPI_static PUBLIC SmokeAPI_interface)
-target_include_directories(SmokeAPI_static PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/static")
+#target_include_directories(SmokeAPI_static PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/static")
 
 ### Shared SmokeAPI
 
@@ -81,11 +81,13 @@ set_target_properties(SmokeAPI PROPERTIES RUNTIME_OUTPUT_NAME ${STEAMAPI_DLL})
 configure_version_resource(SmokeAPI "Free DLC for everyone ʕ ᵔᴥᵔʔ")
 target_include_directories(SmokeAPI PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
-    "${CMAKE_CURRENT_SOURCE_DIR}/static"
+#    "${CMAKE_CURRENT_SOURCE_DIR}/static"
     "${CMAKE_CURRENT_BINARY_DIR}")
 
-set(B_PRODUCTION_MODE ON)
-CPMAddPackage("gh:batterycenter/embed@1.2.19")
+CPMAddPackage(
+    URI "gh:batterycenter/embed@1.2.19"
+    OPTIONS "B_PRODUCTION_MODE ON"
+)
 b_embed(SmokeAPI "res/interface_lookup.json")
 
 configure_linker_exports(

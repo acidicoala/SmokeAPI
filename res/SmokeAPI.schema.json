@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/smokeapi-config.schema.json",
+  "title": "SmokeAPI configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$version": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 3,
+      "description": "A technical field reserved for tools like GUI config editors. Do not modify this value."
+    },
+    "logging": {
+      "type": "boolean",
+      "default": false,
+      "description": "Toggles generation of a SmokeAPI.log.log file."
+    },
+    "default_app_status": {
+      "description": "Sets the default DLC unlocking behaviour.",
+      "default": "unlocked",
+      "$ref": "#/$defs/AppStatus"
+    },
+    "override_app_id": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0,
+      "description": "Overrides the current app ID (0 means no override)."
+    },
+    "override_app_status": {
+      "type": "object",
+      "default": {},
+      "description": "Overrides the status of all DLCs that belong to a specified app ID. Keys are app IDs (as strings).",
+      "patternProperties": {
+        "^\\d{1,10}$": {
+          "$ref": "#/$defs/AppStatus"
+        }
+      },
+      "additionalProperties": false
+    },
+    "override_dlc_status": {
+      "type": "object",
+      "default": {},
+      "description": "Overrides the status of individual DLCs, regardless of the corresponding app status. Keys are DLC IDs (as strings).",
+      "patternProperties": {
+        "^\\d{1,10}$": {
+          "$ref": "#/$defs/AppStatus"
+        }
+      },
+      "additionalProperties": false
+    },
+    "extra_dlcs": {
+      "type": "object",
+      "default": {},
+      "description": "Map of app IDs to objects containing DLC IDs with their display names.",
+      "patternProperties": {
+        "^\\d{1,10}$": {
+          "$ref": "#/$defs/App"
+        }
+      },
+      "additionalProperties": false
+    },
+    "auto_inject_inventory": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether SmokeAPI should automatically inject a list of all registered inventory items when a game queries user inventory."
+    },
+    "extra_inventory_items": {
+      "type": "array",
+      "default": [],
+      "description": "A list of inventory item IDs that will be added in addition to the automatically injected items.",
+      "items": {
+        "type": "integer",
+        "minimum": 0
+      }
+    }
+  },
+  "$defs": {
+    "AppStatus": {
+      "description": "Unlock status for apps or DLCs.",
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "original",
+            "unlocked",
+            "locked"
+          ]
+        },
+        {
+          "type": "null",
+          "description": "Represents UNDEFINED in the enum."
+        }
+      ]
+    },
+    "App": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "dlcs": {
+          "type": "object",
+          "default": {},
+          "description": "Map of DLC IDs to human-readable DLC names.",
+          "patternProperties": {
+            "^\\d{1,10}$": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "$version": 3,
+      "logging": true,
+      "default_app_status": "unlocked",
+      "override_app_status": {
+        "1234": "original",
+        "4321": "unlocked"
+      },
+      "override_dlc_status": {
+        "1234": "original",
+        "4321": "unlocked",
+        "5678": "locked"
+      },
+      "auto_inject_inventory": true,
+      "extra_inventory_items": [],
+      "extra_dlcs": {
+        "1234": {
+          "dlcs": {
+            "56789": "Example DLC 1"
+          }
+        },
+        "4321": {
+          "dlcs": {
+            "98765": "Example DLC 2",
+            "98766": "Example DLC 3"
+          }
+        }
+      }
+    }
+  ]
+}

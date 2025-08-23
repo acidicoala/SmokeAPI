@@ -20,13 +20,6 @@ constexpr auto STEAM_INVENTORY = "STEAMINVENTORY_INTERFACE_V";
 #define MODULE_CALL_CLOSURE(FUNC, ...) \
     [&] { MODULE_CALL(FUNC, __VA_ARGS__); }
 
-#define HOOKED_CALL(FUNC, ...) \
-    static const auto _##FUNC = KB_HOOK_GET_HOOKED_FN(smoke_api::steamapi_module, FUNC); \
-    return _##FUNC(__VA_ARGS__)
-
-#define HOOKED_CALL_CLOSURE(FUNC, ...) \
-    [&] { HOOKED_CALL(FUNC, __VA_ARGS__); }
-
 namespace smoke_api {
     extern HMODULE steamapi_module;
 
