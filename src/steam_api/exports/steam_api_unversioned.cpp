@@ -3,7 +3,7 @@
 
 #include <koalabox/logger.hpp>
 #include <koalabox/util.hpp>
-#include <koalabox/win_util.hpp>
+#include <koalabox/win.hpp>
 
 #include "smoke_api.hpp"
 #include "steam_api/steam_client.hpp"
@@ -23,7 +23,7 @@ namespace {
 
         if(not version_map.contains(version_prefix)) {
             try {
-                const std::string rdata = kb::win_util::get_pe_section_data_or_throw(
+                const std::string rdata = kb::win::get_pe_section_data_or_throw(
                     smoke_api::steamapi_module,
                     ".rdata"
                 );

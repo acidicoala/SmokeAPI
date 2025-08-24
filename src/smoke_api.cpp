@@ -4,15 +4,18 @@
 #include <koalabox/hook.hpp>
 #include <koalabox/loader.hpp>
 #include <koalabox/logger.hpp>
+#include <koalabox/path.hpp>
 #include <koalabox/paths.hpp>
+#include <koalabox/str.hpp>
 #include <koalabox/util.hpp>
-#include <koalabox/win_util.hpp>
+#include <koalabox/win.hpp>
 
 #include "build_config.h"
 
 #include "smoke_api.hpp"
 #include "smoke_api/config.hpp"
 #include "smoke_api/steamclient/steamclient.hpp"
+#include "steam_api/exports/steam_api.hpp"
 
 // Hooking steam_api has shown itself to be less desirable than steamclient
 // for the reasons outlined below:
@@ -51,7 +54,7 @@ namespace {
     void init_proxy_mode() {
         LOG_INFO("Detected proxy mode");
 
-        const auto self_path = kb::paths::get_self_path();
+        const auto self_path = kb::paths::get_self_dir();
         smoke_api::steamapi_module = kb::loader::load_original_library(self_path, STEAMAPI_DLL);
     }
 
@@ -60,16 +63,26 @@ namespace {
 
         kb::hook::init(true);
 
+        const std::vector<std::string> target_libraries{STEAMCLIENT_DLL, STEAMAPI_DLL};
         kb::dll_monitor::init_listener(
-            STEAMCLIENT_DLL,
-            [](const HMODULE& steamclient_module) {
-                kb::hook::detour_or_warn(
-                    steamclient_module,
-                    "CreateInterface",
-                    reinterpret_cast<uintptr_t>(CreateInterface)
-                );
+            target_libraries,
+            [&](const HMODULE& module_handle, const std::string& library_name) {
+                static auto hook_count = 0U;
 
-                kb::dll_monitor::shutdown_listener();
+                if(kb::str::eq(library_name, STEAMCLIENT_DLL)) {
+                    KB_HOOK_DETOUR_MODULE(CreateInterface, module_handle);
+
+                    hook_count++;
+                } else if(kb::str::eq(library_name, STEAMAPI_DLL)) {
+                    KB_HOOK_DETOUR_MODULE(SteamAPI_RestartAppIfNecessary, module_handle);
+                    KB_HOOK_DETOUR_MODULE(SteamAPI_Shutdown, module_handle);
+
+                    hook_count++;
+                }
+
+                if(hook_count == target_libraries.size()) {
+                    kb::dll_monitor::shutdown_listener();
+                }
             }
         );
     }
@@ -77,9 +90,9 @@ namespace {
 
 namespace smoke_api {
     HMODULE steamapi_module = nullptr;
+    bool hook_mode = false;
 
     void init(const HMODULE module_handle) {
-        // FIXME: IMPORTANT! Non ascii paths in directories will result in init errors
         try {
             kb::globals::init_globals(module_handle, PROJECT_NAME);
 
@@ -93,14 +106,15 @@ namespace smoke_api {
             // compilation time stamp only when this file gets recompiled.
             LOG_INFO("{} v{} | Compiled at '{}'", PROJECT_NAME, PROJECT_VERSION, __TIMESTAMP__);
 
-            const fs::path exe_path = kb::win_util::get_module_file_name_or_throw(nullptr);
-            const auto exe_name = exe_path.filename().string();
+            const auto exe_path = kb::win::get_module_path(nullptr);
+            const auto exe_name = kb::path::to_str(exe_path.filename());
 
             LOG_DEBUG("Process name: '{}' [{}-bit]", exe_name, kb::util::BITNESS);
 
             override_app_id();
 
             if(kb::hook::is_hook_mode(module_handle, STEAMAPI_DLL)) {
+                hook_mode = true;
                 init_hook_mode();
             } else {
                 init_proxy_mode();
@@ -115,7 +129,7 @@ namespace smoke_api {
     void shutdown() {
         try {
             if(steamapi_module != nullptr) {
-                kb::win_util::free_library(steamapi_module);
+                kb::win::free_library(steamapi_module);
                 steamapi_module = nullptr;
             }
 

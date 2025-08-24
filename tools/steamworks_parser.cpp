@@ -12,8 +12,8 @@
 #include <koalabox/io.hpp>
 #include <koalabox/logger.hpp>
 #include <koalabox/parser.hpp>
+#include <koalabox/path.hpp>
 #include <koalabox/str.hpp>
-#include <koalabox/util.hpp>
 
 namespace {
     namespace fs = std::filesystem;
@@ -123,8 +123,7 @@ namespace {
         static std::mutex section;
         if(not
             interface_version.empty()
-        )
-        {
+        ) {
             const std::lock_guard lock(section);
             lookup[interface_version] = current_lookup;
         }
@@ -150,13 +149,14 @@ namespace {
         BS::thread_pool<>& pool
     ) {
         const auto headers_dir = sdk_path / "headers\\steam";
+        const auto headers_dir_str = kb::path::to_str(headers_dir);
 
         if(not fs::exists(headers_dir)) {
-            LOG_WARN("Warning: SDK missing 'headers' directory: {}", headers_dir.string());
+            LOG_WARN("Warning: SDK missing 'headers/steam' directory: {}", headers_dir_str);
             return;
         }
 
-        LOG_INFO("Parsing SDK: {}", headers_dir.string());
+        LOG_INFO("Parsing SDK: {}", headers_dir_str);
 
         // Go over each file in headers directory
         for(const auto& entry : fs::directory_iterator(headers_dir)) {
@@ -164,7 +164,7 @@ namespace {
                 const auto task = pool.submit_task(
                     [&, header_path] {
                         try {
-                            LOG_DEBUG("Parsing header: {}", header_path.string());
+                            LOG_DEBUG("Parsing header: {}", kb::path::to_str(header_path));
 
                             const auto processed_header = manually_preprocess_header(header_path);
                             parse_header(processed_header, lookup);
@@ -193,21 +193,14 @@ namespace {
 
         // Go over each steamworks sdk version
         for(const auto& entry : fs::directory_iterator(steamworks_dir)) {
-            if(not
-                entry.is_directory()
-            )
-            {
+            if(not entry.is_directory()) {
                 continue;
             }
 
-            if(not
-                sdk_filter.empty()
-            and
-               not sdk_filter
-            .
-            contains(entry.path().filename().string())
-            )
-            {
+            if(
+                not sdk_filter.empty() and
+                not sdk_filter.contains(kb::path::to_str(entry.path().filename()))
+            ) {
                 continue;
             }
 
@@ -222,7 +215,10 @@ namespace {
         std::ofstream lookup_output(interface_lookup_path);
         lookup_output << std::setw(4) << lookup;
 
-        LOG_INFO("Interface lookup generated at: {}", fs::absolute(interface_lookup_path).string());
+        LOG_INFO(
+            "Interface lookup generated at: {}",
+            kb::path::to_str(fs::absolute(interface_lookup_path))
+        );
     }
 }
 

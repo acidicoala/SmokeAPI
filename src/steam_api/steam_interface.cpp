@@ -6,7 +6,7 @@
 #include <koalabox/hook.hpp>
 #include <koalabox/logger.hpp>
 #include <koalabox/util.hpp>
-#include <koalabox/win_util.hpp>
+#include <koalabox/win.hpp>
 
 #include "smoke_api.hpp"
 #include "virtuals/steam_api_virtuals.hpp"
@@ -113,7 +113,7 @@ namespace steam_interface {
     namespace kb = koalabox;
 
     AppId_t get_app_id_or_throw() {
-        const auto app_id_str = kb::win_util::get_env_var("SteamAppId");
+        const auto app_id_str = kb::win::get_env_var("SteamAppId");
         return std::stoi(app_id_str);
     }
 

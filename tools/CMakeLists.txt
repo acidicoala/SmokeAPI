@@ -17,11 +17,7 @@ target_include_directories(BS_thread_pool INTERFACE ${BS_thread_pool_SOURCE_DIR}
 ### Steamworks Downloader executable
 
 add_executable(steamworks_downloader steamworks_downloader.cpp)
-target_link_libraries(steamworks_downloader PRIVATE
-    KoalaBox
-    cpr # HTTP client
-    miniz # ZIP library TODO: Use koalabox instead
-)
+target_link_libraries(steamworks_downloader PRIVATE KoalaBox)
 
 ### Steamworks Parser executable
 

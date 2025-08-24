@@ -34,6 +34,7 @@ set(SMOKE_API_STATIC_SOURCES
 set(SMOKE_API_SOURCES
     ${SMOKE_API_STATIC_SOURCES}
     src/steam_api/exports/steam_api.cpp
+    src/steam_api/exports/steam_api.hpp
     src/steam_api/exports/steam_api_flat.cpp
     src/steam_api/exports/steam_api_internal.cpp
     src/steam_api/exports/steam_api_unversioned.cpp
@@ -56,11 +57,6 @@ set(SMOKE_API_SOURCES
 
 add_library(SmokeAPI_interface INTERFACE)
 
-# There is a weird MSVC bug where c++23 features are not enabled in x64 builds,
-# while they are available in x86. I've no idea what causes this discrepancy,
-# but manually setting the MSVC compiler option fixes this issue.
-#target_compile_options(SmokeAPI_interface PUBLIC /std:c++latest)
-
 target_include_directories(SmokeAPI_interface INTERFACE
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/static>"
 )
@@ -71,17 +67,19 @@ target_link_libraries(SmokeAPI_interface INTERFACE KoalaBox $<TARGET_OBJECTS:Koa
 
 add_library(SmokeAPI_static STATIC ${SMOKE_API_STATIC_SOURCES})
 target_link_libraries(SmokeAPI_static PUBLIC SmokeAPI_interface)
-#target_include_directories(SmokeAPI_static PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/static")
 
 ### Shared SmokeAPI
 
 add_library(SmokeAPI SHARED ${SMOKE_API_SOURCES})
 target_link_libraries(SmokeAPI PUBLIC SmokeAPI_interface)
 set_target_properties(SmokeAPI PROPERTIES RUNTIME_OUTPUT_NAME ${STEAMAPI_DLL})
-configure_version_resource(SmokeAPI "Free DLC for everyone ʕ ᵔᴥᵔʔ")
+configure_version_resource(
+    TARGET SmokeAPI
+    FILE_DESC "Steamworks DLC unlocker"
+    ORIG_NAME ${STEAMAPI_DLL}
+)
 target_include_directories(SmokeAPI PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
-#    "${CMAKE_CURRENT_SOURCE_DIR}/static"
     "${CMAKE_CURRENT_BINARY_DIR}")
 
 CPMAddPackage(
@@ -98,7 +96,6 @@ configure_linker_exports(
     DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${STEAM_API_DLL}"
 )
 
-# TODO: Why not add other compatible DLLs?
 configure_linker_exports(
     TARGET SmokeAPI
     HEADER_NAME "linker_exports_for_version"

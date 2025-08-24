@@ -6,6 +6,7 @@
 
 #include <koalabox/http_client.hpp>
 #include <koalabox/logger.hpp>
+#include <koalabox/path.hpp>
 #include <koalabox/str.hpp>
 #include <koalabox/zip.hpp>
 
@@ -91,10 +92,12 @@ int wmain(const int argc, const wchar_t** argv) { // NOLINT(*-use-internal-linka
 
     const auto steamworks_dir = std::filesystem::current_path() / "steamworks";
 
+    // Special case. If there is a directory with a bunch of SDKs downloaded,
+    // then we can just provide it as a single argument
     if(argc == 2) {
         if(const auto cdn_dir = kb::str::to_str(argv[1]); fs::is_directory(cdn_dir)) {
             for(const auto& entry : fs::directory_iterator(cdn_dir)) {
-                const auto filename = entry.path().filename().string();
+                const auto filename = kb::path::to_str(entry.path().filename());
                 const std::regex re(R"(steamworks_sdk_(.+)\.zip)");
 
                 if(std::smatch match; std::regex_match(filename, match, re)) {
