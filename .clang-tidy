@@ -69,4 +69,5 @@ misc-*,
 -readability-named-parameter,
 -readability-function-cognitive-complexity,
 -*-include-cleaner,
--*-lambda-function-name'
+-*-lambda-function-name,
+-*-err58-cpp'

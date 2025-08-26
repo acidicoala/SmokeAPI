@@ -14,10 +14,10 @@ namespace smoke_api::config {
         AppStatus,
         // @formatter:off
         {
-            {AppStatus::UNDEFINED, nullptr},
-            {AppStatus::ORIGINAL, "original"},
-            {AppStatus::UNLOCKED, "unlocked"},
-            {AppStatus::LOCKED, "locked"},
+            { AppStatus::UNDEFINED, nullptr    },
+            { AppStatus::ORIGINAL,  "original" },
+            { AppStatus::UNLOCKED,  "unlocked" },
+            { AppStatus::LOCKED,    "locked"   },
         }
         // @formatter:on
     )
@@ -26,7 +26,6 @@ namespace smoke_api::config {
         uint32_t $version = 3;
         bool logging = false;
         AppStatus default_app_status = AppStatus::UNLOCKED;
-        uint32_t override_app_id = 0;
         std::map<std::string, AppStatus> override_app_status;
         std::map<std::string, AppStatus> override_dlc_status;
         AppDlcNameMap extra_dlcs;
@@ -35,11 +34,9 @@ namespace smoke_api::config {
 
         NLOHMANN_DEFINE_TYPE_INTRUSIVE(
             Config,
-            // NOLINT(misc-const-correctness)
             $version,
             logging,
             default_app_status,
-            override_app_id,
             override_app_status,
             override_dlc_status,
             extra_dlcs,

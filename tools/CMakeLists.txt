@@ -4,6 +4,7 @@ project(smoke-api-tools LANGUAGES CXX)
 
 ### Thread pool library
 
+## https://github.com/bshoshany/thread-pool
 CPMAddPackage(
     NAME BS_thread_pool
     GITHUB_REPOSITORY bshoshany/thread-pool

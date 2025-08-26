@@ -32,6 +32,9 @@ namespace smoke_api::cache {
     }
 
     bool save_dlcs(AppId_t app_id, const std::vector<DLC>& dlcs) noexcept {
+        static std::mutex section;
+        const std::lock_guard lock(section);
+
         try {
             LOG_DEBUG("Caching DLC IDs for the app: {}", app_id);
 

@@ -33,3 +33,8 @@ VIRTUAL(bool) ISteamInventory_CheckResultSteamID(PARAMS(SteamInventoryResult_t, 
 
 // ISteamUser
 VIRTUAL(EUserHasLicenseForAppResult) ISteamUser_UserHasLicenseForApp(PARAMS(CSteamID, AppId_t));
+
+// ISteamGameServer
+VIRTUAL(EUserHasLicenseForAppResult) ISteamGameServer_UserHasLicenseForApp(
+    PARAMS(CSteamID, AppId_t)
+);

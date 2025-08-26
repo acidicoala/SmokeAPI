@@ -9,7 +9,7 @@
 
 // ISteamApps
 
-DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsSubscribedApp(void* self, AppId_t dlcID) {
+DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsSubscribedApp(void* self, const AppId_t dlcID) {
     try {
         return smoke_api::steam_apps::IsDlcUnlocked(
             __func__,
@@ -23,7 +23,7 @@ DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsSubscribedApp(void* self, AppId_t dlcID)
     }
 }
 
-DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsDlcInstalled(void* self, AppId_t dlcID) {
+DLL_EXPORT(bool) SteamAPI_ISteamApps_BIsDlcInstalled(void* self, const AppId_t dlcID) {
     try {
         return smoke_api::steam_apps::IsDlcUnlocked(
             __func__,
@@ -284,6 +284,31 @@ DLL_EXPORT(EUserHasLicenseForAppResult) SteamAPI_ISteamUser_UserHasLicenseForApp
             dlcID,
             MODULE_CALL_CLOSURE(
                 SteamAPI_ISteamUser_UserHasLicenseForApp,
+                self,
+                steamID,
+                dlcID
+            )
+        );
+    } catch(const std::exception& e) {
+        LOG_ERROR("{} -> Error: {}", __func__, e.what());
+        return k_EUserHasLicenseResultDoesNotHaveLicense;
+    }
+}
+
+// ISteamGameServer
+
+DLL_EXPORT(EUserHasLicenseForAppResult) SteamAPI_ISteamGameServer_UserHasLicenseForApp(
+    void* self,
+    const CSteamID steamID,
+    const AppId_t dlcID
+) {
+    try {
+        return smoke_api::steam_user::UserHasLicenseForApp(
+            __func__,
+            steam_interface::get_app_id(),
+            dlcID,
+            MODULE_CALL_CLOSURE(
+                SteamAPI_ISteamGameServer_UserHasLicenseForApp,
                 self,
                 steamID,
                 dlcID

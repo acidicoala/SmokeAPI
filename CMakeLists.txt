@@ -40,6 +40,7 @@ set(SMOKE_API_SOURCES
     src/steam_api/exports/steam_api_unversioned.cpp
     src/steam_api/virtuals/isteamapps.cpp
     src/steam_api/virtuals/isteamclient.cpp
+    src/steam_api/virtuals/isteamgameserver.cpp
     src/steam_api/virtuals/isteaminventory.cpp
     src/steam_api/virtuals/isteamuser.cpp
     src/steam_api/virtuals/steam_api_virtuals.hpp
@@ -82,6 +83,7 @@ target_include_directories(SmokeAPI PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
     "${CMAKE_CURRENT_BINARY_DIR}")
 
+## https://github.com/batterycenter/embed
 CPMAddPackage(
     URI "gh:batterycenter/embed@1.2.19"
     OPTIONS "B_PRODUCTION_MODE ON"

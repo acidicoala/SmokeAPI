@@ -1,4 +1,3 @@
-#include "smoke_api.hpp"
 #include "smoke_api/interfaces/steam_inventory.hpp"
 #include "steam_api/virtuals/steam_api_virtuals.hpp"
 
@@ -130,7 +129,7 @@ VIRTUAL(bool) ISteamInventory_GetItemDefinitionIDs(
 }
 
 VIRTUAL(bool) ISteamInventory_CheckResultSteamID(
-    PARAMS(SteamInventoryResult_t resultHandle, CSteamID steamIDExpected)
+    PARAMS(const SteamInventoryResult_t resultHandle, CSteamID steamIDExpected)
 ) {
     return smoke_api::steam_inventory::CheckResultSteamID(
         __func__,

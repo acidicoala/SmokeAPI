@@ -59,7 +59,7 @@ namespace smoke_api::steam_inventory {
             "{} -> handle: {}, pOutItemsArray: {}, arraySize: {}",
             function_name,
             resultHandle,
-            fmt::ptr(pOutItemsArray),
+            reinterpret_cast<void*>(pOutItemsArray),
             *punOutItemsArraySize
         );
 
@@ -140,26 +140,32 @@ namespace smoke_api::steam_inventory {
         const uint32_t* punValueBufferSizeOut,
         const std::function<bool()>& original_function
     ) {
-        const auto common_info = fmt::format(
+        LOG_DEBUG(
             "{} -> Handle: {}, Index: {}, Name: '{}'",
             function_name,
             resultHandle,
             unItemIndex,
-            pchPropertyName
+            // can be empty, in which case steam responds with property list in csv format
+            pchPropertyName ? pchPropertyName : "nullptr"
         );
 
         const auto success = original_function();
 
         if(!success) {
-            LOG_WARN("{}, Result is false", common_info);
+            LOG_WARN("{} -> Result is false", function_name);
             return false;
         }
 
-        LOG_DEBUG(
-            "{}, Buffer: '{}'",
-            common_info,
-            std::string(pchValueBuffer, *punValueBufferSizeOut - 1)
-        );
+        if(
+            pchValueBuffer && *pchValueBuffer &&
+            punValueBufferSizeOut && *punValueBufferSizeOut > 0
+        ) {
+            LOG_DEBUG(
+                R"({} -> Buffer: "{}")",
+                function_name,
+                std::string(pchValueBuffer, *punValueBufferSizeOut - 1)
+            );
+        }
 
         return success;
     }

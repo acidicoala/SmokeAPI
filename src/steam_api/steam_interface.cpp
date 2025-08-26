@@ -5,7 +5,6 @@
 
 #include <koalabox/hook.hpp>
 #include <koalabox/logger.hpp>
-#include <koalabox/util.hpp>
 #include <koalabox/win.hpp>
 
 #include "smoke_api.hpp"
@@ -67,17 +66,11 @@ namespace {
                 }
             },
             {
-                STEAM_INVENTORY,
+                STEAM_GAME_SERVER,
                 interface_data{
-                    .fallback_version = "STEAMINVENTORY_INTERFACE_V003",
+                    .fallback_version = "SteamGameServer015",
                     .entry_map = {
-                        ENTRY(ISteamInventory, GetResultStatus),
-                        ENTRY(ISteamInventory, GetResultItems),
-                        ENTRY(ISteamInventory, CheckResultSteamID),
-                        ENTRY(ISteamInventory, GetAllItems),
-                        ENTRY(ISteamInventory, GetItemsByID),
-                        ENTRY(ISteamInventory, SerializeResult),
-                        ENTRY(ISteamInventory, GetItemDefinitionIDs),
+                        ENTRY(ISteamGameServer, UserHasLicenseForApp),
                     }
                 }
             },

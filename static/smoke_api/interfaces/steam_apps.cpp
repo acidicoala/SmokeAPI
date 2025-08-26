@@ -1,7 +1,6 @@
 #include <set>
 
 #include <koalabox/logger.hpp>
-#include <koalabox/util.hpp>
 
 #include "smoke_api/interfaces/steam_apps.hpp"
 #include "smoke_api/api.hpp"
@@ -88,7 +87,7 @@ namespace smoke_api::steam_apps {
         const std::function<bool()>& original_function
     ) {
         try {
-            const auto unlocked = smoke_api::config::is_dlc_unlocked(
+            const auto unlocked = config::is_dlc_unlocked(
                 app_id,
                 dlc_id,
                 original_function
@@ -172,10 +171,10 @@ namespace smoke_api::steam_apps {
                 );
             };
 
-            const auto inject_dlc = [&](const DLC& dlc) {
+            const auto output_dlc = [&](const DLC& dlc) {
                 // Fill the output pointers
                 *pDlcId = dlc.get_id();
-                *pbAvailable = smoke_api::config::is_dlc_unlocked(
+                *pbAvailable = config::is_dlc_unlocked(
                     app_id,
                     *pDlcId,
                     [&] {
@@ -192,7 +191,7 @@ namespace smoke_api::steam_apps {
                 const auto& dlcs = app_dlcs[app_id];
 
                 if(iDLC >= 0 && iDLC < dlcs.size()) {
-                    inject_dlc(dlcs[iDLC]);
+                    output_dlc(dlcs[iDLC]);
                     print_dlc_info("injected");
                     return true;
                 }
@@ -204,7 +203,7 @@ namespace smoke_api::steam_apps {
             const auto success = original_function();
 
             if(success) {
-                *pbAvailable = smoke_api::config::is_dlc_unlocked(
+                *pbAvailable = config::is_dlc_unlocked(
                     app_id,
                     *pDlcId,
                     [&] {

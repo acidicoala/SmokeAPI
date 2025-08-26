@@ -2,7 +2,6 @@
 #include <map>
 
 #include <koalabox/logger.hpp>
-#include <koalabox/util.hpp>
 #include <koalabox/win.hpp>
 
 #include "smoke_api.hpp"
@@ -34,7 +33,7 @@ namespace {
                     return version_map[version_prefix];
                 }
 
-                throw kb::util::exception("No match found for '{}'", version_prefix);
+                throw std::runtime_error(std::format("No match found for '{}'", version_prefix));
             } catch(const std::exception& ex) {
                 LOG_ERROR(
                     "Failed to get versioned interface: {}."

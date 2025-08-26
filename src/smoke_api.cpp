@@ -37,19 +37,6 @@
 
 namespace {
     namespace kb = koalabox;
-    namespace fs = std::filesystem;
-
-    void override_app_id() {
-        const auto override_app_id = smoke_api::config::instance.override_app_id;
-        if(override_app_id == 0) {
-            return;
-        }
-
-        spdlog::default_logger_raw();
-        LOG_DEBUG("Overriding app id to {}", override_app_id);
-
-        SetEnvironmentVariable(TEXT("SteamAppId"), std::to_wstring(override_app_id).c_str());
-    }
 
     void init_proxy_mode() {
         LOG_INFO("Detected proxy mode");
@@ -61,27 +48,14 @@ namespace {
     void init_hook_mode() {
         LOG_INFO("Detected hook mode");
 
-        kb::hook::init(true);
-
-        const std::vector<std::string> target_libraries{STEAMCLIENT_DLL, STEAMAPI_DLL};
         kb::dll_monitor::init_listener(
-            target_libraries,
+            {STEAMCLIENT_DLL, STEAMAPI_DLL},
             [&](const HMODULE& module_handle, const std::string& library_name) {
-                static auto hook_count = 0U;
-
                 if(kb::str::eq(library_name, STEAMCLIENT_DLL)) {
                     KB_HOOK_DETOUR_MODULE(CreateInterface, module_handle);
-
-                    hook_count++;
                 } else if(kb::str::eq(library_name, STEAMAPI_DLL)) {
                     KB_HOOK_DETOUR_MODULE(SteamAPI_RestartAppIfNecessary, module_handle);
                     KB_HOOK_DETOUR_MODULE(SteamAPI_Shutdown, module_handle);
-
-                    hook_count++;
-                }
-
-                if(hook_count == target_libraries.size()) {
-                    kb::dll_monitor::shutdown_listener();
                 }
             }
         );
@@ -111,7 +85,8 @@ namespace smoke_api {
 
             LOG_DEBUG("Process name: '{}' [{}-bit]", exe_name, kb::util::BITNESS);
 
-            override_app_id();
+            // We need to hook functions in either mode
+            kb::hook::init(true);
 
             if(kb::hook::is_hook_mode(module_handle, STEAMAPI_DLL)) {
                 hook_mode = true;

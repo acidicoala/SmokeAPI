@@ -5,6 +5,10 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
+    "$schema": {
+      "type": "string",
+      "description": "The URI of the JSON Schema used to validate this config."
+    },
     "$version": {
       "type": "integer",
       "minimum": 0,
@@ -20,12 +24,6 @@
       "description": "Sets the default DLC unlocking behaviour.",
       "default": "unlocked",
       "$ref": "#/$defs/AppStatus"
-    },
-    "override_app_id": {
-      "type": "integer",
-      "minimum": 0,
-      "default": 0,
-      "description": "Overrides the current app ID (0 means no override)."
     },
     "override_app_status": {
       "type": "object",
@@ -113,6 +111,7 @@
   },
   "examples": [
     {
+      "$schema": "https://raw.githubusercontent.com/acidicoala/SmokeAPI/refs/heads/master/res/SmokeAPI.schema.json",
       "$version": 3,
       "logging": true,
       "default_app_status": "unlocked",

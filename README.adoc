@@ -73,21 +73,21 @@ SmokeAPI supports 2 installation modes: hook mode and proxy mode.
 
 |===
 
-
 Try installing the unlocker in hook mode first.
 If it doesn't work, try installing it in proxy mode.
 
-==== 🪝 Hook mode
+=== 🪝 Hook mode
 
 . Download the latest SmokeAPI release zip from {smokeapi_release}.
 . From SmokeAPI archive unpack `steam_api.dll` or `steam_api64.dll`, depending on the game bitness, rename it to `version.dll`, and place it next to the game exe file.
 
-==== 🪝 Hook mode (Alternative)
+=== 🪝 Hook mode (Alternative)
 
-If a game doesn't load `version.dll`, you can use one of the {koaloader} DLLs that the game does in fact load. For example, assuming that the game loads `d3d9.dll`:
+If a game doesn't load `version.dll`, you can use one of the {koaloader} DLLs that the game does in fact load.
+For example, assuming that the game loads `winmm.dll`:
 
 . Download the latest Koaloader release zip from https://github.com/acidicoala/Koaloader/releases/latest[Koaloader Releases].
-. From Koaloader archive unpack `d3d9.dll` from `d3d9-32` or `d3d9-64`, depending on the game bitness, and place it next to the game exe file.
+. From Koaloader archive unpack `winmm.dll` from `winmm-32` or `winmm-64`, depending on the game bitness, and place it next to the game exe file.
 . Download the latest SmokeAPI release zip from {smokeapi_release}.
 . From SmokeAPI archive unpack `steam_api.dll` or `steam_api64.dll`, depending on the game bitness, rename it to `SmokeAPI.dll`, and place it next to the game exe file.
 
@@ -265,9 +265,15 @@ For example:
 .\build.ps1 64 Release
 ----
 
+== 🐞 Known issues
+
+* Crashes on startup in Project Winter in hook mode (proxy mode works fine).
+
 == 📚 Open-Source libraries
 
-TODO
+* https://github.com/batterycenter/embed[batterycenter/embed]
+* https://github.com/bshoshany/thread-pool[bshoshany/thread-pool]
+* + https://github.com/acidicoala/Koalabox?tab=readme-ov-file#-open-source-libraries[libraries used by KoalaBox]
 
 == 📄 License
 

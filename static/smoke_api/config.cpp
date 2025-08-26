@@ -1,7 +1,6 @@
 #include <koalabox/config.hpp>
 #include <koalabox/io.hpp>
 #include <koalabox/logger.hpp>
-#include <koalabox/util.hpp>
 
 #include "smoke_api/config.hpp"
 
@@ -40,6 +39,7 @@ namespace smoke_api::config {
             break;
         case AppStatus::ORIGINAL:
         case AppStatus::UNDEFINED:
+        default:
             is_unlocked = original_function();
             break;
         }

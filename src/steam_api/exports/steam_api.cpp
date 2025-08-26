@@ -5,10 +5,9 @@
 #include "smoke_api/config.hpp"
 
 DLL_EXPORT(bool) SteamAPI_RestartAppIfNecessary(const AppId_t unOwnAppID) {
-    if(smoke_api::config::instance.override_app_id != 0) {
-        LOG_DEBUG("{} -> {}. Preventing app restart", unOwnAppID, __func__);
-        return false;
-    }
+    LOG_INFO("{} -> unOwnAppID: {}", __func__, unOwnAppID);
+
+    // Restart can be suppressed if needed
 
     AUTO_CALL(SteamAPI_RestartAppIfNecessary, unOwnAppID);
 }

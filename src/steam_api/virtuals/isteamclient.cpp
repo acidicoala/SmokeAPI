@@ -1,6 +1,5 @@
 #include <koalabox/logger.hpp>
 
-#include "smoke_api.hpp"
 #include "steam_api/steam_client.hpp"
 #include "steam_api/virtuals/steam_api_virtuals.hpp"
 

@@ -32,7 +32,7 @@ namespace smoke_api::api {
 
     std::optional<std::vector<DLC>> fetch_dlcs_from_steam(const AppId_t app_id) {
         try {
-            // TODO: Communicate directly with Steam servers.
+            // TODO: Communicate directly with Steam servers?
             // ref.: https://github.com/SteamRE/SteamKit
             const auto url =
                 std::format("https://store.steampowered.com/dlc/{}/ajaxgetdlclist", app_id);
