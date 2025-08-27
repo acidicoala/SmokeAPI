@@ -8,9 +8,9 @@ jobs:
     permissions:
       contents: write
     with:
-      arch: [ 32, 64 ]
+      arch: '[ 32, 64 ]'
       config: Release
-      modules: [ "SmokeAPI" ]
+      modules: '[ "SmokeAPI" ]'
       zip_command: >
         zip -j $ZIP_NAME
         artifacts/*/*.dll
