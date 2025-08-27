@@ -30,7 +30,7 @@ namespace {
         const std::lock_guard lock(section);
 
         if(app_id == 0) {
-            LOG_ERROR("{} -> App ID is 0", __func__);
+            LOG_ERROR("'{}' -> App ID is 0", __func__);
             app_dlcs[app_id] = {}; // Dummy value to avoid checking for presence on each access
             return;
         }
@@ -94,7 +94,7 @@ namespace smoke_api::steam_apps {
             );
 
             LOG_INFO(
-                "{} -> {}DLC ID: {:>8}, Unlocked: {}",
+                "'{}' -> {}DLC ID: {:>8}, Unlocked: {}",
                 function_name,
                 get_app_id_log(app_id),
                 dlc_id,
@@ -103,7 +103,7 @@ namespace smoke_api::steam_apps {
 
             return unlocked;
         } catch(const std::exception& e) {
-            LOG_ERROR("{} -> Uncaught exception: {}", function_name, e.what());
+            LOG_ERROR("'{}' -> Uncaught exception: {}", function_name, e.what());
             return false;
         }
     }
@@ -115,16 +115,16 @@ namespace smoke_api::steam_apps {
     ) noexcept {
         try {
             const auto total_count = [&](int count) {
-                LOG_INFO("{} -> Responding with DLC count: {}", function_name, count);
+                LOG_INFO("'{}' -> Responding with DLC count: {}", function_name, count);
                 return count;
             };
 
             if(app_id != 0) {
-                LOG_DEBUG("{} -> App ID: {}", function_name, app_id);
+                LOG_DEBUG("'{}' -> App ID: {}", function_name, app_id);
             }
 
             const auto original_count = original_function();
-            LOG_DEBUG("{} -> Original DLC count: {}", function_name, original_count);
+            LOG_DEBUG("'{}' -> Original DLC count: {}", function_name, original_count);
 
             if(original_count < MAX_DLC) {
                 return total_count(original_count);
@@ -156,11 +156,11 @@ namespace smoke_api::steam_apps {
         const std::function<bool()>& is_originally_unlocked
     ) noexcept {
         try {
-            LOG_DEBUG("{} -> {}index: {:>3}", function_name, get_app_id_log(app_id), iDLC);
+            LOG_DEBUG("'{}' -> {}index: {:>3}", function_name, get_app_id_log(app_id), iDLC);
 
             const auto print_dlc_info = [&](const std::string& tag) {
                 LOG_INFO(
-                    R"({} -> [{:^12}] {}index: {:>3}, DLC ID: {:>8}, available: {:5}, name: "{}")",
+                    R"('{}' -> [{:^12}] {}index: {:>3}, DLC ID: {:>8}, available: {:5}, name: "{}")",
                     function_name,
                     tag,
                     get_app_id_log(app_id),
@@ -190,7 +190,7 @@ namespace smoke_api::steam_apps {
                     return true;
                 }
 
-                LOG_WARN("{} -> Out of bounds DLC index: {}", function_name, iDLC);
+                LOG_WARN("'{}' -> Out of bounds DLC index: {}", function_name, iDLC);
                 return false;
             }
 
@@ -206,12 +206,12 @@ namespace smoke_api::steam_apps {
                 );
                 print_dlc_info("original");
             } else {
-                LOG_WARN("{} -> original call failed for index: {}", function_name, iDLC);
+                LOG_WARN("'{}' -> original call failed for index: {}", function_name, iDLC);
             }
 
             return success;
         } catch(const std::exception& e) {
-            LOG_ERROR("{} -> Uncaught exception: {}", function_name, e.what());
+            LOG_ERROR("'{}' -> Uncaught exception: {}", function_name, e.what());
             return false;
         }
     }

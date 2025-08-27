@@ -7,6 +7,7 @@
 #include <koalabox/logger.hpp>
 #include <koalabox/win.hpp>
 
+#include "steam_api/steam_interface.hpp"
 #include "smoke_api.hpp"
 #include "virtuals/steam_api_virtuals.hpp"
 
@@ -33,6 +34,18 @@ namespace {
 
         return {
             {
+                STEAM_APPS,
+                interface_data{
+                    .fallback_version = "STEAMAPPS_INTERFACE_VERSION008",
+                    .entry_map = {
+                        ENTRY(ISteamApps, BIsSubscribedApp),
+                        ENTRY(ISteamApps, BIsDlcInstalled),
+                        ENTRY(ISteamApps, GetDLCCount),
+                        ENTRY(ISteamApps, BGetDLCDataByIndex),
+                    }
+                }
+            },
+            {
                 STEAM_CLIENT,
                 interface_data{
                     .fallback_version = "SteamClient021",
@@ -45,14 +58,11 @@ namespace {
                 }
             },
             {
-                STEAM_APPS,
+                STEAM_GAME_SERVER,
                 interface_data{
-                    .fallback_version = "STEAMAPPS_INTERFACE_VERSION008",
+                    .fallback_version = "SteamGameServer015",
                     .entry_map = {
-                        ENTRY(ISteamApps, BIsSubscribedApp),
-                        ENTRY(ISteamApps, BIsDlcInstalled),
-                        ENTRY(ISteamApps, GetDLCCount),
-                        ENTRY(ISteamApps, BGetDLCDataByIndex),
+                        ENTRY(ISteamGameServer, UserHasLicenseForApp),
                     }
                 }
             },
@@ -76,31 +86,27 @@ namespace {
                     }
                 }
             },
-            {
-                STEAM_GAME_SERVER,
-                interface_data{
-                    .fallback_version = "SteamGameServer015",
-                    .entry_map = {
-                        ENTRY(ISteamGameServer, UserHasLicenseForApp),
-                    }
-                }
-            },
         };
     }
 
-    nlohmann::json read_interface_lookup() {
+    auto read_interface_lookup() {
+        std::map<std::string, std::map<std::string, uint16_t>> lookup_map;
+
         const auto lookup_str = b::embed<"res/interface_lookup.json">().str();
-        return nlohmann::json::parse(lookup_str);
+        const auto lookup_json = nlohmann::json::parse(lookup_str);
+        lookup_json.get_to(lookup_map);
+
+        return lookup_map;
     }
 
-    const nlohmann::json& find_lookup(
+    const std::map<std::string, uint16_t>& find_lookup(
         const std::string& interface_version,
         const std::string& fallback_version
     ) {
         static const auto lookup = read_interface_lookup();
 
         if(lookup.contains(interface_version)) {
-            return lookup[interface_version];
+            return lookup.at(interface_version);
         }
 
         LOG_WARN(
@@ -109,7 +115,7 @@ namespace {
             fallback_version
         );
 
-        return lookup[fallback_version];
+        return lookup.at(fallback_version);
     }
 }
 
@@ -137,19 +143,20 @@ namespace steam_interface {
             return;
         }
 
+        static std::mutex section;
+        const std::lock_guard guard(section);
+
         static std::set<void*> processed_interfaces;
 
         if(processed_interfaces.contains(interface)) {
             LOG_DEBUG(
-                "Interface '{}' at {} has already been processed.",
+                "Interface '{}' @ {} has already been processed.",
                 version_string,
                 interface
             );
             return;
         }
-
-        static std::mutex section;
-        const std::lock_guard guard(section);
+        processed_interfaces.insert(interface);
 
         static const auto virtual_hook_map = get_virtual_hook_map();
         for(const auto& [prefix, data] : virtual_hook_map) {
@@ -161,7 +168,7 @@ namespace steam_interface {
                         kb::hook::swap_virtual_func(
                             interface,
                             entry.function_name,
-                            lookup[function],
+                            lookup.at(function),
                             entry.function_address
                         );
                     }
@@ -170,7 +177,5 @@ namespace steam_interface {
                 break;
             }
         }
-
-        processed_interfaces.insert(interface);
     }
 }

@@ -33,8 +33,8 @@ VIRTUAL(void*) ISteamClient_GetISteamUser(
 
 VIRTUAL(void*) ISteamClient_GetISteamGenericInterface(
     PARAMS(
-        HSteamUser hSteamUser,
-        HSteamPipe hSteamPipe,
+        const HSteamUser hSteamUser,
+        const HSteamPipe hSteamPipe,
         const char* pchVersion
     )
 ) noexcept {

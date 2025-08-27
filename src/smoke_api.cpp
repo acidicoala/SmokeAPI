@@ -83,6 +83,8 @@ namespace smoke_api {
             // compilation time stamp only when this file gets recompiled.
             LOG_INFO("{} v{} | Compiled at '{}'", PROJECT_NAME, PROJECT_VERSION, __TIMESTAMP__);
 
+            LOG_DEBUG("Parsed config:\n{}", nlohmann::json(config::instance).dump(2));
+
             const auto exe_path = kb::win::get_module_path(nullptr);
             const auto exe_name = kb::path::to_str(exe_path.filename());
 
