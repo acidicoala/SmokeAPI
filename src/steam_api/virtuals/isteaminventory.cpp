@@ -3,7 +3,7 @@
 
 VIRTUAL(EResult) ISteamInventory_GetResultStatus(
     PARAMS(const SteamInventoryResult_t resultHandle)
-) {
+) noexcept {
     return smoke_api::steam_inventory::GetResultStatus(
         __func__,
         resultHandle,
@@ -17,7 +17,7 @@ VIRTUAL(bool) ISteamInventory_GetResultItems(
         SteamItemDetails_t* pOutItemsArray,
         uint32_t* punOutItemsArraySize
     )
-) {
+) noexcept {
     return smoke_api::steam_inventory::GetResultItems(
         __func__,
         resultHandle,
@@ -44,7 +44,7 @@ VIRTUAL(bool) ISteamInventory_GetResultItemProperty(
         char* pchValueBuffer,
         uint32_t* punValueBufferSizeOut
     )
-) {
+) noexcept {
     return smoke_api::steam_inventory::GetResultItemProperty(
         __func__,
         resultHandle,
@@ -65,7 +65,7 @@ VIRTUAL(bool) ISteamInventory_GetResultItemProperty(
     );
 }
 
-VIRTUAL(bool) ISteamInventory_GetAllItems(PARAMS(SteamInventoryResult_t* pResultHandle)) {
+VIRTUAL(bool) ISteamInventory_GetAllItems(PARAMS(SteamInventoryResult_t* pResultHandle)) noexcept {
     return smoke_api::steam_inventory::GetAllItems(
         __func__,
         pResultHandle,
@@ -79,7 +79,7 @@ VIRTUAL(bool) ISteamInventory_GetItemsByID(
         const SteamItemInstanceID_t* pInstanceIDs,
         const uint32_t unCountInstanceIDs
     )
-) {
+) noexcept {
     return smoke_api::steam_inventory::GetItemsByID(
         __func__,
         pResultHandle,
@@ -98,7 +98,7 @@ VIRTUAL(bool) ISteamInventory_SerializeResult(
         void* pOutBuffer,
         uint32_t* punOutBufferSize
     )
-) {
+) noexcept {
     return smoke_api::steam_inventory::SerializeResult(
         __func__,
         resultHandle,
@@ -116,7 +116,7 @@ VIRTUAL(bool) ISteamInventory_GetItemDefinitionIDs(
         SteamItemDef_t*pItemDefIDs,
         uint32_t* punItemDefIDsArraySize
     )
-) {
+) noexcept {
     return smoke_api::steam_inventory::GetItemDefinitionIDs(
         __func__,
         pItemDefIDs,
@@ -130,14 +130,11 @@ VIRTUAL(bool) ISteamInventory_GetItemDefinitionIDs(
 
 VIRTUAL(bool) ISteamInventory_CheckResultSteamID(
     PARAMS(const SteamInventoryResult_t resultHandle, CSteamID steamIDExpected)
-) {
+) noexcept {
     return smoke_api::steam_inventory::CheckResultSteamID(
         __func__,
         resultHandle,
         steamIDExpected,
-        HOOKED_CALL_CLOSURE(
-            ISteamInventory_CheckResultSteamID,
-            ARGS(resultHandle, steamIDExpected)
-        )
+        HOOKED_CALL_CLOSURE(ISteamInventory_CheckResultSteamID, ARGS(resultHandle, steamIDExpected))
     );
 }

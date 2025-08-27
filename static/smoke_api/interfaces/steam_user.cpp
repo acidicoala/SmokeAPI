@@ -9,26 +9,31 @@ namespace smoke_api::steam_user {
         const AppId_t appId,
         const AppId_t dlcId,
         const std::function<EUserHasLicenseForAppResult()>& original_function
-    ) {
-        const auto result = original_function();
+    ) noexcept {
+        try {
+            const auto result = original_function();
 
-        if(result == k_EUserHasLicenseResultNoAuth) {
-            LOG_WARN("{} -> App ID: {:>8}, Result: NoAuth", function_name, dlcId);
-            return result;
-        }
-
-        const auto has_license = config::is_dlc_unlocked(
-            appId,
-            dlcId,
-            [&] {
-                return result == k_EUserHasLicenseResultHasLicense;
+            if(result == k_EUserHasLicenseResultNoAuth) {
+                LOG_WARN("{} -> App ID: {:>8}, Result: NoAuth", function_name, dlcId);
+                return result;
             }
-        );
 
-        LOG_INFO("{} -> App ID: {:>8}, HasLicense: {}", function_name, dlcId, has_license);
+            const auto has_license = config::is_dlc_unlocked(
+                appId,
+                dlcId,
+                [&] {
+                    return result == k_EUserHasLicenseResultHasLicense;
+                }
+            );
 
-        return has_license
-                   ? k_EUserHasLicenseResultHasLicense
-                   : k_EUserHasLicenseResultDoesNotHaveLicense;
+            LOG_INFO("{} -> App ID: {:>8}, HasLicense: {}", function_name, dlcId, has_license);
+
+            return has_license
+                       ? k_EUserHasLicenseResultHasLicense
+                       : k_EUserHasLicenseResultDoesNotHaveLicense;
+        } catch(const std::exception& e) {
+            LOG_ERROR("{} -> Error: {}", function_name, e.what());
+            return k_EUserHasLicenseResultDoesNotHaveLicense;
+        }
     }
 }

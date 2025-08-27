@@ -7,13 +7,18 @@ namespace steam_client {
         const std::string& function_name,
         const std::string& interface_version,
         const std::function<void*()>& original_function
-    ) {
-        auto* const interface = original_function();
+    ) noexcept {
+        try {
+            auto* const interface = original_function();
 
-        LOG_DEBUG("{} -> '{}' @ {}", function_name, interface_version, interface);
+            LOG_DEBUG("{} -> '{}' @ {}", function_name, interface_version, interface);
 
-        steam_interface::hook_virtuals(interface, interface_version);
+            steam_interface::hook_virtuals(interface, interface_version);
 
-        return interface;
+            return interface;
+        } catch(const std::exception& e) {
+            LOG_ERROR("{} -> Error: '{}' @ {}", function_name, interface_version, e.what());
+            return nullptr;
+        }
     }
 }

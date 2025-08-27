@@ -9,17 +9,12 @@ VIRTUAL(void*) ISteamClient_GetISteamApps(
         const HSteamPipe hSteamPipe,
         const char* version
     )
-) {
-    try {
-        return steam_client::GetGenericInterface(
-            __func__,
-            version,
-            HOOKED_CALL_CLOSURE(ISteamClient_GetISteamApps, ARGS(hSteamUser, hSteamPipe, version))
-        );
-    } catch(const std::exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what());
-        return nullptr;
-    }
+) noexcept {
+    return steam_client::GetGenericInterface(
+        __func__,
+        version,
+        HOOKED_CALL_CLOSURE(ISteamClient_GetISteamApps, ARGS(hSteamUser, hSteamPipe, version))
+    );
 }
 
 VIRTUAL(void*) ISteamClient_GetISteamUser(
@@ -28,17 +23,12 @@ VIRTUAL(void*) ISteamClient_GetISteamUser(
         const HSteamPipe hSteamPipe,
         const char* version
     )
-) {
-    try {
-        return steam_client::GetGenericInterface(
-            __func__,
-            version,
-            HOOKED_CALL_CLOSURE(ISteamClient_GetISteamUser, ARGS(hSteamUser, hSteamPipe, version))
-        );
-    } catch(const std::exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what());
-        return nullptr;
-    }
+) noexcept {
+    return steam_client::GetGenericInterface(
+        __func__,
+        version,
+        HOOKED_CALL_CLOSURE(ISteamClient_GetISteamUser, ARGS(hSteamUser, hSteamPipe, version))
+    );
 }
 
 VIRTUAL(void*) ISteamClient_GetISteamGenericInterface(
@@ -47,20 +37,15 @@ VIRTUAL(void*) ISteamClient_GetISteamGenericInterface(
         HSteamPipe hSteamPipe,
         const char* pchVersion
     )
-) {
-    try {
-        return steam_client::GetGenericInterface(
-            __func__,
-            pchVersion,
-            HOOKED_CALL_CLOSURE(
-                ISteamClient_GetISteamGenericInterface,
-                ARGS(hSteamUser, hSteamPipe, pchVersion)
-            )
-        );
-    } catch(const std::exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what());
-        return nullptr;
-    }
+) noexcept {
+    return steam_client::GetGenericInterface(
+        __func__,
+        pchVersion,
+        HOOKED_CALL_CLOSURE(
+            ISteamClient_GetISteamGenericInterface,
+            ARGS(hSteamUser, hSteamPipe, pchVersion)
+        )
+    );
 }
 
 VIRTUAL(void*) ISteamClient_GetISteamInventory(
@@ -69,18 +54,13 @@ VIRTUAL(void*) ISteamClient_GetISteamInventory(
         const HSteamPipe hSteamPipe,
         const char* pchVersion
     )
-) {
-    try {
-        return steam_client::GetGenericInterface(
-            __func__,
-            pchVersion,
-            HOOKED_CALL_CLOSURE(
-                ISteamClient_GetISteamInventory,
-                ARGS(hSteamUser, hSteamPipe, pchVersion)
-            )
-        );
-    } catch(const std::exception& e) {
-        LOG_ERROR("{} -> Error: {}", __func__, e.what());
-        return nullptr;
-    }
+) noexcept {
+    return steam_client::GetGenericInterface(
+        __func__,
+        pchVersion,
+        HOOKED_CALL_CLOSURE(
+            ISteamClient_GetISteamInventory,
+            ARGS(hSteamUser, hSteamPipe, pchVersion)
+        )
+    );
 }

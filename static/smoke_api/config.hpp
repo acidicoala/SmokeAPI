@@ -23,8 +23,9 @@ namespace smoke_api::config {
     )
 
     struct Config {
-        uint32_t $version = 3;
+        uint32_t $version = 4;
         bool logging = false;
+        bool log_steam_http = false;
         AppStatus default_app_status = AppStatus::UNLOCKED;
         std::map<std::string, AppStatus> override_app_status;
         std::map<std::string, AppStatus> override_dlc_status;
@@ -32,7 +33,7 @@ namespace smoke_api::config {
         bool auto_inject_inventory = true;
         std::vector<uint32_t> extra_inventory_items;
 
-        NLOHMANN_DEFINE_TYPE_INTRUSIVE(
+        NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(
             Config,
             $version,
             logging,

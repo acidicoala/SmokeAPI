@@ -85,7 +85,7 @@ namespace smoke_api::steam_apps {
         const AppId_t app_id,
         const AppId_t dlc_id,
         const std::function<bool()>& original_function
-    ) {
+    ) noexcept {
         try {
             const auto unlocked = config::is_dlc_unlocked(
                 app_id,
@@ -103,7 +103,7 @@ namespace smoke_api::steam_apps {
 
             return unlocked;
         } catch(const std::exception& e) {
-            LOG_ERROR("Uncaught exception: {}", e.what());
+            LOG_ERROR("{} -> Uncaught exception: {}", function_name, e.what());
             return false;
         }
     }
@@ -112,7 +112,7 @@ namespace smoke_api::steam_apps {
         const std::string& function_name,
         const AppId_t app_id,
         const std::function<int()>& original_function
-    ) {
+    ) noexcept {
         try {
             const auto total_count = [&](int count) {
                 LOG_INFO("{} -> Responding with DLC count: {}", function_name, count);
@@ -139,7 +139,7 @@ namespace smoke_api::steam_apps {
 
             return total_count(static_cast<int>(app_dlcs[app_id].size()));
         } catch(const std::exception& e) {
-            LOG_ERROR("Uncaught exception: {}", function_name, e.what());
+            LOG_ERROR("{} -> Uncaught exception: {}", function_name, e.what());
             return 0;
         }
     }
@@ -153,8 +153,8 @@ namespace smoke_api::steam_apps {
         char* pchName,
         const int cchNameBufferSize,
         const std::function<bool()>& original_function,
-        const std::function<bool(AppId_t)>& is_originally_unlocked
-    ) {
+        const std::function<bool()>& is_originally_unlocked
+    ) noexcept {
         try {
             LOG_DEBUG("{} -> {}index: {:>3}", function_name, get_app_id_log(app_id), iDLC);
 
@@ -174,13 +174,7 @@ namespace smoke_api::steam_apps {
             const auto output_dlc = [&](const DLC& dlc) {
                 // Fill the output pointers
                 *pDlcId = dlc.get_id();
-                *pbAvailable = config::is_dlc_unlocked(
-                    app_id,
-                    *pDlcId,
-                    [&] {
-                        return is_originally_unlocked(*pDlcId);
-                    }
-                );
+                *pbAvailable = config::is_dlc_unlocked(app_id, *pDlcId, is_originally_unlocked);
 
                 auto name = dlc.get_name();
                 name = name.substr(0, cchNameBufferSize + 1);

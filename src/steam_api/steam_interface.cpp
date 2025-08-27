@@ -25,11 +25,11 @@ namespace {
 
     std::map<std::string, interface_data> get_virtual_hook_map() {
 #define ENTRY(INTERFACE, FUNC)                                                                     \
-    {                                                                                              \
-        #FUNC, {                                                                                   \
-            #INTERFACE "_" #FUNC, reinterpret_cast<uintptr_t>(INTERFACE##_##FUNC)                  \
-        }                                                                                          \
-    }
+            {                                                                                              \
+                #FUNC, {                                                                                   \
+                    #INTERFACE "_" #FUNC, reinterpret_cast<uintptr_t>(INTERFACE##_##FUNC)                  \
+                }                                                                                          \
+            }
 
         return {
             {
@@ -53,6 +53,17 @@ namespace {
                         ENTRY(ISteamApps, BIsDlcInstalled),
                         ENTRY(ISteamApps, GetDLCCount),
                         ENTRY(ISteamApps, BGetDLCDataByIndex),
+                    }
+                }
+            },
+            {
+                STEAM_HTTP,
+                interface_data{
+                    .fallback_version = "STEAMHTTP_INTERFACE_VERSION003",
+                    .entry_map = {
+                        ENTRY(ISteamHTTP, GetHTTPResponseBodyData),
+                        ENTRY(ISteamHTTP, GetHTTPStreamingResponseBodyData),
+                        ENTRY(ISteamHTTP, SetHTTPRequestRawPostBody),
                     }
                 }
             },
@@ -129,7 +140,11 @@ namespace steam_interface {
         static std::set<void*> processed_interfaces;
 
         if(processed_interfaces.contains(interface)) {
-            LOG_DEBUG("Interface {} at {} has already been processed.", version_string, interface);
+            LOG_DEBUG(
+                "Interface '{}' at {} has already been processed.",
+                version_string,
+                interface
+            );
             return;
         }
 

@@ -8,5 +8,5 @@ namespace smoke_api::steam_user {
         AppId_t appId,
         AppId_t dlcId,
         const std::function<EUserHasLicenseForAppResult()>& original_function
-    );
+    ) noexcept;
 }

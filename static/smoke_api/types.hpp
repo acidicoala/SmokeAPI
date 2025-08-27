@@ -14,11 +14,15 @@
 // These macros are meant to be used for callbacks that should return original result
 
 #define HOOKED_CALL(FUNC, ...) \
-static const auto _##FUNC = KB_HOOK_GET_HOOKED_FN(FUNC); \
-return _##FUNC(__VA_ARGS__)
+    static const auto _##FUNC = KB_HOOK_GET_HOOKED_FN(FUNC); \
+    return _##FUNC(__VA_ARGS__)
 
 #define HOOKED_CALL_CLOSURE(FUNC, ...) \
-[&] { HOOKED_CALL(FUNC, __VA_ARGS__); }
+    [&] { HOOKED_CALL(FUNC, __VA_ARGS__); }
+
+#define HOOKED_CALL_RESULT(FUNC, ...) \
+    static const auto _##FUNC = KB_HOOK_GET_HOOKED_FN(FUNC); \
+    const auto result = _##FUNC(__VA_ARGS__)
 
 /**
  * By default, virtual functions are declared with __thiscall
@@ -55,12 +59,19 @@ return _##FUNC(__VA_ARGS__)
 
 using AppId_t = uint32_t;
 using HSteamPipe = uint32_t;
-using EResult = uint32_t;
 using HSteamUser = uint32_t;
 using SteamInventoryResult_t = uint32_t;
 using SteamItemInstanceID_t = uint64_t;
 using SteamItemDef_t = uint32_t;
 using CSteamID = uint64_t;
+using HTTPRequestHandle = uint32_t;
+
+enum class EResult {
+    k_EResultNone = 0,
+    k_EResultOK   = 1,
+    k_EResultFail = 2,
+    // See all at steamclientpublic.h
+};
 
 struct SteamItemDetails_t {
     SteamItemInstanceID_t m_itemId;
@@ -71,10 +82,12 @@ struct SteamItemDetails_t {
 
 // results from UserHasLicenseForApp
 enum EUserHasLicenseForAppResult {
-    k_EUserHasLicenseResultHasLicense         = 0, // User has a license for specified app
-    k_EUserHasLicenseResultDoesNotHaveLicense = 1,
+    // User has a license for specified app
+    k_EUserHasLicenseResultHasLicense = 0,
     // User does not have a license for the specified app
-    k_EUserHasLicenseResultNoAuth = 2, // User has not been authenticated
+    k_EUserHasLicenseResultDoesNotHaveLicense = 1,
+    // User has not been authenticated
+    k_EUserHasLicenseResultNoAuth = 2,
 };
 
 // These aliases exist solely to increase code readability
@@ -87,7 +100,7 @@ using DlcNameMap = std::map<DlcIdKey, DlcNameValue>;
 struct App {
     DlcNameMap dlcs;
 
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(App, dlcs) // NOLINT(misc-const-correctness)
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(App, dlcs)
 };
 
 using AppDlcNameMap = std::map<AppIdKey, App>;
@@ -98,6 +111,8 @@ class DLC {
     std::string name;
 
 public:
+    NLOHMANN_DEFINE_TYPE_INTRUSIVE_WITH_DEFAULT(DLC, appid, name)
+
     explicit DLC() = default;
 
     explicit DLC(std::string appid, std::string name) : appid{std::move(appid)},
@@ -114,8 +129,6 @@ public:
     [[nodiscard]] std::string get_name() const {
         return name;
     }
-
-    NLOHMANN_DEFINE_TYPE_INTRUSIVE(DLC, appid, name)
 
     static std::vector<DLC> get_dlcs_from_apps(const AppDlcNameMap& apps, AppId_t app_id);
 

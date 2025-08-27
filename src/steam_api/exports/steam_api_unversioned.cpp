@@ -22,9 +22,13 @@ namespace {
 
         if(not version_map.contains(version_prefix)) {
             try {
-                const std::string rdata = kb::win::get_pe_section_data_or_throw(
+                const auto section = kb::win::get_pe_section_or_throw(
                     smoke_api::steamapi_module,
                     ".rdata"
+                );
+                const auto rdata = std::string(
+                    reinterpret_cast<const char*>(section.start_address),
+                    section.size
                 );
 
                 const std::regex regex(version_prefix + "\\d{3}");
@@ -50,15 +54,7 @@ namespace {
     }
 }
 
-DLL_EXPORT(void*) SteamClient() {
-    static auto version = get_versioned_interface(STEAM_CLIENT, "006");
-
-    return steam_client::GetGenericInterface(
-        __func__,
-        version,
-        MODULE_CALL_CLOSURE(SteamClient)
-    );
-}
+// TODO: Do we really need to proxy them?
 
 DLL_EXPORT(void*) SteamApps() {
     static auto version = get_versioned_interface(STEAM_APPS, "002");
@@ -70,13 +66,23 @@ DLL_EXPORT(void*) SteamApps() {
     );
 }
 
-DLL_EXPORT(void*) SteamUser() {
-    static auto version = get_versioned_interface(STEAM_USER, "012");
+DLL_EXPORT(void*) SteamClient() {
+    static auto version = get_versioned_interface(STEAM_CLIENT, "006");
 
     return steam_client::GetGenericInterface(
         __func__,
         version,
-        MODULE_CALL_CLOSURE(SteamUser)
+        MODULE_CALL_CLOSURE(SteamClient)
+    );
+}
+
+DLL_EXPORT(void*) SteamHTTP() {
+    static auto version = get_versioned_interface(STEAM_HTTP, "003");
+
+    return steam_client::GetGenericInterface(
+        __func__,
+        version,
+        MODULE_CALL_CLOSURE(SteamHTTP)
     );
 }
 
@@ -87,5 +93,15 @@ DLL_EXPORT(void*) SteamInventory() {
         __func__,
         version,
         MODULE_CALL_CLOSURE(SteamInventory)
+    );
+}
+
+DLL_EXPORT(void*) SteamUser() {
+    static auto version = get_versioned_interface(STEAM_USER, "012");
+
+    return steam_client::GetGenericInterface(
+        __func__,
+        version,
+        MODULE_CALL_CLOSURE(SteamUser)
     );
 }

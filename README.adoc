@@ -114,8 +114,15 @@ To use it, simply place it next to the SmokeAPI DLL.
 It will be read upon each launch of the game.
 In the absence of the config file, default values specified below will be used.
 The configuration file is expected to conform to the JSON standard.
+All options within the config file are optional.
 
 `logging`:: Toggles generation of a `SmokeAPI.log.log` file.
++
+[horizontal]
+Type::: Boolean
+Default::: `false`
+
+`log_steam_http`:: Toggles logging of _SteamHTTP_ traffic.
 +
 [horizontal]
 Type::: Boolean
@@ -184,8 +191,9 @@ Default::: `{}`
 [source,json]
 ----
 {
-  "$version": 3,
+  "$version": 4,
   "logging": true,
+  "log_steam_http": true,
   "default_app_status": "unlocked",
   "override_app_status": {
     "1234": "original",
@@ -223,7 +231,7 @@ Some games that have a large number of DLCs begin ownership verification by quer
 Once the game receives the list, it will go over each item and check the ownership.
 The issue arises from the fact that response from Steamworks SDK may max out at 64, depending on how much unowned DLCs the user has.
 To alleviate this issue, SmokeAPI will make a web request to Steam API for a full list of DLCs, which works well most of the time.
-Unfortunately, even the web API does not solve all of our problems, because it will only return DLCs that are available in Steam store.
+Unfortunately, even the web API does not solve all of our problems, because it will return only DLCs that are available in Steam store.
 This means that DLCs without a dedicated store offer, such as pre-order DLCs will be left out.
 That's where the `extra_dlcs` config option comes into play.
 You can specify those missing DLC IDs there, and SmokeAPI will make them available to the game.

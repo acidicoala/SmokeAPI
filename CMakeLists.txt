@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(SmokeAPI VERSION 3.0.0)
+project(SmokeAPI VERSION 3.1.0)
 
 include(KoalaBox/cmake/KoalaBox.cmake)
 
@@ -16,6 +16,8 @@ configure_build_config(extra_build_config)
 set(SMOKE_API_STATIC_SOURCES
     static/smoke_api/interfaces/steam_apps.hpp
     static/smoke_api/interfaces/steam_apps.cpp
+    static/smoke_api/interfaces/steam_http.hpp
+    static/smoke_api/interfaces/steam_http.cpp
     static/smoke_api/interfaces/steam_inventory.hpp
     static/smoke_api/interfaces/steam_inventory.cpp
     static/smoke_api/interfaces/steam_user.hpp
@@ -35,12 +37,11 @@ set(SMOKE_API_SOURCES
     ${SMOKE_API_STATIC_SOURCES}
     src/steam_api/exports/steam_api.cpp
     src/steam_api/exports/steam_api.hpp
-    src/steam_api/exports/steam_api_flat.cpp
-    src/steam_api/exports/steam_api_internal.cpp
     src/steam_api/exports/steam_api_unversioned.cpp
     src/steam_api/virtuals/isteamapps.cpp
     src/steam_api/virtuals/isteamclient.cpp
     src/steam_api/virtuals/isteamgameserver.cpp
+    src/steam_api/virtuals/isteamhttp.cpp
     src/steam_api/virtuals/isteaminventory.cpp
     src/steam_api/virtuals/isteamuser.cpp
     src/steam_api/virtuals/steam_api_virtuals.hpp
@@ -48,7 +49,7 @@ set(SMOKE_API_SOURCES
     src/steam_api/steam_client.cpp
     src/steam_api/steam_interface.cpp
     src/steam_api/steam_interface.hpp
-    src/steamclient.cpp
+    src/steamclient/steamclient.cpp
     src/main.cpp
     src/smoke_api.cpp
     src/smoke_api.hpp
@@ -81,7 +82,8 @@ configure_version_resource(
 )
 target_include_directories(SmokeAPI PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
-    "${CMAKE_CURRENT_BINARY_DIR}")
+    "${CMAKE_CURRENT_BINARY_DIR}"
+)
 
 ## https://github.com/batterycenter/embed
 CPMAddPackage(

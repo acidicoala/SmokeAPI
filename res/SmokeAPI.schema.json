@@ -12,13 +12,18 @@
     "$version": {
       "type": "integer",
       "minimum": 0,
-      "default": 3,
+      "default": 4,
       "description": "A technical field reserved for tools like GUI config editors. Do not modify this value."
     },
     "logging": {
       "type": "boolean",
       "default": false,
       "description": "Toggles generation of a SmokeAPI.log.log file."
+    },
+    "log_steam_http": {
+      "type": "boolean",
+      "default": false,
+      "description": "Toggles logging of SteamHTTP traffic"
     },
     "default_app_status": {
       "description": "Sets the default DLC unlocking behaviour.",
@@ -111,9 +116,10 @@
   },
   "examples": [
     {
-      "$schema": "https://raw.githubusercontent.com/acidicoala/SmokeAPI/refs/heads/master/res/SmokeAPI.schema.json",
-      "$version": 3,
+      "$schema": "https://raw.githubusercontent.com/acidicoala/SmokeAPI/refs/tags/v3.0.0/res/SmokeAPI.schema.json",
+      "$version": 4,
       "logging": true,
+      "log_steam_http": true,
       "default_app_status": "unlocked",
       "override_app_status": {
         "1234": "original",

@@ -56,6 +56,9 @@ namespace {
                 } else if(kb::str::eq(library_name, STEAMAPI_DLL)) {
                     KB_HOOK_DETOUR_MODULE(SteamAPI_RestartAppIfNecessary, module_handle);
                     KB_HOOK_DETOUR_MODULE(SteamAPI_Shutdown, module_handle);
+
+                    // Note: It is not necessary to hook flat functions or interface accessors
+                    //       since the underlying interfaces will be hooked through steamclient.
                 }
             }
         );

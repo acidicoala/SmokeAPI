@@ -4,6 +4,7 @@
 
 constexpr auto STEAM_APPS = "STEAMAPPS_INTERFACE_VERSION";
 constexpr auto STEAM_CLIENT = "SteamClient";
+constexpr auto STEAM_HTTP = "STEAMHTTP_INTERFACE_VERSION";
 constexpr auto STEAM_USER = "SteamUser";
 constexpr auto STEAM_INVENTORY = "STEAMINVENTORY_INTERFACE_V";
 constexpr auto STEAM_GAME_SERVER = "SteamGameServer";
