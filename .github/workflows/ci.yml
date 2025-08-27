@@ -4,11 +4,11 @@ on: push
 jobs:
   ci:
     name: CI
-    uses: acidicoala/KoalaBox/.github/workflows/build-and-package.yml@50dba8cafc7ea9523f73be038c80f1eacd1b4f8c
+    uses: acidicoala/KoalaBox/.github/workflows/build-and-package.yml@d36e7ec2ce7d73fbf66ca59b034c7a9373419461
     permissions:
       contents: write
     with:
-      arch: [ 64 ]
+      arch: [ 32, 64 ]
       config: Release
       modules: [ "SmokeAPI" ]
       zip_command: >
