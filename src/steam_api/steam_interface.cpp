@@ -78,6 +78,21 @@ namespace {
                 }
             },
             {
+                STEAM_INVENTORY,
+                interface_data{
+                    .fallback_version = "STEAMINVENTORY_INTERFACE_V003",
+                    .entry_map = {
+                        ENTRY(ISteamInventory, GetResultStatus),
+                        ENTRY(ISteamInventory, GetResultItems),
+                        ENTRY(ISteamInventory, CheckResultSteamID),
+                        ENTRY(ISteamInventory, GetAllItems),
+                        ENTRY(ISteamInventory, GetItemsByID),
+                        ENTRY(ISteamInventory, SerializeResult),
+                        ENTRY(ISteamInventory, GetItemDefinitionIDs),
+                    }
+                }
+            },
+            {
                 STEAM_USER,
                 interface_data{
                     .fallback_version = "SteamUser023",
