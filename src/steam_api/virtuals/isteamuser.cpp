@@ -11,6 +11,6 @@ VIRTUAL(EUserHasLicenseForAppResult) ISteamUser_UserHasLicenseForApp(
         __func__,
         steam_interface::get_app_id(),
         dlc_id,
-        HOOKED_CALL_CLOSURE(ISteamUser_UserHasLicenseForApp, ARGS(steamID, dlc_id))
+        SWAPPED_CALL_CLOSURE(ISteamUser_UserHasLicenseForApp, ARGS(steamID, dlc_id))
     );
 }

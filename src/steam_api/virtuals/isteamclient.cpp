@@ -13,7 +13,7 @@ VIRTUAL(void*) ISteamClient_GetISteamApps(
     return steam_client::GetGenericInterface(
         __func__,
         version,
-        HOOKED_CALL_CLOSURE(ISteamClient_GetISteamApps, ARGS(hSteamUser, hSteamPipe, version))
+        SWAPPED_CALL_CLOSURE(ISteamClient_GetISteamApps, ARGS(hSteamUser, hSteamPipe, version))
     );
 }
 
@@ -27,7 +27,7 @@ VIRTUAL(void*) ISteamClient_GetISteamUser(
     return steam_client::GetGenericInterface(
         __func__,
         version,
-        HOOKED_CALL_CLOSURE(ISteamClient_GetISteamUser, ARGS(hSteamUser, hSteamPipe, version))
+        SWAPPED_CALL_CLOSURE(ISteamClient_GetISteamUser, ARGS(hSteamUser, hSteamPipe, version))
     );
 }
 
@@ -41,7 +41,7 @@ VIRTUAL(void*) ISteamClient_GetISteamGenericInterface(
     return steam_client::GetGenericInterface(
         __func__,
         pchVersion,
-        HOOKED_CALL_CLOSURE(
+        SWAPPED_CALL_CLOSURE(
             ISteamClient_GetISteamGenericInterface,
             ARGS(hSteamUser, hSteamPipe, pchVersion)
         )
@@ -58,7 +58,7 @@ VIRTUAL(void*) ISteamClient_GetISteamInventory(
     return steam_client::GetGenericInterface(
         __func__,
         pchVersion,
-        HOOKED_CALL_CLOSURE(
+        SWAPPED_CALL_CLOSURE(
             ISteamClient_GetISteamInventory,
             ARGS(hSteamUser, hSteamPipe, pchVersion)
         )

@@ -37,6 +37,7 @@ namespace smoke_api::config {
             Config,
             $version,
             logging,
+            log_steam_http,
             default_app_status,
             override_app_status,
             override_dlc_status,

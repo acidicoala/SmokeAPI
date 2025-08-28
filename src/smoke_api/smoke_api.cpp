@@ -79,11 +79,9 @@ namespace smoke_api {
                 kb::logger::init_file_logger(kb::paths::get_log_path());
             }
 
-            // This kind of timestamp is reliable only for CI builds, as it will reflect the
-            // compilation time stamp only when this file gets recompiled.
-            LOG_INFO("{} v{} | Compiled at '{}'", PROJECT_NAME, PROJECT_VERSION, __TIMESTAMP__);
+            LOG_INFO("{} v{} | Built at '{}'", PROJECT_NAME, PROJECT_VERSION, __TIMESTAMP__);
 
-            LOG_DEBUG("Parsed config:\n{}", nlohmann::json(config::instance).dump(2));
+            LOG_DEBUG("Parsed config:\n{}", nlohmann::ordered_json(config::instance).dump(2));
 
             const auto exe_path = kb::win::get_module_path(nullptr);
             const auto exe_name = kb::path::to_str(exe_path.filename());

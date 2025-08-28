@@ -16,7 +16,7 @@ VIRTUAL(bool) ISteamHTTP_GetHTTPResponseBodyData(
         hRequest,
         pBodyDataBuffer,
         unBufferSize,
-        HOOKED_CALL_CLOSURE(
+        SWAPPED_CALL_CLOSURE(
             ISteamHTTP_GetHTTPResponseBodyData,
             ARGS(hRequest, pBodyDataBuffer, unBufferSize)
         )
@@ -37,7 +37,7 @@ VIRTUAL(bool) ISteamHTTP_GetHTTPStreamingResponseBodyData(
         cOffset,
         pBodyDataBuffer,
         unBufferSize,
-        HOOKED_CALL_CLOSURE(
+        SWAPPED_CALL_CLOSURE(
             ISteamHTTP_GetHTTPStreamingResponseBodyData,
             ARGS(hRequest, cOffset, pBodyDataBuffer, unBufferSize)
         )
@@ -58,7 +58,7 @@ VIRTUAL(bool) ISteamHTTP_SetHTTPRequestRawPostBody(
         pchContentType,
         pubBody,
         unBodyLen,
-        HOOKED_CALL_CLOSURE(
+        SWAPPED_CALL_CLOSURE(
             ISteamHTTP_SetHTTPRequestRawPostBody,
             ARGS(hRequest, pchContentType, pubBody, unBodyLen)
         )

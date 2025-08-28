@@ -9,7 +9,7 @@ VIRTUAL(bool) ISteamApps_BIsSubscribedApp(PARAMS(const AppId_t dlc_id)) noexcept
         __func__,
         steam_interface::get_app_id(),
         dlc_id,
-        HOOKED_CALL_CLOSURE(ISteamApps_BIsSubscribedApp, ARGS(dlc_id))
+        SWAPPED_CALL_CLOSURE(ISteamApps_BIsSubscribedApp, ARGS(dlc_id))
     );
 }
 
@@ -18,7 +18,7 @@ VIRTUAL(bool) ISteamApps_BIsDlcInstalled(PARAMS(const AppId_t dlc_id)) noexcept 
         __func__,
         steam_interface::get_app_id(),
         dlc_id,
-        HOOKED_CALL_CLOSURE(ISteamApps_BIsDlcInstalled, ARGS(dlc_id))
+        SWAPPED_CALL_CLOSURE(ISteamApps_BIsDlcInstalled, ARGS(dlc_id))
     );
 }
 
@@ -26,7 +26,7 @@ VIRTUAL(int) ISteamApps_GetDLCCount(PARAMS()) noexcept {
     return smoke_api::steam_apps::GetDLCCount(
         __func__,
         steam_interface::get_app_id(),
-        HOOKED_CALL_CLOSURE(ISteamApps_GetDLCCount, ARGS())
+        SWAPPED_CALL_CLOSURE(ISteamApps_GetDLCCount, ARGS())
     );
 }
 
@@ -47,11 +47,11 @@ VIRTUAL(bool) ISteamApps_BGetDLCDataByIndex(
         pbAvailable,
         pchName,
         cchNameBufferSize,
-        HOOKED_CALL_CLOSURE(
+        SWAPPED_CALL_CLOSURE(
             ISteamApps_BGetDLCDataByIndex,
             ARGS(iDLC, p_dlc_id, pbAvailable, pchName, cchNameBufferSize)
         ),
-        HOOKED_CALL_CLOSURE(
+        SWAPPED_CALL_CLOSURE(
            ISteamApps_BIsSubscribedApp,
            ARGS(*p_dlc_id)
        )

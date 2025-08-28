@@ -35,6 +35,8 @@ set(SMOKE_API_STATIC_SOURCES
 
 set(SMOKE_API_SOURCES
     ${SMOKE_API_STATIC_SOURCES}
+    src/smoke_api/smoke_api.cpp
+    src/smoke_api/smoke_api.hpp
     src/steam_api/exports/steam_api.cpp
     src/steam_api/exports/steam_api.hpp
     src/steam_api/exports/steam_api_unversioned.cpp
@@ -51,29 +53,30 @@ set(SMOKE_API_SOURCES
     src/steam_api/steam_interface.hpp
     src/steamclient/steamclient.cpp
     src/main.cpp
-    src/smoke_api.cpp
-    src/smoke_api.hpp
 )
 
 ### SmokeAPI interface
 
-add_library(SmokeAPI_interface INTERFACE)
+add_library(SmokeAPI_common INTERFACE)
+add_library(SmokeAPI::common ALIAS SmokeAPI_common)
 
-target_include_directories(SmokeAPI_interface INTERFACE
+target_include_directories(SmokeAPI_common INTERFACE
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/static>"
 )
-target_link_libraries(SmokeAPI_interface INTERFACE KoalaBox $<TARGET_OBJECTS:KoalaBox>)
+target_link_libraries(SmokeAPI_common INTERFACE KoalaBox $<TARGET_OBJECTS:KoalaBox>)
 
 
 ### Static SmokeAPI
 
 add_library(SmokeAPI_static STATIC ${SMOKE_API_STATIC_SOURCES})
-target_link_libraries(SmokeAPI_static PUBLIC SmokeAPI_interface)
+add_library(SmokeAPI::static ALIAS SmokeAPI_static)
+
+target_link_libraries(SmokeAPI_static PUBLIC SmokeAPI::common)
 
 ### Shared SmokeAPI
 
 add_library(SmokeAPI SHARED ${SMOKE_API_SOURCES})
-target_link_libraries(SmokeAPI PUBLIC SmokeAPI_interface)
+target_link_libraries(SmokeAPI PUBLIC SmokeAPI::common)
 set_target_properties(SmokeAPI PROPERTIES RUNTIME_OUTPUT_NAME ${STEAMAPI_DLL})
 configure_version_resource(
     TARGET SmokeAPI

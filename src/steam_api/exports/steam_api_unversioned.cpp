@@ -1,10 +1,10 @@
-#include <regex>
 #include <map>
+#include <regex>
 
 #include <koalabox/logger.hpp>
 #include <koalabox/win.hpp>
 
-#include "smoke_api.hpp"
+#include "smoke_api/smoke_api.hpp"
 #include "steam_api/steam_client.hpp"
 
 namespace {
@@ -20,41 +20,48 @@ namespace {
     ) {
         static std::map<std::string, std::string> version_map;
 
-        if(not version_map.contains(version_prefix)) {
-            try {
-                const auto section = kb::win::get_pe_section_or_throw(
-                    smoke_api::steamapi_module,
-                    ".rdata"
-                );
-                const auto rdata = std::string(
-                    reinterpret_cast<const char*>(section.start_address),
-                    section.size
-                );
-
-                const std::regex regex(version_prefix + "\\d{3}");
-                if(std::smatch match; std::regex_search(rdata, match, regex)) {
-                    version_map[version_prefix] = match[0];
-                    return version_map[version_prefix];
-                }
-
-                throw std::runtime_error(std::format("No match found for '{}'", version_prefix));
-            } catch(const std::exception& ex) {
-                LOG_ERROR(
-                    "Failed to get versioned interface: {}."
-                    "Falling back to version {}",
-                    ex.what(),
-                    fallback
-                );
-
-                version_map[version_prefix] = version_prefix + fallback;
-            }
+        if(version_map.contains(version_prefix)) {
+            return version_map.at(version_prefix);
         }
 
-        return version_map[version_prefix];
+        try {
+            const auto section = kb::win::get_pe_section_or_throw(
+                smoke_api::steamapi_module,
+                ".rdata"
+            );
+            const auto rdata = std::string(
+                reinterpret_cast<const char*>(section.start_address),
+                section.size
+            );
+
+            const std::regex regex(version_prefix + "\\d{3}");
+            if(std::smatch match; std::regex_search(rdata, match, regex)) {
+                version_map[version_prefix] = match[0];
+            } else {
+                throw std::runtime_error(std::format("No match found for '{}'", version_prefix));
+            }
+        } catch(const std::exception& ex) {
+            LOG_ERROR(
+                "Failed to get versioned interface: {}."
+                "Falling back to version {}",
+                ex.what(),
+                fallback
+            );
+
+            version_map[version_prefix] = version_prefix + fallback;
+        }
+
+        return version_map.at(version_prefix);
     }
 }
 
 // TODO: Do we really need to proxy them?
+
+#define MODULE_CALL_CLOSURE(FUNC, ...) \
+    [&] { \
+        static const auto _##FUNC = KB_WIN_GET_PROC(smoke_api::steamapi_module, FUNC); \
+        return _##FUNC(__VA_ARGS__); \
+    }
 
 DLL_EXPORT(void*) SteamApps() {
     static auto version = get_versioned_interface(STEAM_APPS, "002");

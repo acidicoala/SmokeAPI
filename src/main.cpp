@@ -1,4 +1,4 @@
-#include "smoke_api.hpp"
+#include "smoke_api/smoke_api.hpp"
 
 // This header will be populated at build time
 #include "linker_exports_for_steam_api.h"

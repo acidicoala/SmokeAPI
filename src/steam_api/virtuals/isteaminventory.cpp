@@ -7,7 +7,7 @@ VIRTUAL(EResult) ISteamInventory_GetResultStatus(
     return smoke_api::steam_inventory::GetResultStatus(
         __func__,
         resultHandle,
-        HOOKED_CALL_CLOSURE(ISteamInventory_GetResultStatus, ARGS(resultHandle))
+        SWAPPED_CALL_CLOSURE(ISteamInventory_GetResultStatus, ARGS(resultHandle))
     );
 }
 
@@ -23,12 +23,13 @@ VIRTUAL(bool) ISteamInventory_GetResultItems(
         resultHandle,
         pOutItemsArray,
         punOutItemsArraySize,
-        HOOKED_CALL_CLOSURE(
+        SWAPPED_CALL_CLOSURE(
             ISteamInventory_GetResultItems,
             ARGS(resultHandle, pOutItemsArray, punOutItemsArraySize)
         ),
         [&](SteamItemDef_t* pItemDefIDs, uint32_t* punItemDefIDsArraySize) {
-            HOOKED_CALL(
+            SWAPPED_CALL(
+                THIS,
                 ISteamInventory_GetItemDefinitionIDs,
                 ARGS(pItemDefIDs, punItemDefIDsArraySize)
             );
@@ -52,7 +53,7 @@ VIRTUAL(bool) ISteamInventory_GetResultItemProperty(
         pchPropertyName,
         pchValueBuffer,
         punValueBufferSizeOut,
-        HOOKED_CALL_CLOSURE(
+        SWAPPED_CALL_CLOSURE(
             ISteamInventory_GetResultItemProperty,
             ARGS(
                 resultHandle,
@@ -69,7 +70,7 @@ VIRTUAL(bool) ISteamInventory_GetAllItems(PARAMS(SteamInventoryResult_t* pResult
     return smoke_api::steam_inventory::GetAllItems(
         __func__,
         pResultHandle,
-        HOOKED_CALL_CLOSURE(ISteamInventory_GetAllItems, ARGS(pResultHandle))
+        SWAPPED_CALL_CLOSURE(ISteamInventory_GetAllItems, ARGS(pResultHandle))
     );
 }
 
@@ -85,7 +86,7 @@ VIRTUAL(bool) ISteamInventory_GetItemsByID(
         pResultHandle,
         pInstanceIDs,
         unCountInstanceIDs,
-        HOOKED_CALL_CLOSURE(
+        SWAPPED_CALL_CLOSURE(
             ISteamInventory_GetItemsByID,
             ARGS(pResultHandle, pInstanceIDs, unCountInstanceIDs)
         )
@@ -104,7 +105,7 @@ VIRTUAL(bool) ISteamInventory_SerializeResult(
         resultHandle,
         pOutBuffer,
         punOutBufferSize,
-        HOOKED_CALL_CLOSURE(
+        SWAPPED_CALL_CLOSURE(
             ISteamInventory_SerializeResult,
             ARGS(resultHandle, pOutBuffer, punOutBufferSize)
         )
@@ -121,7 +122,7 @@ VIRTUAL(bool) ISteamInventory_GetItemDefinitionIDs(
         __func__,
         pItemDefIDs,
         punItemDefIDsArraySize,
-        HOOKED_CALL_CLOSURE(
+        SWAPPED_CALL_CLOSURE(
             ISteamInventory_GetItemDefinitionIDs,
             ARGS(pItemDefIDs, punItemDefIDsArraySize)
         )
@@ -135,6 +136,6 @@ VIRTUAL(bool) ISteamInventory_CheckResultSteamID(
         __func__,
         resultHandle,
         steamIDExpected,
-        HOOKED_CALL_CLOSURE(ISteamInventory_CheckResultSteamID, ARGS(resultHandle, steamIDExpected))
+        SWAPPED_CALL_CLOSURE(ISteamInventory_CheckResultSteamID, ARGS(resultHandle, steamIDExpected))
     );
 }

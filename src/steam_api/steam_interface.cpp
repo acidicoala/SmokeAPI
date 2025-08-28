@@ -8,28 +8,28 @@
 #include <koalabox/win.hpp>
 
 #include "steam_api/steam_interface.hpp"
-#include "smoke_api.hpp"
+#include "smoke_api/smoke_api.hpp"
 #include "virtuals/steam_api_virtuals.hpp"
 
 namespace {
     struct interface_entry {
         // function_name must match the function identifier to be able to call original functions
         std::string function_name; // e.g. "ISteamClient_GetISteamApps"
-        uintptr_t function_address; // e.g. ISteamClient_GetISteamApps
+        void* function_address; // e.g. ISteamClient_GetISteamApps
     };
 
-    struct interface_data {
+    struct interface_data { // NOLINT(*-exception-escape)
         std::string fallback_version; // e.g. "SteamClient021"
         std::map<std::string, interface_entry> entry_map;
         // e.g. {ENTRY(ISteamClient, GetISteamApps), ...}
     };
 
     std::map<std::string, interface_data> get_virtual_hook_map() {
-#define ENTRY(INTERFACE, FUNC)                                                                     \
-            {                                                                                              \
-                #FUNC, {                                                                                   \
-                    #INTERFACE "_" #FUNC, reinterpret_cast<uintptr_t>(INTERFACE##_##FUNC)                  \
-                }                                                                                          \
+#define ENTRY(INTERFACE, FUNC) \
+            { \
+                #FUNC, { \
+                    #INTERFACE "_" #FUNC, reinterpret_cast<void*>(INTERFACE##_##FUNC) \
+                } \
             }
 
         return {
@@ -137,6 +137,10 @@ namespace steam_interface {
         }
     }
 
+    /**
+     * @param interface Pointer to the interface
+     * @param version_string Example: 'SteamClient020'
+     */
     void hook_virtuals(void* interface, const std::string& version_string) {
         if(interface == nullptr) {
             // Game has tried to use an interface before initializing steam api
@@ -160,22 +164,25 @@ namespace steam_interface {
 
         static const auto virtual_hook_map = get_virtual_hook_map();
         for(const auto& [prefix, data] : virtual_hook_map) {
-            if(version_string.starts_with(prefix)) {
-                const auto& lookup = find_lookup(version_string, data.fallback_version);
+            if(not version_string.starts_with(prefix)) {
+                continue;
+            }
+            const auto& lookup = find_lookup(version_string, data.fallback_version);
 
-                for(const auto& [function, entry] : data.entry_map) {
-                    if(lookup.contains(function)) {
-                        kb::hook::swap_virtual_func(
-                            interface,
-                            entry.function_name,
-                            lookup.at(function),
-                            entry.function_address
-                        );
-                    }
+            for(const auto& [function, entry] : data.entry_map) {
+                if(not lookup.contains(function)) {
+                    continue;
                 }
 
-                break;
+                kb::hook::swap_virtual_func(
+                    interface,
+                    entry.function_name,
+                    lookup.at(function),
+                    entry.function_address
+                );
             }
+
+            break;
         }
     }
 }

@@ -13,16 +13,12 @@
 
 // These macros are meant to be used for callbacks that should return original result
 
-#define HOOKED_CALL(FUNC, ...) \
-    static const auto _##FUNC = KB_HOOK_GET_HOOKED_FN(FUNC); \
+#define SWAPPED_CALL(CLASS, FUNC, ...) \
+    const auto _##FUNC = KB_HOOK_GET_SWAPPED_FN(CLASS, FUNC); \
     return _##FUNC(__VA_ARGS__)
 
-#define HOOKED_CALL_CLOSURE(FUNC, ...) \
-    [&] { HOOKED_CALL(FUNC, __VA_ARGS__); }
-
-#define HOOKED_CALL_RESULT(FUNC, ...) \
-    static const auto _##FUNC = KB_HOOK_GET_HOOKED_FN(FUNC); \
-    const auto result = _##FUNC(__VA_ARGS__)
+#define SWAPPED_CALL_CLOSURE(FUNC, ...) \
+    [&] { SWAPPED_CALL(THIS, FUNC, __VA_ARGS__); }
 
 /**
  * By default, virtual functions are declared with __thiscall
