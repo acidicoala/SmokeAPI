@@ -10,17 +10,13 @@ namespace smoke_api::config {
         LOCKED,
     };
 
-    NLOHMANN_JSON_SERIALIZE_ENUM(
-        AppStatus,
-        // @formatter:off
-        {
-            { AppStatus::UNDEFINED, nullptr    },
-            { AppStatus::ORIGINAL,  "original" },
-            { AppStatus::UNLOCKED,  "unlocked" },
-            { AppStatus::LOCKED,    "locked"   },
-        }
-        // @formatter:on
-    )
+    // @formatter:off
+    NLOHMANN_JSON_SERIALIZE_ENUM(AppStatus, {
+        { AppStatus::UNDEFINED,  nullptr    },
+        { AppStatus::ORIGINAL,   "original" },
+        { AppStatus::UNLOCKED,   "unlocked" },
+        { AppStatus::LOCKED,     "locked"   },
+    }) // @formatter:on
 
     struct Config {
         uint32_t $version = 4;

@@ -54,6 +54,10 @@ namespace {
                 if(kb::str::eq(library_name, STEAMCLIENT_DLL)) {
                     KB_HOOK_DETOUR_MODULE(CreateInterface, module_handle);
                 } else if(kb::str::eq(library_name, STEAMAPI_DLL)) {
+                    KB_HOOK_DETOUR_MODULE(SteamAPI_Init, module_handle);
+                    KB_HOOK_DETOUR_MODULE(SteamAPI_InitSafe, module_handle);
+                    KB_HOOK_DETOUR_MODULE(SteamAPI_InitFlat, module_handle);
+                    KB_HOOK_DETOUR_MODULE(SteamInternal_SteamAPI_Init, module_handle);
                     KB_HOOK_DETOUR_MODULE(SteamAPI_RestartAppIfNecessary, module_handle);
                     KB_HOOK_DETOUR_MODULE(SteamAPI_Shutdown, module_handle);
 
@@ -98,8 +102,8 @@ namespace smoke_api {
             }
 
             LOG_INFO("Initialization complete");
-        } catch(const std::exception& ex) {
-            kb::util::panic(fmt::format("Initialization error: {}", ex.what()));
+        } catch(const std::exception& e) {
+            kb::util::panic(fmt::format("Initialization error: {}", e.what()));
         }
     }
 

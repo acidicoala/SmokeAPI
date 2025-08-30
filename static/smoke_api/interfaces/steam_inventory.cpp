@@ -13,7 +13,7 @@ namespace smoke_api::steam_inventory {
             const auto status = original_function();
 
             LOG_DEBUG(
-                "'{}' -> handle: {}, status: {}",
+                "{} -> handle: {}, status: {}",
                 function_name,
                 resultHandle,
                 static_cast<int>(status)
@@ -21,7 +21,7 @@ namespace smoke_api::steam_inventory {
 
             return status;
         } catch(const std::exception& e) {
-            LOG_ERROR("'{}' -> Error: {}", function_name, e.what());
+            LOG_ERROR("{} -> Error: {}", function_name, e.what());
             return EResult::k_EResultFail;
         }
     }
@@ -52,17 +52,17 @@ namespace smoke_api::steam_inventory {
             };
 
             if(not success) {
-                LOG_DEBUG("'{}' -> original result is false", function_name);
+                LOG_DEBUG("{} -> original result is false", function_name);
                 return success;
             }
 
             if(punOutItemsArraySize == nullptr) {
-                LOG_ERROR("'{}' -> arraySize pointer is null", function_name);
+                LOG_ERROR("{} -> arraySize pointer is null", function_name);
                 return success;
             }
 
             LOG_DEBUG(
-                "'{}' -> handle: {}, pOutItemsArray: {}, arraySize: {}",
+                "{} -> handle: {}, pOutItemsArray: {}, arraySize: {}",
                 function_name,
                 resultHandle,
                 reinterpret_cast<void*>(pOutItemsArray),
@@ -95,7 +95,7 @@ namespace smoke_api::steam_inventory {
                 original_count = *punOutItemsArraySize;
                 *punOutItemsArraySize += auto_injected_count + injected_count;
                 LOG_DEBUG(
-                    "'{}' -> Original count: {}, Total count: {}",
+                    "{} -> Original count: {}, Total count: {}",
                     function_name,
                     original_count,
                     *punOutItemsArraySize
@@ -136,7 +136,7 @@ namespace smoke_api::steam_inventory {
 
             return success;
         } catch(const std::exception& e) {
-            LOG_ERROR("'{}' -> Error: {}", function_name, e.what());
+            LOG_ERROR("{} -> Error: {}", function_name, e.what());
             return false;
         }
     }
@@ -152,7 +152,7 @@ namespace smoke_api::steam_inventory {
     ) noexcept {
         try {
             LOG_DEBUG(
-                "'{}' -> Handle: {}, Index: {}, Name: '{}'",
+                "{} -> Handle: {}, Index: {}, Name: '{}'",
                 function_name,
                 resultHandle,
                 unItemIndex,
@@ -163,7 +163,7 @@ namespace smoke_api::steam_inventory {
             const auto success = original_function();
 
             if(!success) {
-                LOG_WARN("'{}' -> Result is false", function_name);
+                LOG_WARN("{} -> Result is false", function_name);
                 return false;
             }
 
@@ -180,7 +180,7 @@ namespace smoke_api::steam_inventory {
 
             return success;
         } catch(const std::exception& e) {
-            LOG_ERROR("'{}' -> Error: {}", function_name, e.what());
+            LOG_ERROR("{} -> Error: {}", function_name, e.what());
             return false;
         }
     }
@@ -194,14 +194,14 @@ namespace smoke_api::steam_inventory {
             const auto success = original_function();
 
             LOG_DEBUG(
-                "'{}' -> Handle: {}",
+                "{} -> Handle: {}",
                 function_name,
                 reinterpret_cast<const void*>(pResultHandle)
             );
 
             return success;
         } catch(const std::exception& e) {
-            LOG_ERROR("'{}' -> Error: {}", function_name, e.what());
+            LOG_ERROR("{} -> Error: {}", function_name, e.what());
             return false;
         }
     }
@@ -216,7 +216,7 @@ namespace smoke_api::steam_inventory {
         try {
             const auto success = original_function();
 
-            LOG_DEBUG("'{}' -> Handle: {}", function_name, fmt::ptr(pResultHandle));
+            LOG_DEBUG("{} -> Handle: {}", function_name, fmt::ptr(pResultHandle));
 
             if(success && pInstanceIDs != nullptr) {
                 for(int i = 0; i < unCountInstanceIDs; i++) {
@@ -226,7 +226,7 @@ namespace smoke_api::steam_inventory {
 
             return success;
         } catch(const std::exception& e) {
-            LOG_ERROR("'{}' -> Error: {}", function_name, e.what());
+            LOG_ERROR("{} -> Error: {}", function_name, e.what());
             return false;
         }
     }
@@ -243,10 +243,10 @@ namespace smoke_api::steam_inventory {
 
             if(pOutBuffer != nullptr) {
                 std::string buffer(static_cast<char*>(pOutBuffer), *punOutBufferSize);
-                LOG_DEBUG("'{}' -> Handle: {}, Buffer: '{}'", function_name, resultHandle, buffer);
+                LOG_DEBUG("{} -> Handle: {}, Buffer: '{}'", function_name, resultHandle, buffer);
             } else {
                 LOG_DEBUG(
-                    "'{}' -> Handle: {}, Size: '{}'",
+                    "{} -> Handle: {}, Size: '{}'",
                     function_name,
                     resultHandle,
                     *punOutBufferSize
@@ -255,7 +255,7 @@ namespace smoke_api::steam_inventory {
 
             return success;
         } catch(const std::exception& e) {
-            LOG_ERROR("'{}' -> Error: {}", function_name, e.what());
+            LOG_ERROR("{} -> Error: {}", function_name, e.what());
             return false;
         }
     }
@@ -270,12 +270,12 @@ namespace smoke_api::steam_inventory {
             const auto success = original_function();
 
             if(!success) {
-                LOG_WARN("'{}' -> Result is false", function_name);
+                LOG_WARN("{} -> Result is false", function_name);
                 return false;
             }
 
             if(punItemDefIDsArraySize) {
-                LOG_DEBUG("'{}' -> Size: {}", function_name, *punItemDefIDsArraySize);
+                LOG_DEBUG("{} -> Size: {}", function_name, *punItemDefIDsArraySize);
             } else {
                 return success;
             }
@@ -289,7 +289,7 @@ namespace smoke_api::steam_inventory {
 
             return success;
         } catch(const std::exception& e) {
-            LOG_ERROR("'{}' -> Error: {}", function_name, e.what());
+            LOG_ERROR("{} -> Error: {}", function_name, e.what());
             return false;
         }
     }
@@ -304,7 +304,7 @@ namespace smoke_api::steam_inventory {
             const auto result = original_function();
 
             LOG_DEBUG(
-                "'{}' -> handle: {}, steamID: {}, original result: {}",
+                "{} -> handle: {}, steamID: {}, original result: {}",
                 function_name,
                 resultHandle,
                 steamIDExpected,
@@ -313,7 +313,7 @@ namespace smoke_api::steam_inventory {
 
             return true;
         } catch(const std::exception& e) {
-            LOG_ERROR("'{}' -> Error: {}", function_name, e.what());
+            LOG_ERROR("{} -> Error: {}", function_name, e.what());
             return false;
         }
     }

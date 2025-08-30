@@ -18,6 +18,7 @@ namespace {
         void* function_address; // e.g. ISteamClient_GetISteamApps
     };
 
+    // TODO: Split fallback into low and high versions
     struct interface_data { // NOLINT(*-exception-escape)
         std::string fallback_version; // e.g. "SteamClient021"
         std::map<std::string, interface_entry> entry_map;
@@ -153,12 +154,13 @@ namespace steam_interface {
     }
 
     /**
-     * @param interface Pointer to the interface
+     * @param interface_ptr Pointer to the interface
      * @param version_string Example: 'SteamClient020'
      */
-    void hook_virtuals(void* interface, const std::string& version_string) {
-        if(interface == nullptr) {
+    void hook_virtuals(void* interface_ptr, const std::string& version_string) {
+        if(interface_ptr == nullptr) {
             // Game has tried to use an interface before initializing steam api
+            // This does happen in practice.
             return;
         }
 
@@ -167,21 +169,28 @@ namespace steam_interface {
 
         static std::set<void*> processed_interfaces;
 
-        if(processed_interfaces.contains(interface)) {
+        if(processed_interfaces.contains(interface_ptr)) {
             LOG_DEBUG(
                 "Interface '{}' @ {} has already been processed.",
                 version_string,
-                interface
+                interface_ptr
             );
             return;
         }
-        processed_interfaces.insert(interface);
+        processed_interfaces.insert(interface_ptr);
 
         static const auto virtual_hook_map = get_virtual_hook_map();
         for(const auto& [prefix, data] : virtual_hook_map) {
             if(not version_string.starts_with(prefix)) {
                 continue;
             }
+
+            LOG_INFO(
+                "Processing '{}' @ {} found in virtual hook map",
+                version_string,
+                interface_ptr
+            );
+
             const auto& lookup = find_lookup(version_string, data.fallback_version);
 
             for(const auto& [function, entry] : data.entry_map) {
@@ -190,7 +199,7 @@ namespace steam_interface {
                 }
 
                 kb::hook::swap_virtual_func(
-                    interface,
+                    interface_ptr,
                     entry.function_name,
                     lookup.at(function),
                     entry.function_address

@@ -24,7 +24,7 @@ namespace smoke_api::steam_http {
                         : "";
 
                 LOG_INFO(
-                    "'{}' -> handle: {}, size: {}, buffer:\n{}",
+                    "{} -> handle: {}, size: {}, buffer:\n{}",
                     function_name,
                     hRequest,
                     unBufferSize,
@@ -34,7 +34,7 @@ namespace smoke_api::steam_http {
 
             return result;
         } catch(const std::exception& e) {
-            LOG_ERROR("'{}' -> Error: {}", __func__, e.what());
+            LOG_ERROR("{} -> Error: {}", __func__, e.what());
             return false;
         }
     }
@@ -60,7 +60,7 @@ namespace smoke_api::steam_http {
                         : "";
 
                 LOG_INFO(
-                    "'{}' -> handle: {}, offset: {}, size: {}, buffer:\n{}",
+                    "{} -> handle: {}, offset: {}, size: {}, buffer:\n{}",
                     function_name,
                     hRequest,
                     cOffset,
@@ -71,7 +71,7 @@ namespace smoke_api::steam_http {
 
             return result;
         } catch(const std::exception& e) {
-            LOG_ERROR("'{}' -> Error: {}", __func__, e.what());
+            LOG_ERROR("{} -> Error: {}", __func__, e.what());
             return false;
         }
     }
@@ -97,7 +97,7 @@ namespace smoke_api::steam_http {
                         : "";
 
                 LOG_INFO(
-                    "'{}' -> handle: {}, content-type: {}, size: {}, buffer:\n{}",
+                    "{} -> handle: {}, content-type: {}, size: {}, buffer:\n{}",
                     function_name,
                     hRequest,
                     content_type,
@@ -108,7 +108,7 @@ namespace smoke_api::steam_http {
 
             return result;
         } catch(const std::exception& e) {
-            LOG_ERROR("'{}' -> Error: {}", __func__, e.what());
+            LOG_ERROR("{} -> Error: {}", __func__, e.what());
             return false;
         }
     }

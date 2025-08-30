@@ -2,8 +2,6 @@
 
 #include "smoke_api/types.hpp"
 
-// TODO: Make them all noexcept
-
 namespace smoke_api::steam_apps {
     bool IsDlcUnlocked(
         const std::string& function_name,

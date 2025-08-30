@@ -81,7 +81,7 @@ set_target_properties(SmokeAPI PROPERTIES RUNTIME_OUTPUT_NAME ${STEAMAPI_DLL})
 configure_version_resource(
     TARGET SmokeAPI
     FILE_DESC "Steamworks DLC unlocker"
-    ORIG_NAME ${STEAMAPI_DLL}
+    ORIG_NAME SmokeAPI
 )
 target_include_directories(SmokeAPI PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
