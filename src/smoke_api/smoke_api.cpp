@@ -54,6 +54,11 @@ namespace {
                 if(kb::str::eq(library_name, STEAMCLIENT_DLL)) {
                     KB_HOOK_DETOUR_MODULE(CreateInterface, module_handle);
                 } else if(kb::str::eq(library_name, STEAMAPI_DLL)) {
+                    // TODO: SteamAPI_Init will be too small to hook on x64.
+                    // Ideally, we should inspect the address it jumps to and hook that instead.
+                    // Moreover, SteamAPI_InitSafe calls the same address,
+                    // so it could be used as a sanity check
+
                     KB_HOOK_DETOUR_MODULE(SteamAPI_Init, module_handle);
                     KB_HOOK_DETOUR_MODULE(SteamAPI_InitSafe, module_handle);
                     KB_HOOK_DETOUR_MODULE(SteamAPI_InitFlat, module_handle);
