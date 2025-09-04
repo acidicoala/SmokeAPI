@@ -2,7 +2,6 @@
 
 #include "smoke_api/steamclient/steamclient.hpp"
 
-#include "smoke_api/smoke_api.hpp"
 #include "smoke_api/types.hpp"
 #include "steam_api/steam_client.hpp"
 

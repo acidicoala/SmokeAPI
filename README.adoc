@@ -64,7 +64,7 @@ SmokeAPI supports 2 installation modes: hook mode and proxy mode.
 |Mode |Advantages |Disadvantages
 
 |🪝 Hook mode
-|Persists after game updates
+|Persists after game updates; Can be loaded by other injectors.
 |Might need an additional DLL (Koaloader)
 
 |🔀 Proxy mode
@@ -81,7 +81,10 @@ If it doesn't work, try installing it in proxy mode.
 . Download the latest SmokeAPI release zip from {smokeapi_release}.
 . From SmokeAPI archive unpack `steam_api.dll` or `steam_api64.dll`, depending on the game bitness, rename it to `version.dll`, and place it next to the game exe file.
 
-=== 🪝 Hook mode (Alternative)
+=== 🪝 Hook mode (Alternative installation)
+
+:special_k: https://www.special-k.info[Special K]
+:custom_plugin: https://wiki.special-k.info/en/SpecialK/Tools#custom-plugin[custom plugin]
 
 If a game doesn't load `version.dll`, you can use one of the {koaloader} DLLs that the game does in fact load.
 For example, assuming that the game loads `winmm.dll`:
@@ -91,18 +94,27 @@ For example, assuming that the game loads `winmm.dll`:
 . Download the latest SmokeAPI release zip from {smokeapi_release}.
 . From SmokeAPI archive unpack `steam_api.dll` or `steam_api64.dll`, depending on the game bitness, rename it to `SmokeAPI.dll`, and place it next to the game exe file.
 
+[[special_k_note]]
+IMPORTANT: There are games which have extra protections that break hook mode.
+In such cases, it might be worth trying {special_k}, which can inject SmokeAPI as a {custom_plugin}.
+
 ==== 🔀 Proxy mode
 
 . Find `steam_api.dll` / `steam_api64.dll` file in game directory, and rename it to `steam_api_o.dll` / `steam_api64_o.dll`.
 . Download the latest SmokeAPI release zip from  {smokeapi_release}.
 . From SmokeAPI archive unpack `steam_api.dll`/`steam_api64.dll`, depending on the game bitness, and place it next to the original steam_api DLL file.
 
+IMPORTANT: There are games which have extra protections that break proxy mode.
+In such cases, see the note on <<special_k_note, Hook mode with Special K>>
+
+---
+
 If the unlocker is not working as expected, then please fully read the https://gist.github.com/acidicoala/2c131cb90e251f97c0c1dbeaf2c174dc[Generic Unlocker Installation Instructions] before seeking support in the {forum-topic}.
 
 == ⚙ Configuration
 
-NOTE: This document describes configuration for version 3 of SmokeAPI.
-You can find the version 2 documentation https://github.com/acidicoala/SmokeAPI/blob/v2.0.5/README.md#-configuration[here].
+NOTE: This document describes configuration for version 4 of SmokeAPI.
+You can find the version 3 documentation https://github.com/acidicoala/SmokeAPI/blob/v3.0.0/README.adoc#-configuration[here].
 
 :fn-app-id: footnote:fn-app-id[App/DLC IDs can be obtained from https://steamdb.info[SteamDB] or https://steambase.io[Steambase]. Keep in mind that you need to be signed in with a steam account in order to see accurate inventory item IDs on that website.]
 

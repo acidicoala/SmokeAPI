@@ -15,7 +15,7 @@
 #include "smoke_api.hpp"
 #include "smoke_api/config.hpp"
 #include "smoke_api/steamclient/steamclient.hpp"
-#include "steam_api/exports/steam_api.hpp"
+// #include "steam_api/exports/steam_api.hpp"
 
 // Hooking steam_api has shown itself to be less desirable than steamclient
 // for the reasons outlined below:
@@ -49,26 +49,14 @@ namespace {
         LOG_INFO("Detected hook mode");
 
         kb::dll_monitor::init_listener(
-            {STEAMCLIENT_DLL, STEAMAPI_DLL},
+            {STEAMCLIENT_DLL},
             [&](const HMODULE& module_handle, const std::string& library_name) {
-                if(kb::str::eq(library_name, STEAMCLIENT_DLL)) {
-                    KB_HOOK_DETOUR_MODULE(CreateInterface, module_handle);
-                } else if(kb::str::eq(library_name, STEAMAPI_DLL)) {
-                    // TODO: SteamAPI_Init will be too small to hook on x64.
-                    // Ideally, we should inspect the address it jumps to and hook that instead.
-                    // Moreover, SteamAPI_InitSafe calls the same address,
-                    // so it could be used as a sanity check
+                KB_HOOK_DETOUR_MODULE(CreateInterface, module_handle);
 
-                    KB_HOOK_DETOUR_MODULE(SteamAPI_Init, module_handle);
-                    KB_HOOK_DETOUR_MODULE(SteamAPI_InitSafe, module_handle);
-                    KB_HOOK_DETOUR_MODULE(SteamAPI_InitFlat, module_handle);
-                    KB_HOOK_DETOUR_MODULE(SteamInternal_SteamAPI_Init, module_handle);
-                    KB_HOOK_DETOUR_MODULE(SteamAPI_RestartAppIfNecessary, module_handle);
-                    KB_HOOK_DETOUR_MODULE(SteamAPI_Shutdown, module_handle);
-
-                    // Note: It is not necessary to hook flat functions or interface accessors
-                    //       since the underlying interfaces will be hooked through steamclient.
-                }
+                // TODO: What if we just request all relevant interfaces ahead of time?
+                // This could help in situations where SmokeAPI was injected
+                // after a game has obtained the interfaces.
+                // After that, we could just unhook SteamClient.
             }
         );
     }

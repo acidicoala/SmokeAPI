@@ -1,3 +1,5 @@
+// Not included in project due atm due to lack of usage
+
 #include <koalabox/logger.hpp>
 
 #include "steam_api/exports/steam_api.hpp"
