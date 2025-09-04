@@ -1,7 +1,7 @@
 #include <koalabox/logger.hpp>
 
+#include "smoke_api/smoke_api.hpp"
 #include "smoke_api/interfaces/steam_user.hpp"
-#include "steam_api/steam_interface.hpp"
 #include "steam_api/virtuals/steam_api_virtuals.hpp"
 
 VIRTUAL(EUserHasLicenseForAppResult) ISteamUser_UserHasLicenseForApp(
@@ -9,7 +9,7 @@ VIRTUAL(EUserHasLicenseForAppResult) ISteamUser_UserHasLicenseForApp(
 ) noexcept {
     return smoke_api::steam_user::UserHasLicenseForApp(
         __func__,
-        steam_interface::get_app_id(),
+        smoke_api::get_app_id(),
         dlc_id,
         SWAPPED_CALL_CLOSURE(ISteamUser_UserHasLicenseForApp, ARGS(steamID, dlc_id))
     );

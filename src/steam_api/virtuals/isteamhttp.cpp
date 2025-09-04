@@ -1,7 +1,6 @@
 #include <koalabox/logger.hpp>
 
 #include "smoke_api/interfaces/steam_http.hpp"
-#include "steam_api/steam_interface.hpp"
 #include "steam_api/virtuals/steam_api_virtuals.hpp"
 
 VIRTUAL(bool) ISteamHTTP_GetHTTPResponseBodyData(

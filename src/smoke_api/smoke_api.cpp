@@ -6,7 +6,6 @@
 #include <koalabox/logger.hpp>
 #include <koalabox/path.hpp>
 #include <koalabox/paths.hpp>
-#include <koalabox/str.hpp>
 #include <koalabox/util.hpp>
 #include <koalabox/win.hpp>
 
@@ -114,5 +113,16 @@ namespace smoke_api {
         }
 
         kb::logger::shutdown();
+    }
+
+    AppId_t get_app_id() {
+        try {
+            const auto app_id_str = kb::win::get_env_var("SteamAppId");
+            static auto app_id = std::stoi(app_id_str);
+            return app_id;
+        } catch(const std::exception& e) {
+            LOG_ERROR("Failed to get app id: {}", e.what());
+            return 0;
+        }
     }
 }

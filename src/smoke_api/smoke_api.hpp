@@ -1,6 +1,6 @@
 #pragma once
 
-#include <koalabox/win.hpp>
+#include "smoke_api/types.hpp"
 
 constexpr auto STEAM_APPS = "STEAMAPPS_INTERFACE_VERSION";
 constexpr auto STEAM_CLIENT = "SteamClient";
@@ -15,10 +15,10 @@ constexpr auto STEAM_GAME_SERVER = "SteamGameServer";
 
 namespace smoke_api {
     extern HMODULE steamapi_module;
-
     extern bool hook_mode;
 
     void init(HMODULE module_handle);
-
     void shutdown();
+
+    AppId_t get_app_id();
 }

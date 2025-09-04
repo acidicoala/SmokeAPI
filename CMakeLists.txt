@@ -49,8 +49,8 @@ set(SMOKE_API_SOURCES
     src/steam_api/virtuals/steam_api_virtuals.hpp
     src/steam_api/steam_client.hpp
     src/steam_api/steam_client.cpp
-    src/steam_api/steam_interface.cpp
-    src/steam_api/steam_interface.hpp
+    src/steam_api/steam_interfaces.cpp
+    src/steam_api/steam_interfaces.hpp
     src/steamclient/steamclient.cpp
     src/main.cpp
 )

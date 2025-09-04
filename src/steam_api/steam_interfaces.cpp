@@ -7,7 +7,7 @@
 #include <koalabox/logger.hpp>
 #include <koalabox/win.hpp>
 
-#include "steam_api/steam_interface.hpp"
+#include "steam_api/steam_interfaces.hpp"
 #include "smoke_api/smoke_api.hpp"
 #include "virtuals/steam_api_virtuals.hpp"
 
@@ -135,23 +135,8 @@ namespace {
     }
 }
 
-namespace steam_interface {
+namespace steam_interfaces {
     namespace kb = koalabox;
-
-    AppId_t get_app_id_or_throw() {
-        const auto app_id_str = kb::win::get_env_var("SteamAppId");
-        return std::stoi(app_id_str);
-    }
-
-    AppId_t get_app_id() {
-        try {
-            static const auto app_id = get_app_id_or_throw();
-            return app_id;
-        } catch(const std::exception& e) {
-            LOG_ERROR("Failed to get app id: {}", e.what());
-            return 0;
-        }
-    }
 
     /**
      * @param interface_ptr Pointer to the interface
