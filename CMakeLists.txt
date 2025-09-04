@@ -37,9 +37,6 @@ set(SMOKE_API_SOURCES
     ${SMOKE_API_STATIC_SOURCES}
     src/smoke_api/smoke_api.cpp
     src/smoke_api/smoke_api.hpp
-#    src/steam_api/exports/steam_api.cpp
-#    src/steam_api/exports/steam_api.hpp
-#    src/steam_api/exports/steam_api_unversioned.cpp
     src/steam_api/virtuals/isteamapps.cpp
     src/steam_api/virtuals/isteamclient.cpp
     src/steam_api/virtuals/isteamgameserver.cpp
@@ -99,7 +96,7 @@ configure_linker_exports(
     TARGET SmokeAPI
     HEADER_NAME "linker_exports_for_steam_api"
     FORWARDED_DLL "${STEAMAPI_DLL}_o"
-    INPUT_SOURCES_DIR "${CMAKE_CURRENT_SOURCE_DIR}/src/steam_api/exports"
+    INPUT_SOURCES_DIR ""
     DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${STEAM_API_DLL}"
 )
 
