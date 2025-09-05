@@ -14,7 +14,6 @@
 #include "smoke_api.hpp"
 #include "smoke_api/config.hpp"
 #include "smoke_api/steamclient/steamclient.hpp"
-// #include "steam_api/exports/steam_api.hpp"
 
 // Hooking steam_api has shown itself to be less desirable than steamclient
 // for the reasons outlined below:
@@ -37,34 +36,19 @@
 namespace {
     namespace kb = koalabox;
 
-    void init_proxy_mode() {
-        LOG_INFO("Detected proxy mode");
+    HMODULE original_steamapi_handle = nullptr;
 
-        const auto self_path = kb::paths::get_self_dir();
-        smoke_api::steamapi_module = kb::loader::load_original_library(self_path, STEAMAPI_DLL);
-    }
-
-    void init_hook_mode() {
-        LOG_INFO("Detected hook mode");
-
+    void start_dll_listener() {
         kb::dll_monitor::init_listener(
             {STEAMCLIENT_DLL},
-            [&](const HMODULE& module_handle, const std::string& library_name) {
+            [&](const HMODULE& module_handle, auto&) {
                 KB_HOOK_DETOUR_MODULE(CreateInterface, module_handle);
-
-                // TODO: What if we just request all relevant interfaces ahead of time?
-                // This could help in situations where SmokeAPI was injected
-                // after a game has obtained the interfaces.
-                // After that, we could just unhook SteamClient.
             }
         );
     }
 }
 
 namespace smoke_api {
-    HMODULE steamapi_module = nullptr;
-    bool hook_mode = false;
-
     void init(const HMODULE module_handle) {
         try {
             kb::globals::init_globals(module_handle, PROJECT_NAME);
@@ -87,10 +71,18 @@ namespace smoke_api {
             kb::hook::init(true);
 
             if(kb::hook::is_hook_mode(module_handle, STEAMAPI_DLL)) {
-                hook_mode = true;
-                init_hook_mode();
+                LOG_INFO("Detected hook mode");
+
+                start_dll_listener();
             } else {
-                init_proxy_mode();
+                LOG_INFO("Detected proxy mode");
+
+                const auto self_path = kb::paths::get_self_dir();
+                original_steamapi_handle = kb::loader::load_original_library(
+                    self_path,
+                    STEAMAPI_DLL
+                );
+                start_dll_listener();
             }
 
             LOG_INFO("Initialization complete");
@@ -101,10 +93,12 @@ namespace smoke_api {
 
     void shutdown() {
         try {
-            if(steamapi_module != nullptr) {
-                kb::win::free_library(steamapi_module);
-                steamapi_module = nullptr;
+            if(original_steamapi_handle != nullptr) {
+                kb::win::free_library(original_steamapi_handle);
+                original_steamapi_handle = nullptr;
             }
+
+            // TODO: Unhook everything
 
             LOG_INFO("Shutdown complete");
         } catch(const std::exception& e) {

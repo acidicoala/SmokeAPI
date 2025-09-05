@@ -14,8 +14,6 @@ constexpr auto STEAM_GAME_SERVER = "SteamGameServer";
 #define DLL_EXPORT(TYPE) extern "C" [[maybe_unused]] __declspec(dllexport) TYPE __cdecl
 
 namespace smoke_api {
-    extern HMODULE steamapi_module;
-    extern bool hook_mode;
 
     void init(HMODULE module_handle);
     void shutdown();
