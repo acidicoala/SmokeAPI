@@ -47,10 +47,12 @@
 #define PARAMS(...) const void* RCX, __VA_ARGS__
 #define ARGS(...) RCX, __VA_ARGS__
 #define THIS RCX
+#define DECLARE_EDX()
 #else
 #define PARAMS(...) const void* ECX, const void* EDX, __VA_ARGS__
 #define ARGS(...) ECX, EDX, __VA_ARGS__
 #define THIS ECX
+#define DECLARE_EDX() const void* EDX = nullptr;
 #endif
 
 using AppId_t = uint32_t;

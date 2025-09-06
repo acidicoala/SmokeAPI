@@ -43,24 +43,20 @@ namespace {
 
     HMODULE original_steamapi_handle = nullptr;
 
-    std::set<std::string> find_steamclient_versions(const HMODULE steamapi_handle) noexcept {
-        try {
-            std::set<std::string> versions;
-            const auto rdata = kb::win::get_pe_section_or_throw(steamapi_handle, ".rdata").to_string();
+    std::set<std::string> find_steamclient_versions(const HMODULE steamapi_handle) {
+        std::set<std::string> versions;
 
-            const std::regex pattern(R"(SteamClient\d{3})");
-            auto matches_begin = std::sregex_iterator(rdata.begin(), rdata.end(), pattern);
-            auto matches_end = std::sregex_iterator();
+        const auto rdata = kb::win::get_pe_section_or_throw(steamapi_handle, ".rdata").to_string();
 
-            for(std::sregex_iterator i = matches_begin; i != matches_end; ++i) {
-                versions.insert(i->str());
-            }
+        const std::regex pattern(R"(SteamClient\d{3})");
+        auto matches_begin = std::sregex_iterator(rdata.begin(), rdata.end(), pattern);
+        auto matches_end = std::sregex_iterator();
 
-            return versions;
-        } catch(const std::exception& e) {
-            LOG_ERROR("{} -> insert error: {}", __func__, e.what());
-            return {};
+        for(std::sregex_iterator i = matches_begin; i != matches_end; ++i) {
+            versions.insert(i->str());
         }
+
+        return versions;
     }
 
     // ReSharper disable once CppDFAConstantFunctionResult
@@ -93,11 +89,7 @@ namespace {
     }
 
     void start_dll_listener() {
-        kb::dll_monitor::init_listener(
-            {
-                {STEAMCLIENT_DLL, on_steamclient_loaded}
-            }
-        );
+        kb::dll_monitor::init_listener({{STEAMCLIENT_DLL, on_steamclient_loaded}});
     }
 }
 

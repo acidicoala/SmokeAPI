@@ -211,9 +211,7 @@ namespace steam_interfaces {
 
             // Prepare HSteamPipe and HSteamUser
             const auto CreateInterface$ = KB_WIN_GET_PROC(steamclient_handle, CreateInterface);
-            const auto* const THIS = CreateInterface$(
-                steam_client_interface_version.c_str(), nullptr
-            );
+            const auto* const THIS = CreateInterface$(steam_client_interface_version.c_str(), nullptr);
             hook_virtuals(THIS, steam_client_interface_version);
 
             const auto interface_lookup = read_interface_lookup();
@@ -236,6 +234,7 @@ namespace steam_interfaces {
                     continue;
                 }
 
+                DECLARE_EDX();
                 const auto* const interface_ptr = ISteamClient_GetISteamGenericInterface(
                     ARGS(steam_user, steam_pipe, interface_version.c_str())
                 );
@@ -244,9 +243,6 @@ namespace steam_interfaces {
                     LOG_ERROR("Failed to get generic interface: '{}'", interface_version)
                 }
             }
-
-            // ISteamClient_ReleaseUser(ARGS(steam_pipe, steam_user));
-            // ISteamClient_BReleaseSteamPipe(ARGS(steam_pipe));
 
             kb::hook::unhook_vt_all(THIS);
         } catch(const std::exception& e) {
