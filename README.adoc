@@ -79,7 +79,9 @@ If it doesn't work, try installing it in proxy mode.
 === 🪝 Hook mode
 
 . Download the latest SmokeAPI release zip from {smokeapi_release}.
-. From SmokeAPI archive unpack `steam_api.dll` or `steam_api64.dll`, depending on the game bitness, rename it to `version.dll`, and place it next to the game exe file.
+. From SmokeAPI archive unpack `SmokeAPI32.dll` / `SmokeAPI64.dll`, depending on the game bitness
+. Rename the unpacked DLL to `version.dll`.
+. Place `version.dll` next to the game's `.exe` file.
 
 === 🪝 Hook mode (Alternative installation)
 
@@ -92,7 +94,8 @@ For example, assuming that the game loads `winmm.dll`:
 . Download the latest Koaloader release zip from https://github.com/acidicoala/Koaloader/releases/latest[Koaloader Releases].
 . From Koaloader archive unpack `winmm.dll` from `winmm-32` or `winmm-64`, depending on the game bitness, and place it next to the game exe file.
 . Download the latest SmokeAPI release zip from {smokeapi_release}.
-. From SmokeAPI archive unpack `steam_api.dll` or `steam_api64.dll`, depending on the game bitness, rename it to `SmokeAPI.dll`, and place it next to the game exe file.
+. From SmokeAPI archive unpack `SmokeAPI32.dll` / `SmokeAPI64.dll`, depending on the game bitness.
+. Place the unpacked DLL next to the game's `exe` file.
 
 [[special_k_note]]
 IMPORTANT: There are games which have extra protections that break hook mode.
@@ -102,12 +105,13 @@ In such cases, it might be worth trying {special_k}, which can inject SmokeAPI a
 
 . Find `steam_api.dll` / `steam_api64.dll` file in game directory, and rename it to `steam_api_o.dll` / `steam_api64_o.dll`.
 . Download the latest SmokeAPI release zip from  {smokeapi_release}.
-. From SmokeAPI archive unpack `steam_api.dll`/`steam_api64.dll`, depending on the game bitness, and place it next to the original steam_api DLL file.
+. From SmokeAPI archive unpack `SmokeAPI32.dll` / `SmokeAPI64.dll`, depending on the game bitness.
+. Rename the unpacked DLL to `steam_api.dll` / `steam_api64.dll` and place it next to the `steam_api_o.dll` / `steam_api64_o.dll` file.
 
 IMPORTANT: There are games which have extra protections that break proxy mode.
 In such cases, see the note on <<special_k_note, Hook mode with Special K>>
 
----
+'''
 
 If the unlocker is not working as expected, then please fully read the https://gist.github.com/acidicoala/2c131cb90e251f97c0c1dbeaf2c174dc[Generic Unlocker Installation Instructions] before seeking support in the {forum-topic}.
 

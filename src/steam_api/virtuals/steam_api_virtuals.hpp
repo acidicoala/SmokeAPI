@@ -14,9 +14,11 @@ VIRTUAL(void*) ISteamClient_GetISteamUser(PARAMS(HSteamUser, HSteamPipe, const c
 VIRTUAL(void*) ISteamClient_GetISteamGenericInterface(
     PARAMS(HSteamUser, HSteamPipe, const char*)
 
+
 ) noexcept;
 VIRTUAL(void*) ISteamClient_GetISteamInventory(
     PARAMS(HSteamUser, HSteamPipe, const char*)
+
 
 ) noexcept;
 
@@ -46,6 +48,7 @@ VIRTUAL(bool) ISteamInventory_GetItemsByID(
 ) noexcept;
 VIRTUAL(bool) ISteamInventory_SerializeResult(
     PARAMS(SteamInventoryResult_t, void*, uint32_t*)
+
 
 ) noexcept;
 VIRTUAL(bool) ISteamInventory_GetItemDefinitionIDs(PARAMS(SteamItemDef_t*, uint32_t*)) noexcept;

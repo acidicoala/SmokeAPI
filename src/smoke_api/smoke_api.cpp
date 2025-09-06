@@ -1,3 +1,6 @@
+#include <regex>
+#include <set>
+
 #include <koalabox/config.hpp>
 #include <koalabox/dll_monitor.hpp>
 #include <koalabox/globals.hpp>
@@ -9,11 +12,13 @@
 #include <koalabox/util.hpp>
 #include <koalabox/win.hpp>
 
-#include "build_config.h"
-
 #include "smoke_api.hpp"
+
 #include "smoke_api/config.hpp"
 #include "smoke_api/steamclient/steamclient.hpp"
+#include "steam_api/steam_interfaces.hpp"
+
+#include "build_config.h"
 
 // Hooking steam_api has shown itself to be less desirable than steamclient
 // for the reasons outlined below:
@@ -38,11 +43,59 @@ namespace {
 
     HMODULE original_steamapi_handle = nullptr;
 
+    std::set<std::string> find_steamclient_versions(const HMODULE steamapi_handle) noexcept {
+        try {
+            std::set<std::string> versions;
+            const auto rdata = kb::win::get_pe_section_or_throw(steamapi_handle, ".rdata").to_string();
+
+            const std::regex pattern(R"(SteamClient\d{3})");
+            auto matches_begin = std::sregex_iterator(rdata.begin(), rdata.end(), pattern);
+            auto matches_end = std::sregex_iterator();
+
+            for(std::sregex_iterator i = matches_begin; i != matches_end; ++i) {
+                versions.insert(i->str());
+            }
+
+            return versions;
+        } catch(const std::exception& e) {
+            LOG_ERROR("{} -> insert error: {}", __func__, e.what());
+            return {};
+        }
+    }
+
+    // ReSharper disable once CppDFAConstantFunctionResult
+    bool on_steamclient_loaded(const HMODULE steamclient_handle) noexcept {
+        auto* const steamapi_handle = original_steamapi_handle
+                                          ? original_steamapi_handle
+                                          : GetModuleHandle(TEXT(STEAMAPI_DLL));
+        if(!steamapi_handle) {
+            LOG_ERROR("{} -> {} is not loaded", __func__, STEAMAPI_DLL);
+            return true;
+        }
+
+        static const auto CreateInterface$ = KB_WIN_GET_PROC(steamclient_handle, CreateInterface);
+
+        const auto steamclient_versions = find_steamclient_versions(steamapi_handle);
+        for(const auto& steamclient_version : steamclient_versions) {
+            if(CreateInterface$(steamclient_version.c_str(), nullptr)) {
+                LOG_WARN("'{}' was already initialized. SmokeAPI might not work as expected.", steamclient_version);
+                LOG_WARN("Probable cause: SmokeAPI was injected too late. If possible, try injecting it earlier.");
+
+                steam_interfaces::hook_steamclient_interface(steamclient_handle, steamclient_version);
+            } else {
+                LOG_INFO("'{}' is not initialized. Waiting for initialization.", steamclient_version);
+            }
+        }
+
+        KB_HOOK_DETOUR_MODULE(CreateInterface, steamclient_handle);
+
+        return true;
+    }
+
     void start_dll_listener() {
         kb::dll_monitor::init_listener(
-            {STEAMCLIENT_DLL},
-            [&](const HMODULE& module_handle, auto&) {
-                KB_HOOK_DETOUR_MODULE(CreateInterface, module_handle);
+            {
+                {STEAMCLIENT_DLL, on_steamclient_loaded}
             }
         );
     }
@@ -82,6 +135,7 @@ namespace smoke_api {
                     self_path,
                     STEAMAPI_DLL
                 );
+
                 start_dll_listener();
             }
 

@@ -9,6 +9,7 @@
 
 #include "steam_api/steam_interfaces.hpp"
 #include "smoke_api/smoke_api.hpp"
+#include "smoke_api/steamclient/steamclient.hpp"
 #include "virtuals/steam_api_virtuals.hpp"
 
 namespace {
@@ -18,14 +19,15 @@ namespace {
         void* function_address; // e.g. ISteamClient_GetISteamApps
     };
 
-    // TODO: Split fallback into low and high versions
-    struct interface_data { // NOLINT(*-exception-escape)
+    struct interface_data_t { // NOLINT(*-exception-escape)
         std::string fallback_version; // e.g. "SteamClient021"
+        // Key is function name without interface prefix
         std::map<std::string, interface_entry> entry_map;
         // e.g. {ENTRY(ISteamClient, GetISteamApps), ...}
     };
 
-    std::map<std::string, interface_data> get_virtual_hook_map() {
+    // Key is interface name, e.g. "SteamClient"
+    std::map<std::string, interface_data_t> get_virtual_hook_map() {
 #define ENTRY(INTERFACE, FUNC) \
             { \
                 #FUNC, { \
@@ -36,7 +38,7 @@ namespace {
         return {
             {
                 STEAM_APPS,
-                interface_data{
+                interface_data_t{
                     .fallback_version = "STEAMAPPS_INTERFACE_VERSION008",
                     .entry_map = {
                         ENTRY(ISteamApps, BIsSubscribedApp),
@@ -48,7 +50,7 @@ namespace {
             },
             {
                 STEAM_CLIENT,
-                interface_data{
+                interface_data_t{
                     .fallback_version = "SteamClient021",
                     .entry_map = {
                         ENTRY(ISteamClient, GetISteamApps),
@@ -60,7 +62,7 @@ namespace {
             },
             {
                 STEAM_GAME_SERVER,
-                interface_data{
+                interface_data_t{
                     .fallback_version = "SteamGameServer015",
                     .entry_map = {
                         ENTRY(ISteamGameServer, UserHasLicenseForApp),
@@ -69,7 +71,7 @@ namespace {
             },
             {
                 STEAM_HTTP,
-                interface_data{
+                interface_data_t{
                     .fallback_version = "STEAMHTTP_INTERFACE_VERSION003",
                     .entry_map = {
                         ENTRY(ISteamHTTP, GetHTTPResponseBodyData),
@@ -80,7 +82,7 @@ namespace {
             },
             {
                 STEAM_INVENTORY,
-                interface_data{
+                interface_data_t{
                     .fallback_version = "STEAMINVENTORY_INTERFACE_V003",
                     .entry_map = {
                         ENTRY(ISteamInventory, GetResultStatus),
@@ -95,7 +97,7 @@ namespace {
             },
             {
                 STEAM_USER,
-                interface_data{
+                interface_data_t{
                     .fallback_version = "SteamUser023",
                     .entry_map = {
                         ENTRY(ISteamUser, UserHasLicenseForApp),
@@ -105,8 +107,14 @@ namespace {
         };
     }
 
-    auto read_interface_lookup() {
-        std::map<std::string, std::map<std::string, uint16_t>> lookup_map;
+    // Key is function name, Value is ordinal
+    using ordinal_map_t = std::map<std::string, uint16_t>;
+
+    // Key is interface version string
+    using lookup_map_t = std::map<std::string, ordinal_map_t>;
+
+    lookup_map_t read_interface_lookup() {
+        lookup_map_t lookup_map;
 
         const auto lookup_str = b::embed<"res/interface_lookup.json">().str();
         const auto lookup_json = nlohmann::json::parse(lookup_str);
@@ -140,9 +148,9 @@ namespace steam_interfaces {
 
     /**
      * @param interface_ptr Pointer to the interface
-     * @param version_string Example: 'SteamClient020'
+     * @param version_string Example: 'SteamClient007'
      */
-    void hook_virtuals(void* interface_ptr, const std::string& version_string) {
+    void hook_virtuals(const void* interface_ptr, const std::string& version_string) {
         if(interface_ptr == nullptr) {
             // Game has tried to use an interface before initializing steam api
             // This does happen in practice.
@@ -152,14 +160,10 @@ namespace steam_interfaces {
         static std::mutex section;
         const std::lock_guard guard(section);
 
-        static std::set<void*> processed_interfaces;
+        static std::set<const void*> processed_interfaces;
 
         if(processed_interfaces.contains(interface_ptr)) {
-            LOG_DEBUG(
-                "Interface '{}' @ {} has already been processed.",
-                version_string,
-                interface_ptr
-            );
+            LOG_DEBUG("Interface '{}' @ {} has already been processed.", version_string, interface_ptr);
             return;
         }
         processed_interfaces.insert(interface_ptr);
@@ -170,11 +174,7 @@ namespace steam_interfaces {
                 continue;
             }
 
-            LOG_INFO(
-                "Processing '{}' @ {} found in virtual hook map",
-                version_string,
-                interface_ptr
-            );
+            LOG_INFO("Processing '{}' @ {} found in virtual hook map", version_string, interface_ptr);
 
             const auto& lookup = find_lookup(version_string, data.fallback_version);
 
@@ -192,6 +192,65 @@ namespace steam_interfaces {
             }
 
             break;
+        }
+    }
+
+    void hook_steamclient_interface(
+        const HMODULE steamclient_handle,
+        const std::string& steam_client_interface_version
+    ) noexcept {
+        try {
+            // Create a copy for modification
+            auto virtual_hook_map = get_virtual_hook_map();
+
+            // Remove steam client map since we don't want to hook its methods
+            virtual_hook_map.erase(STEAM_CLIENT);
+
+            // Map remaining virtual hook map to a set of keys
+            const auto prefixes = std::views::keys(virtual_hook_map) | std::ranges::to<std::set>();
+
+            // Prepare HSteamPipe and HSteamUser
+            const auto CreateInterface$ = KB_WIN_GET_PROC(steamclient_handle, CreateInterface);
+            const auto* const THIS = CreateInterface$(
+                steam_client_interface_version.c_str(), nullptr
+            );
+            hook_virtuals(THIS, steam_client_interface_version);
+
+            const auto interface_lookup = read_interface_lookup();
+            for(const auto& interface_version : interface_lookup | std::views::keys) {
+                // SteamUser and SteamPipe handles must match the ones previously used by the game,
+                // otherwise SteamAPI will just create new instances of interfaces, instead of returning
+                // existing instances that are used by the game. Usually these handles default to 1,
+                // but if a game creates several of them, then we need to somehow find them out dynamically.
+                constexpr auto steam_pipe = 1;
+                constexpr auto steam_user = 1;
+
+                const bool should_hook = std::ranges::any_of(
+                    prefixes,
+                    [&](const auto& prefix) {
+                        return std::ranges::starts_with(interface_version, prefix);
+                    }
+                );
+
+                if(not should_hook) {
+                    continue;
+                }
+
+                const auto* const interface_ptr = ISteamClient_GetISteamGenericInterface(
+                    ARGS(steam_user, steam_pipe, interface_version.c_str())
+                );
+
+                if(not interface_ptr) {
+                    LOG_ERROR("Failed to get generic interface: '{}'", interface_version)
+                }
+            }
+
+            // ISteamClient_ReleaseUser(ARGS(steam_pipe, steam_user));
+            // ISteamClient_BReleaseSteamPipe(ARGS(steam_pipe));
+
+            kb::hook::unhook_vt_all(THIS);
+        } catch(const std::exception& e) {
+            LOG_ERROR("{} -> Unhandled exception: {}", __func__, e.what());
         }
     }
 }

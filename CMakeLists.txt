@@ -9,7 +9,8 @@ add_subdirectory(tools)
 
 set_32_and_64(STEAMAPI_DLL steam_api)
 set_32_and_64(STEAMCLIENT_DLL steamclient)
-set_32_and_64(STEAM_API_DLL steam_api.dll steam_api64.dll)
+set_32_and_64(STEAM_API_DLL steam_api steam_api64)
+set_32_and_64(SMOKEAPI_DLL SmokeAPI32 SmokeAPI64)
 
 configure_build_config(extra_build_config)
 
@@ -74,11 +75,11 @@ target_link_libraries(SmokeAPI_static PUBLIC SmokeAPI::common)
 
 add_library(SmokeAPI SHARED ${SMOKE_API_SOURCES})
 target_link_libraries(SmokeAPI PUBLIC SmokeAPI::common)
-set_target_properties(SmokeAPI PROPERTIES RUNTIME_OUTPUT_NAME ${STEAMAPI_DLL})
+set_target_properties(SmokeAPI PROPERTIES RUNTIME_OUTPUT_NAME ${SMOKEAPI_DLL})
 configure_version_resource(
     TARGET SmokeAPI
     FILE_DESC "Steamworks DLC unlocker"
-    ORIG_NAME SmokeAPI
+    ORIG_NAME ${SMOKEAPI_DLL}
 )
 target_include_directories(SmokeAPI PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/src"
@@ -97,7 +98,7 @@ configure_linker_exports(
     HEADER_NAME "linker_exports_for_steam_api"
     FORWARDED_DLL "${STEAMAPI_DLL}_o"
     INPUT_SOURCES_DIR ""
-    DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${STEAM_API_DLL}"
+    DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${STEAM_API_DLL}.dll"
 )
 
 configure_linker_exports(

@@ -7,13 +7,13 @@ VIRTUAL(void*) ISteamClient_GetISteamApps(
     PARAMS(
         const HSteamUser hSteamUser,
         const HSteamPipe hSteamPipe,
-        const char* version
+        const char* pchVersion
     )
 ) noexcept {
     return steam_client::GetGenericInterface(
         __func__,
-        version,
-        SWAPPED_CALL_CLOSURE(ISteamClient_GetISteamApps, ARGS(hSteamUser, hSteamPipe, version))
+        pchVersion,
+        SWAPPED_CALL_CLOSURE(ISteamClient_GetISteamApps, ARGS(hSteamUser, hSteamPipe, pchVersion))
     );
 }
 
@@ -21,13 +21,13 @@ VIRTUAL(void*) ISteamClient_GetISteamUser(
     PARAMS(
         const HSteamUser hSteamUser,
         const HSteamPipe hSteamPipe,
-        const char* version
+        const char* pchVersion
     )
 ) noexcept {
     return steam_client::GetGenericInterface(
         __func__,
-        version,
-        SWAPPED_CALL_CLOSURE(ISteamClient_GetISteamUser, ARGS(hSteamUser, hSteamPipe, version))
+        pchVersion,
+        SWAPPED_CALL_CLOSURE(ISteamClient_GetISteamUser, ARGS(hSteamUser, hSteamPipe, pchVersion))
     );
 }
 

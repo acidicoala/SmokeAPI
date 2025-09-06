@@ -1,7 +1,7 @@
 #include <koalabox/logger.hpp>
 
-#include "steam_api/steam_interfaces.hpp"
 #include "steam_client.hpp"
+#include "steam_api/steam_interfaces.hpp"
 
 namespace steam_client {
     void* GetGenericInterface(

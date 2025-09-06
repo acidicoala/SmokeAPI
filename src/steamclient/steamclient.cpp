@@ -1,14 +1,21 @@
+#include <mutex>
+
 #include <koalabox/hook.hpp>
+#include <koalabox/logger.hpp>
 
 #include "smoke_api/steamclient/steamclient.hpp"
-
 #include "smoke_api/types.hpp"
+
 #include "steam_api/steam_client.hpp"
 
 /**
  * SmokeAPI implementation
  */
-C_DECL(void*) CreateInterface(const char* interface_version, int* out_result) {
+C_DECL(void*) CreateInterface(const char* interface_version, create_interface_result* out_result) {
+    // Mutex here helps us detect unintended recursion early on by throwing an exception.
+    static std::mutex section;
+    const std::lock_guard lock(section);
+
     return steam_client::GetGenericInterface(
         __func__,
         interface_version,
