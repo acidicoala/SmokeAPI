@@ -74,6 +74,9 @@ namespace {
         const auto steamclient_versions = find_steamclient_versions(steamapi_handle);
         for(const auto& steamclient_version : steamclient_versions) {
             if(CreateInterface$(steamclient_version.c_str(), nullptr)) {
+                // TODO: This is not true when running under Proton.
+                // Even before initialization, an interface will be returned,
+                // but GetISteamGenericInterface will still fail.
                 LOG_WARN("'{}' was already initialized. SmokeAPI might not work as expected.", steamclient_version);
                 LOG_WARN("Probable cause: SmokeAPI was injected too late. If possible, try injecting it earlier.");
 
