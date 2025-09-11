@@ -17,12 +17,12 @@ target_include_directories(BS_thread_pool INTERFACE ${BS_thread_pool_SOURCE_DIR}
 
 ### Steamworks Downloader executable
 
-add_executable(steamworks_downloader steamworks_downloader.cpp)
+add_executable(steamworks_downloader src/steamworks_downloader.cpp)
 target_link_libraries(steamworks_downloader PRIVATE KoalaBox)
 
 ### Steamworks Parser executable
 
-add_executable(steamworks_parser steamworks_parser.cpp)
+add_executable(steamworks_parser src/steamworks_parser.cpp)
 target_link_libraries(steamworks_parser PRIVATE
     KoalaBox
     BS_thread_pool

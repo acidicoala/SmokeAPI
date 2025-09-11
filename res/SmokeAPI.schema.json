@@ -1,71 +1,71 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://example.com/smokeapi-config.schema.json",
+  "$id": "https://raw.githubusercontent.com/acidicoala/SmokeAPI/refs/tags/v3.1.1/res/SmokeAPI.schema.json",
   "title": "SmokeAPI configuration",
   "type": "object",
   "additionalProperties": false,
   "properties": {
     "$schema": {
       "type": "string",
-      "description": "The URI of the JSON Schema used to validate this config."
+      "description": "URL of a JSON Schema that corresponds to this config.",
+      "x-default": "[SmokeAPI.schema.json](res/SmokeAPI.schema.json)",
+      "x-valid-values": "URL to a valid SmokeAPI config JSON schema."
     },
     "$version": {
       "type": "integer",
+      "description": "Reserved for use by tools like GUI config editors.",
       "const": 4,
-      "description": "A technical field reserved for tools like GUI config editors. Do not modify this value."
+      "x-valid-values": "Integer numbers from 1 and beyond."
     },
     "logging": {
       "type": "boolean",
       "default": false,
-      "description": "Toggles generation of a SmokeAPI.log.log file."
+      "x-packaged-default": true,
+      "description": "Enables logging to SmokeAPI.log.log file.",
+      "x-valid-values": "`true` or `false`."
     },
     "log_steam_http": {
       "type": "boolean",
       "default": false,
-      "description": "Toggles logging of SteamHTTP traffic"
+      "description": "Toggles logging of SteamHTTP traffic",
+      "x-valid-values": "`true` or `false`."
     },
     "default_app_status": {
-      "description": "Sets the default DLC unlocking behaviour.",
+      "type": "string",
+      "description": "Specifies default DLC status.",
       "default": "unlocked",
-      "$ref": "#/$defs/AppStatus"
+      "$ref": "#/$defs/AppStatus",
+      "x-valid-values": "`\"unlocked\"` or `\"locked\"` or `\"original\"`."
     },
     "override_app_status": {
       "type": "object",
       "default": {},
-      "description": "Overrides the status of all DLCs that belong to a specified app ID. Keys are app IDs (as strings).",
+      "description": "Overrides the status of all DLCs that belong to a specified app ID.",
       "patternProperties": {
         "^\\d{1,10}$": {
           "$ref": "#/$defs/AppStatus"
         }
       },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "x-valid-values": "An object with `\"key\": \"value\"` pairs, where key is App ID and value is App status."
     },
     "override_dlc_status": {
       "type": "object",
       "default": {},
-      "description": "Overrides the status of individual DLCs, regardless of the corresponding app status. Keys are DLC IDs (as strings).",
+      "description": "Overrides the status of individual DLCs, regardless of the corresponding app status.",
       "patternProperties": {
         "^\\d{1,10}$": {
           "$ref": "#/$defs/AppStatus"
         }
       },
-      "additionalProperties": false
-    },
-    "extra_dlcs": {
-      "type": "object",
-      "default": {},
-      "description": "Map of app IDs to objects containing DLC IDs with their display names.",
-      "patternProperties": {
-        "^\\d{1,10}$": {
-          "$ref": "#/$defs/App"
-        }
-      },
-      "additionalProperties": false
+      "additionalProperties": false,
+      "x-valid-values": "An object with `\"key\": \"value\"` pairs, where key is DLC ID and value is DLC status."
     },
     "auto_inject_inventory": {
       "type": "boolean",
       "default": true,
-      "description": "Whether SmokeAPI should automatically inject a list of all registered inventory items when a game queries user inventory."
+      "description": "Specifies whether SmokeAPI should automatically inject a list of all registered inventory items, when a game queries user inventory",
+      "x-valid-values": "`true` or `false`."
     },
     "extra_inventory_items": {
       "type": "array",
@@ -74,25 +74,30 @@
       "items": {
         "type": "integer",
         "minimum": 0
-      }
+      },
+      "x-valid-values": "An array of integer App IDs."
+    },
+    "extra_dlcs": {
+      "type": "object",
+      "default": {},
+      "description": "See [Extra info](#how_smokeapi_works_in_games_with_large_number_of_dlcs) to understand the use case for this option.",
+      "patternProperties": {
+        "^\\d{1,10}$": {
+          "$ref": "#/$defs/App"
+        }
+      },
+      "additionalProperties": false,
+      "x-valid-values": "An object with `\"key\": \"value\"`, where the key is App ID and value is an object with `\"dlcs\"` property. See the complete example for more."
     }
   },
   "$defs": {
     "AppStatus": {
       "description": "Unlock status for apps or DLCs.",
-      "anyOf": [
-        {
-          "type": "string",
-          "enum": [
-            "original",
-            "unlocked",
-            "locked"
-          ]
-        },
-        {
-          "type": "null",
-          "description": "Represents UNDEFINED in the enum."
-        }
+      "type": "string",
+      "enum": [
+        "original",
+        "unlocked",
+        "locked"
       ]
     },
     "App": {
@@ -115,7 +120,7 @@
   },
   "examples": [
     {
-      "$schema": "https://raw.githubusercontent.com/acidicoala/SmokeAPI/refs/tags/v3.1.0/res/SmokeAPI.schema.json",
+      "$schema": "https://raw.githubusercontent.com/acidicoala/SmokeAPI/refs/tags/v3.1.1/res/SmokeAPI.schema.json",
       "$version": 4,
       "logging": true,
       "log_steam_http": true,
@@ -130,7 +135,11 @@
         "5678": "locked"
       },
       "auto_inject_inventory": true,
-      "extra_inventory_items": [],
+      "extra_inventory_items": [
+        9876,
+        8765,
+        7654
+      ],
       "extra_dlcs": {
         "1234": {
           "dlcs": {

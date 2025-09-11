@@ -4,7 +4,7 @@ project(SmokeAPI VERSION 3.1.1)
 
 include(KoalaBox/cmake/KoalaBox.cmake)
 
-add_subdirectory(KoalaBox EXCLUDE_FROM_ALL)
+add_subdirectory(KoalaBox)
 add_subdirectory(tools)
 
 set_32_and_64(STEAMAPI_DLL steam_api)
