@@ -147,7 +147,7 @@ Below you can find the detailed description of each available config option. In 
 | `override_dlc_status` | Overrides the status of individual DLCs, regardless of the corresponding app status. | Object | `{}` | An object with `"key": "value"` pairs, where key is DLC ID and value is DLC status. |
 | `auto_inject_inventory` | Specifies whether SmokeAPI should automatically inject a list of all registered inventory items, when a game queries user inventory | Boolean | `true` | `true` or `false`. |
 | `extra_inventory_items` | A list of inventory item IDs that will be added in addition to the automatically injected items. | Array | `[]` | An array of integer App IDs. |
-| `extra_dlcs` | See [Extra info](#how_smokeapi_works_in_games_with_large_number_of_dlcs) to understand the use case for this option. | Object | `{}` | An object with `"key": "value"`, where the key is App ID and value is an object with `"dlcs"` property. See the complete example for more. |
+| `extra_dlcs` | See [Extra info](#-how-smokeapi-works-in-games-with-large-number-of-dlcs) to understand the use case for this option. | Object | `{}` | An object with `"key": "value"`, where the key is App ID and value is an object with `"dlcs"` property. See the complete example for more. |
 
 
 <details><summary>Advanced options</summary>

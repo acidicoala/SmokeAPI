@@ -80,7 +80,7 @@
     "extra_dlcs": {
       "type": "object",
       "default": {},
-      "description": "See [Extra info](#how_smokeapi_works_in_games_with_large_number_of_dlcs) to understand the use case for this option.",
+      "description": "See [Extra info](#-how-smokeapi-works-in-games-with-large-number-of-dlcs) to understand the use case for this option.",
       "patternProperties": {
         "^\\d{1,10}$": {
           "$ref": "#/$defs/App"
