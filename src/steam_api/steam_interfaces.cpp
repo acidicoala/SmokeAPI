@@ -243,8 +243,6 @@ namespace steam_interfaces {
                     LOG_ERROR("Failed to get generic interface: '{}'", interface_version)
                 }
             }
-
-            kb::hook::unhook_vt_all(THIS);
         } catch(const std::exception& e) {
             LOG_ERROR("{} -> Unhandled exception: {}", __func__, e.what());
         }
