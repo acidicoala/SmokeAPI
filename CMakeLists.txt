@@ -73,7 +73,7 @@ target_link_libraries(SmokeAPI_static PUBLIC SmokeAPI::common)
 
 ### Shared SmokeAPI
 
-add_library(SmokeAPI SHARED ${SMOKE_API_SOURCES})
+add_library(SmokeAPI SHARED ${SMOKE_API_SOURCES} ${VERSION_RESOURCE})
 target_link_libraries(SmokeAPI PUBLIC SmokeAPI::common)
 set_target_properties(SmokeAPI PROPERTIES RUNTIME_OUTPUT_NAME ${SMOKEAPI_DLL})
 configure_version_resource(
@@ -81,10 +81,7 @@ configure_version_resource(
     FILE_DESC "Steamworks DLC unlocker"
     ORIG_NAME ${SMOKEAPI_DLL}
 )
-target_include_directories(SmokeAPI PRIVATE
-    "${CMAKE_CURRENT_SOURCE_DIR}/src"
-    "${CMAKE_CURRENT_BINARY_DIR}"
-)
+configure_include_directories()
 
 ## https://github.com/batterycenter/embed
 CPMAddPackage(
