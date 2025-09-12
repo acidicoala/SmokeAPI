@@ -216,7 +216,7 @@ namespace smoke_api::steam_inventory {
         try {
             const auto success = original_function();
 
-            LOG_DEBUG("{} -> Handle: {}", function_name, fmt::ptr(pResultHandle));
+            LOG_DEBUG("{} -> Handle: {}", function_name, static_cast<void*>(pResultHandle));
 
             if(success && pInstanceIDs != nullptr) {
                 for(int i = 0; i < unCountInstanceIDs; i++) {

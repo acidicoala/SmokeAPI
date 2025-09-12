@@ -7,10 +7,10 @@
 #include <koalabox/hook.hpp>
 #include <koalabox/loader.hpp>
 #include <koalabox/logger.hpp>
+#include <koalabox/module.hpp>
 #include <koalabox/path.hpp>
 #include <koalabox/paths.hpp>
 #include <koalabox/util.hpp>
-#include <koalabox/win.hpp>
 
 #include "smoke_api.hpp"
 
@@ -41,16 +41,17 @@
 namespace {
     namespace kb = koalabox;
 
-    HMODULE original_steamapi_handle = nullptr;
+    void* original_steamapi_handle = nullptr;
 
     std::set<std::string> find_steamclient_versions(const HMODULE steamapi_handle) {
         std::set<std::string> versions;
 
-        const auto rdata = kb::win::get_pe_section_or_throw(steamapi_handle, ".rdata").to_string();
+        const auto rdata_section = kb::module::get_section_or_throw(steamapi_handle, kb::module::CONST_STR_SECTION);
+        const auto rdata = rdata_section.to_string();
 
         const std::regex pattern(R"(SteamClient\d{3})");
-        auto matches_begin = std::sregex_iterator(rdata.begin(), rdata.end(), pattern);
-        auto matches_end = std::sregex_iterator();
+        const auto matches_begin = std::sregex_iterator(rdata.begin(), rdata.end(), pattern);
+        const auto matches_end = std::sregex_iterator();
 
         for(std::sregex_iterator i = matches_begin; i != matches_end; ++i) {
             versions.insert(i->str());
@@ -60,16 +61,16 @@ namespace {
     }
 
     // ReSharper disable once CppDFAConstantFunctionResult
-    bool on_steamclient_loaded(const HMODULE steamclient_handle) noexcept {
+    bool on_steamclient_loaded(const HMODULE steamclient_handle) {
         auto* const steamapi_handle = original_steamapi_handle
                                           ? original_steamapi_handle
-                                          : GetModuleHandle(TEXT(STEAMAPI_DLL));
+                                          : kb::module::get_library_handle(TEXT(STEAMAPI_DLL));
         if(!steamapi_handle) {
             LOG_ERROR("{} -> {} is not loaded", __func__, STEAMAPI_DLL);
             return true;
         }
 
-        static const auto CreateInterface$ = KB_WIN_GET_PROC(steamclient_handle, CreateInterface);
+        static const auto CreateInterface$ = KB_MOD_GET_FUNC(steamclient_handle, CreateInterface);
 
         const auto steamclient_versions = find_steamclient_versions(steamapi_handle);
         for(const auto& steamclient_version : steamclient_versions) {
@@ -110,7 +111,7 @@ namespace smoke_api {
             LOG_INFO("{} v{} | Built at '{}'", PROJECT_NAME, PROJECT_VERSION, __TIMESTAMP__);
             LOG_DEBUG("Parsed config:\n{}", nlohmann::ordered_json(config::instance).dump(2));
 
-            const auto exe_path = kb::win::get_module_path(nullptr);
+            const auto exe_path = kb::module::get_fs_path(nullptr);
             const auto exe_name = kb::path::to_str(exe_path.filename());
 
             LOG_DEBUG("Process name: '{}' [{}-bit]", exe_name, kb::util::BITNESS);
@@ -136,14 +137,14 @@ namespace smoke_api {
 
             LOG_INFO("Initialization complete");
         } catch(const std::exception& e) {
-            kb::util::panic(fmt::format("Initialization error: {}", e.what()));
+            kb::util::panic(std::format("Initialization error: {}", e.what()));
         }
     }
 
     void shutdown() {
         try {
             if(original_steamapi_handle != nullptr) {
-                kb::win::free_library(original_steamapi_handle);
+                kb::module::unload_library(original_steamapi_handle);
                 original_steamapi_handle = nullptr;
             }
 
@@ -160,7 +161,7 @@ namespace smoke_api {
 
     AppId_t get_app_id() {
         try {
-            const auto app_id_str = kb::win::get_env_var("SteamAppId");
+            const auto app_id_str = kb::util::get_env_var("SteamAppId");
             static auto app_id = std::stoi(app_id_str);
             return app_id;
         } catch(const std::exception& e) {

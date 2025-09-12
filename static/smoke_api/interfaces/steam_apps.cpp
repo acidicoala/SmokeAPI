@@ -18,7 +18,7 @@ namespace {
     std::set<uint32_t> fully_fetched; // NOLINT(cert-err58-cpp)
 
     std::string get_app_id_log(const uint32_t app_id) {
-        return app_id ? fmt::format("App ID: {:>8}, ", app_id) : "";
+        return app_id ? std::format("App ID: {:>8}, ", app_id) : "";
     }
 
     /**
@@ -176,9 +176,11 @@ namespace smoke_api::steam_apps {
                 *pDlcId = dlc.get_id();
                 *pbAvailable = config::is_dlc_unlocked(app_id, *pDlcId, is_originally_unlocked);
 
-                auto name = dlc.get_name();
-                name = name.substr(0, cchNameBufferSize + 1);
-                memcpy_s(pchName, cchNameBufferSize, name.c_str(), name.size());
+                const auto& name = dlc.get_name();
+
+                const auto bytes_to_copy = std::min(static_cast<size_t>(cchNameBufferSize - 1), name.size());
+                std::memcpy(pchName, name.c_str(), bytes_to_copy);
+                pchName[bytes_to_copy] = '\0'; // Ensure null-termination
             };
 
             if(app_dlcs.contains(app_id)) {

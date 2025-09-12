@@ -7,11 +7,6 @@ include(KoalaBox/cmake/KoalaBox.cmake)
 add_subdirectory(KoalaBox)
 add_subdirectory(tools)
 
-set_32_and_64(STEAMAPI_DLL steam_api)
-set_32_and_64(STEAMCLIENT_DLL steamclient)
-set_32_and_64(STEAM_API_DLL steam_api steam_api64)
-set_32_and_64(SMOKEAPI_DLL SmokeAPI32 SmokeAPI64)
-
 configure_build_config(extra_build_config)
 
 set(SMOKE_API_STATIC_SOURCES
@@ -50,8 +45,21 @@ set(SMOKE_API_SOURCES
     src/steam_api/steam_interfaces.cpp
     src/steam_api/steam_interfaces.hpp
     src/steamclient/steamclient.cpp
-    src/main.cpp
 )
+
+if(WIN32)
+    set_32_and_64(STEAM_API_MODULE steam_api)
+    set_32_and_64(STEAMCLIENT_DLL steamclient)
+
+    list(APPEND SMOKE_API_SOURCES src/main_win.cpp)
+else()
+    set_32_and_64(LINUX_DIR linux32 linux64)
+    set(STEAM_API_MODULE libsteam_api)
+    set(STEAMCLIENT_DLL steamclient)
+
+    list(APPEND SMOKE_API_SOURCES src/main_linux.cpp)
+endif()
+set_32_and_64(SMOKE_API_FILENAME smoke_api32 smoke_api64)
 
 ### SmokeAPI interface
 
@@ -73,15 +81,42 @@ target_link_libraries(SmokeAPI_static PUBLIC SmokeAPI::common)
 
 ### Shared SmokeAPI
 
-add_library(SmokeAPI SHARED ${SMOKE_API_SOURCES} ${VERSION_RESOURCE})
+add_library(SmokeAPI SHARED ${SMOKE_API_SOURCES})
 target_link_libraries(SmokeAPI PUBLIC SmokeAPI::common)
-set_target_properties(SmokeAPI PROPERTIES RUNTIME_OUTPUT_NAME ${SMOKEAPI_DLL})
-configure_version_resource(
-    TARGET SmokeAPI
-    FILE_DESC "Steamworks DLC unlocker"
-    ORIG_NAME ${SMOKEAPI_DLL}
-)
+set_target_properties(SmokeAPI PROPERTIES OUTPUT_NAME ${SMOKE_API_FILENAME})
+
 configure_include_directories()
+
+if(WIN32)
+    configure_version_resource(
+        TARGET SmokeAPI
+        FILE_DESC "Steamworks DLC unlocker"
+        ORIG_NAME ${SMOKE_API_FILENAME}
+    )
+    configure_linker_exports(
+        TARGET SmokeAPI
+        HEADER_NAME "linker_exports_for_steam_api.h"
+        FORWARDED_DLL "${STEAM_API_MODULE}_o"
+        INPUT_SOURCES_DIR ""
+        DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${STEAM_API_MODULE}.dll"
+    )
+
+    configure_linker_exports(
+        TARGET SmokeAPI
+        HEADER_NAME "linker_exports_for_version.h"
+        FORWARDED_DLL "C:/Windows/System32/version.dll"
+        INPUT_SOURCES_DIR ""
+        DLL_FILES_GLOB "C:/Windows/System32/version.dll"
+    )
+else()
+    configure_linker_exports(
+        TARGET SmokeAPI
+        HEADER_NAME "libsteam_api_exports.cpp"
+        FORWARDED_DLL "${STEAM_API_MODULE}_o.so"
+        DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${LINUX_DIR}/${STEAM_API_MODULE}.so"
+        INPUT_SOURCES_DIR ""
+    )
+endif()
 
 ## https://github.com/batterycenter/embed
 CPMAddPackage(
@@ -89,19 +124,3 @@ CPMAddPackage(
     OPTIONS "B_PRODUCTION_MODE ON"
 )
 b_embed(SmokeAPI "res/interface_lookup.json")
-
-configure_linker_exports(
-    TARGET SmokeAPI
-    HEADER_NAME "linker_exports_for_steam_api"
-    FORWARDED_DLL "${STEAMAPI_DLL}_o"
-    INPUT_SOURCES_DIR ""
-    DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${STEAM_API_DLL}.dll"
-)
-
-configure_linker_exports(
-    TARGET SmokeAPI
-    HEADER_NAME "linker_exports_for_version"
-    FORWARDED_DLL "C:/Windows/System32/version.dll"
-    INPUT_SOURCES_DIR ""
-    DLL_FILES_GLOB "C:/Windows/System32/version.dll"
-)

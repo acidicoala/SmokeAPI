@@ -49,9 +49,21 @@ namespace {
                     return unzip_dir / "headers/steam" / fs::path(name).filename();
                 }
 
-                if(name.starts_with("sdk/redistributable_bin/") && name.ends_with(".dll") &&
-                   name.find("steam_api") != std::string::npos) {
+                // Windows binaries
+                if(
+                    name.starts_with("sdk/redistributable_bin/") &&
+                    name.ends_with(".dll") &&
+                    name.contains("steam_api")
+                ) {
                     return unzip_dir / "binaries" / fs::path(name).filename();
+                }
+
+                // Linux binaries
+                if(
+                    name.starts_with("sdk/redistributable_bin/linux") &&
+                    name.ends_with("libsteam_api.so")
+                    ) {
+                    return unzip_dir / "binaries" / name.substr(name.find("linux"));
                 }
 
                 return fs::path();
@@ -84,7 +96,7 @@ namespace {
  * A tool for downloading Steamworks SDK and unpacking its headers and binaries
  * for further processing by other tools.
  */
-int wmain(const int argc, const wchar_t** argv) { // NOLINT(*-use-internal-linkage)
+int MAIN(const int argc, const TCHAR* argv[]) { // NOLINT(*-use-internal-linkage)
     if(argc == 1) {
         print_help();
         return 0;

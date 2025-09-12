@@ -1,13 +1,13 @@
-#include <ranges>
 #include <set>
 
 #include <battery/embed.hpp>
 
 #include <koalabox/hook.hpp>
 #include <koalabox/logger.hpp>
-#include <koalabox/win.hpp>
 
 #include "steam_api/steam_interfaces.hpp"
+
+#include "koalabox/module.hpp"
 #include "smoke_api/smoke_api.hpp"
 #include "smoke_api/steamclient/steamclient.hpp"
 #include "virtuals/steam_api_virtuals.hpp"
@@ -210,7 +210,7 @@ namespace steam_interfaces {
             const auto prefixes = std::views::keys(virtual_hook_map) | std::ranges::to<std::set>();
 
             // Prepare HSteamPipe and HSteamUser
-            const auto CreateInterface$ = KB_WIN_GET_PROC(steamclient_handle, CreateInterface);
+            const auto CreateInterface$ = KB_MOD_GET_FUNC(steamclient_handle, CreateInterface);
             const auto* const THIS = CreateInterface$(steam_client_interface_version.c_str(), nullptr);
             hook_virtuals(THIS, steam_client_interface_version);
 
@@ -223,12 +223,13 @@ namespace steam_interfaces {
                 constexpr auto steam_pipe = 1;
                 constexpr auto steam_user = 1;
 
-                const bool should_hook = std::ranges::any_of(
-                    prefixes,
-                    [&](const auto& prefix) {
-                        return std::ranges::starts_with(interface_version, prefix);
+                bool should_hook = false;
+                for(const auto& prefix : prefixes) {
+                    if(interface_version.starts_with(prefix)) {
+                        should_hook = true;
+                        break;
                     }
-                );
+                }
 
                 if(not should_hook) {
                     continue;

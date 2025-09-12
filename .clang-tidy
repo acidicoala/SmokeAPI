@@ -70,4 +70,5 @@ misc-*,
 -readability-function-cognitive-complexity,
 -*-include-cleaner,
 -*-lambda-function-name,
--*-err58-cpp'
+-*-err58-cpp,
+-*-misplaced-const'

@@ -37,9 +37,9 @@ namespace {
 
         kb::parser::walk(
             root,
-            [&](const auto& current_node) {
+            [&](const ts::Node& current_node) {
                 const auto current_type = current_node.getType();
-                const auto current_value = current_node.getSourceRange(source);
+                // const auto current_value = current_node.getSourceRange(source);
                 const auto current_sexpr = current_node.getSExpr();
 
                 if(current_type == "class_specifier") {
@@ -101,7 +101,7 @@ namespace {
 
                             if(preproc_node.getType() == "preproc_arg") {
                                 const auto quoted_version = preproc_node.getSourceRange(source);
-                                const auto trimmed_version = koalabox::str::trim(quoted_version);
+                                const auto trimmed_version = koalabox::str::trim(std::string(quoted_version));
                                 interface_version = unquote_if_quoted(trimmed_version);
                                 LOG_DEBUG("Interface version: {}", interface_version);
 
@@ -161,7 +161,7 @@ namespace {
         // Go over each file in headers directory
         for(const auto& entry : fs::directory_iterator(headers_dir)) {
             if(const auto& header_path = entry.path(); header_path.extension() == ".h") {
-                const auto task = pool.submit_task(
+                const auto task = pool.submit_task( // NOLINT(*-unused-local-non-trivial-variable)
                     [&, header_path] {
                         try {
                             LOG_DEBUG("Parsing header: {}", kb::path::to_str(header_path));
@@ -227,7 +227,7 @@ namespace {
  * Optionally accepts a list of folder names that filters which sdk versions will be parsed.
  * No list means all versions will be parsed.
  */
-int wmain(const int argc, const wchar_t* argv[]) { // NOLINT(*-use-internal-linkage)
+int MAIN(const int argc, const TCHAR* argv[]) { // NOLINT(*-use-internal-linkage)
     try {
         koalabox::logger::init_console_logger();
 
@@ -242,7 +242,7 @@ int wmain(const int argc, const wchar_t* argv[]) { // NOLINT(*-use-internal-link
         const auto steamworks_dir = fs::path("steamworks");
 
         if(!fs::exists(steamworks_dir)) {
-            throw std::exception("Expected to find 'steamworks' in current working directory.");
+            throw std::runtime_error("Expected to find 'steamworks' in current working directory.");
         }
 
         const auto start = std::chrono::steady_clock::now();
@@ -251,7 +251,7 @@ int wmain(const int argc, const wchar_t* argv[]) { // NOLINT(*-use-internal-link
         const auto elapsed = duration_cast<std::chrono::seconds>(end - start);
 
         LOG_INFO("Finished parsing steamworks in {} seconds", elapsed.count());
-    } catch(std::exception& e) {
+    } catch(const std::exception& e) {
         LOG_CRITICAL("Error: {}", e.what());
         return 1;
     }
