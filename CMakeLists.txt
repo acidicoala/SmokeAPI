@@ -7,8 +7,6 @@ include(KoalaBox/cmake/KoalaBox.cmake)
 add_subdirectory(KoalaBox)
 add_subdirectory(tools)
 
-configure_build_config(extra_build_config)
-
 set(SMOKE_API_STATIC_SOURCES
     static/smoke_api/interfaces/steam_apps.hpp
     static/smoke_api/interfaces/steam_apps.cpp
@@ -61,6 +59,8 @@ else()
 endif()
 set_32_and_64(SMOKE_API_FILENAME smoke_api32 smoke_api64)
 
+configure_build_config(extra_build_config)
+
 ### SmokeAPI interface
 
 add_library(SmokeAPI_common INTERFACE)
@@ -109,13 +109,13 @@ if(WIN32)
         DLL_FILES_GLOB "C:/Windows/System32/version.dll"
     )
 else()
-    configure_linker_exports(
-        TARGET SmokeAPI
-        HEADER_NAME "libsteam_api_exports.cpp"
-        FORWARDED_DLL "${STEAM_API_MODULE}_o.so"
-        DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${LINUX_DIR}/${STEAM_API_MODULE}.so"
-        INPUT_SOURCES_DIR ""
-    )
+#    configure_linker_exports(
+#        TARGET SmokeAPI
+#        HEADER_NAME "libsteam_api_exports.cpp"
+#        FORWARDED_DLL "${STEAM_API_MODULE}_o.so"
+#        DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${LINUX_DIR}/${STEAM_API_MODULE}.so"
+#        INPUT_SOURCES_DIR ""
+#    )
 endif()
 
 ## https://github.com/batterycenter/embed

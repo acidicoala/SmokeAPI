@@ -64,9 +64,9 @@ namespace {
     bool on_steamclient_loaded(const HMODULE steamclient_handle) {
         auto* const steamapi_handle = original_steamapi_handle
                                           ? original_steamapi_handle
-                                          : kb::module::get_library_handle(TEXT(STEAMAPI_DLL));
+                                          : kb::module::get_library_handle(TEXT(STEAM_API_MODULE));
         if(!steamapi_handle) {
-            LOG_ERROR("{} -> {} is not loaded", __func__, STEAMAPI_DLL);
+            LOG_ERROR("{} -> {} is not loaded", __func__, STEAM_API_MODULE);
             return true;
         }
 
@@ -75,7 +75,7 @@ namespace {
         const auto steamclient_versions = find_steamclient_versions(steamapi_handle);
         for(const auto& steamclient_version : steamclient_versions) {
             if(CreateInterface$(steamclient_version.c_str(), nullptr)) {
-                // TODO: This is not true when running under Proton.
+                // TODO: This is not true when running under Proton or native Linux.
                 // Even before initialization, an interface will be returned,
                 // but GetISteamGenericInterface will still fail.
                 LOG_WARN("'{}' was already initialized. SmokeAPI might not work as expected.", steamclient_version);
@@ -119,20 +119,20 @@ namespace smoke_api {
             // We need to hook functions in either mode
             kb::hook::init(true);
 
-            if(kb::hook::is_hook_mode(module_handle, STEAMAPI_DLL)) {
+            if(kb::hook::is_hook_mode(module_handle, STEAM_API_MODULE)) {
                 LOG_INFO("Detected hook mode");
 
                 start_dll_listener();
             } else {
                 LOG_INFO("Detected proxy mode");
 
+                start_dll_listener();
+
                 const auto self_path = kb::paths::get_self_dir();
                 original_steamapi_handle = kb::loader::load_original_library(
                     self_path,
-                    STEAMAPI_DLL
+                    STEAM_API_MODULE
                 );
-
-                start_dll_listener();
             }
 
             LOG_INFO("Initialization complete");

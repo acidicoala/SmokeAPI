@@ -1,4 +1,4 @@
 #pragma once
 
-#define STEAMAPI_DLL    "${STEAMAPI_DLL}"
+#define STEAM_API_MODULE    "${STEAM_API_MODULE}"
 #define STEAMCLIENT_DLL "${STEAMCLIENT_DLL}"

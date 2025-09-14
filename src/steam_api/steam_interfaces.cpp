@@ -206,10 +206,10 @@ namespace steam_interfaces {
             // Remove steam client map since we don't want to hook its methods
             virtual_hook_map.erase(STEAM_CLIENT);
 
-            // Map remaining virtual hook map to a set of keys
+            // Map virtual hook map to a set of keys
             const auto prefixes = std::views::keys(virtual_hook_map) | std::ranges::to<std::set>();
 
-            // Prepare HSteamPipe and HSteamUser
+
             const auto CreateInterface$ = KB_MOD_GET_FUNC(steamclient_handle, CreateInterface);
             const auto* const THIS = CreateInterface$(steam_client_interface_version.c_str(), nullptr);
             hook_virtuals(THIS, steam_client_interface_version);
