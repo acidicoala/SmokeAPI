@@ -1,5 +1,7 @@
 #include <dlfcn.h>
 
+#include "koalabox/util.hpp"
+
 #include "smoke_api/smoke_api.hpp"
 
 extern "C" void __attribute__((constructor)) init() {
@@ -10,8 +12,7 @@ extern "C" void __attribute__((constructor)) init() {
         void* handle = dlopen(info.dli_fname, RTLD_NOW | RTLD_NOLOAD);
         smoke_api::init(handle);
     } else {
-        OutputDebugString("Initialization error: failed to get own module handle.");
-        DebugBreak();
+        koalabox::util::panic("Initialization error: failed to get own module handle.");
     }
 }
 

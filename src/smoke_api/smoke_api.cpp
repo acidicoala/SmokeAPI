@@ -41,9 +41,13 @@
 namespace {
     namespace kb = koalabox;
 
-    void* original_steamapi_handle = nullptr;
+    void* steamapi_handle = nullptr;
 
-    std::set<std::string> find_steamclient_versions(const HMODULE steamapi_handle) {
+    std::set<std::string> find_steamclient_versions() {
+        if(!steamapi_handle) {
+            kb::util::panic("Invalid state. steamapi_handle is null.");
+        }
+
         std::set<std::string> versions;
 
         const auto rdata_section = kb::module::get_section_or_throw(steamapi_handle, kb::module::CONST_STR_SECTION);
@@ -60,30 +64,30 @@ namespace {
         return versions;
     }
 
-    // ReSharper disable once CppDFAConstantFunctionResult
     bool on_steamclient_loaded(const HMODULE steamclient_handle) {
-        auto* const steamapi_handle = original_steamapi_handle
-                                          ? original_steamapi_handle
-                                          : kb::module::get_library_handle(TEXT(STEAM_API_MODULE));
-        if(!steamapi_handle) {
-            LOG_ERROR("{} -> {} is not loaded", __func__, STEAM_API_MODULE);
-            return true;
-        }
-
         static const auto CreateInterface$ = KB_MOD_GET_FUNC(steamclient_handle, CreateInterface);
 
-        const auto steamclient_versions = find_steamclient_versions(steamapi_handle);
-        for(const auto& steamclient_version : steamclient_versions) {
-            if(CreateInterface$(steamclient_version.c_str(), nullptr)) {
-                // TODO: This is not true when running under Proton or native Linux.
-                // Even before initialization, an interface will be returned,
-                // but GetISteamGenericInterface will still fail.
-                LOG_WARN("'{}' was already initialized. SmokeAPI might not work as expected.", steamclient_version);
-                LOG_WARN("Probable cause: SmokeAPI was injected too late. If possible, try injecting it earlier.");
-
-                steam_interfaces::hook_steamclient_interface(steamclient_handle, steamclient_version);
-            } else {
-                LOG_INFO("'{}' is not initialized. Waiting for initialization.", steamclient_version);
+        if(steamapi_handle) {
+            // SteamAPI might have been initialized.
+            // Hence, we need to query SteamClient interfaces and hook them if needed.
+            const auto steamclient_versions = find_steamclient_versions();
+            for(const auto& steamclient_version : steamclient_versions) {
+                if(CreateInterface$(steamclient_version.c_str(), nullptr)) {
+#ifdef KB_WIN
+                    if(!kb::util::is_wine_env()) {
+                        LOG_WARN(
+                            "'{}' was already initialized. SmokeAPI might not work as expected.", steamclient_version
+                        );
+                        LOG_WARN(
+                            "Probable cause: SmokeAPI was injected too late. If possible, try injecting it earlier."
+                        );
+                        LOG_WARN("NOTE: You can safely ignore this warning if running under Proton or native Linux");
+                    }
+#endif
+                    steam_interfaces::hook_steamclient_interface(steamclient_handle, steamclient_version);
+                } else {
+                    LOG_INFO("'{}' has not been initialized. Waiting for initialization.", steamclient_version);
+                }
             }
         }
 
@@ -115,6 +119,7 @@ namespace smoke_api {
             const auto exe_name = kb::path::to_str(exe_path.filename());
 
             LOG_DEBUG("Process name: '{}' [{}-bit]", exe_name, kb::util::BITNESS);
+            LOG_DEBUG("Self handle: {}", module_handle);
 
             // We need to hook functions in either mode
             kb::hook::init(true);
@@ -129,7 +134,7 @@ namespace smoke_api {
                 start_dll_listener();
 
                 const auto self_path = kb::paths::get_self_dir();
-                original_steamapi_handle = kb::loader::load_original_library(
+                steamapi_handle = kb::loader::load_original_library(
                     self_path,
                     STEAM_API_MODULE
                 );
@@ -143,10 +148,12 @@ namespace smoke_api {
 
     void shutdown() {
         try {
-            if(original_steamapi_handle != nullptr) {
-                kb::module::unload_library(original_steamapi_handle);
-                original_steamapi_handle = nullptr;
+            if(steamapi_handle != nullptr) {
+                kb::module::unload_library(steamapi_handle);
+                steamapi_handle = nullptr;
             }
+
+            kb::dll_monitor::shutdown_listener(nullptr);
 
             // TODO: Unhook everything
 

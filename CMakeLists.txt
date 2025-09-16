@@ -109,16 +109,17 @@ if(WIN32)
         DLL_FILES_GLOB "C:/Windows/System32/version.dll"
     )
 else()
-#    configure_linker_exports(
-#        TARGET SmokeAPI
-#        HEADER_NAME "libsteam_api_exports.cpp"
-#        FORWARDED_DLL "${STEAM_API_MODULE}_o.so"
-#        DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${LINUX_DIR}/${STEAM_API_MODULE}.so"
-#        INPUT_SOURCES_DIR ""
-#    )
+    configure_linker_exports(
+        TARGET SmokeAPI
+        HEADER_NAME "libsteam_api_exports.cpp"
+        FORWARDED_DLL "${STEAM_API_MODULE}_o.so"
+        DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${LINUX_DIR}/${STEAM_API_MODULE}.so"
+        INPUT_SOURCES_DIR ""
+    )
 endif()
 
 ## https://github.com/batterycenter/embed
+target_compile_definitions(SmokeAPI PUBLIC B_PRODUCTION_MODE)
 CPMAddPackage(
     URI "gh:batterycenter/embed@1.2.19"
     OPTIONS "B_PRODUCTION_MODE ON"

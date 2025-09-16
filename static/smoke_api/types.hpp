@@ -40,19 +40,15 @@
  * so __fastcall is simply ignored. However, RDX in this case
  * will store the 1st actual argument to the function, so we
  * have to omit it from the function signature.
- *
- * The macros below implement the above-mentioned considerations.
- * Also, note the ## prefix before __VA_ARGS__. This enables a GCC extension
- * which strips trailing comma if __VA_ARGS__ is empty.
  */
-#ifdef _WIN64
-#define PARAMS(...) const void* RCX, ##__VA_ARGS__
-#define ARGS(...) RCX, ##__VA_ARGS__
+#ifdef KB_64
+#define PARAMS(...) const void* RCX __VA_OPT__(,) __VA_ARGS__
+#define ARGS(...) RCX __VA_OPT__(,) __VA_ARGS__
 #define THIS RCX
 #define DECLARE_EDX()
 #else
-#define PARAMS(...) const void* ECX, const void* EDX, ##__VA_ARGS__
-#define ARGS(...) ECX, EDX, ##__VA_ARGS__
+#define PARAMS(...) const void* ECX, const void* EDX __VA_OPT__(,) __VA_ARGS__
+#define ARGS(...) ECX, EDX __VA_OPT__(,) __VA_ARGS__
 #define THIS ECX
 #define DECLARE_EDX() const void* EDX = nullptr;
 #endif
