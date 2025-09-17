@@ -119,7 +119,7 @@ namespace smoke_api {
             const auto exe_name = kb::path::to_str(exe_path.filename());
 
             LOG_DEBUG("Process name: '{}' [{}-bit]", exe_name, kb::util::BITNESS);
-            LOG_DEBUG("Self handle: {}", module_handle);
+            LOG_DEBUG("Self handle: {}", reinterpret_cast<void*>(module_handle));
 
             // We need to hook functions in either mode
             kb::hook::init(true);

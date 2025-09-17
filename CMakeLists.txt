@@ -100,7 +100,6 @@ if(WIN32)
         INPUT_SOURCES_DIR ""
         DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${STEAM_API_MODULE}.dll"
     )
-
     configure_linker_exports(
         TARGET SmokeAPI
         HEADER_NAME "linker_exports_for_version.h"
