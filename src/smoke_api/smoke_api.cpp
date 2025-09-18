@@ -42,6 +42,7 @@ namespace {
     namespace kb = koalabox;
 
     void* steamapi_handle = nullptr;
+    const kb::dll_monitor::callback_context_t* dll_monitor_context = nullptr;
 
     std::set<std::string> find_steamclient_versions() {
         if(!steamapi_handle) {
@@ -93,11 +94,18 @@ namespace {
 
         KB_HOOK_DETOUR_MODULE(CreateInterface, steamclient_handle);
 
+        // TODO: There is an implicit lifetime dependency here and potential for leaks.
+        //       This mechanism requires rework.
+        // DLL monitor will have destroyed it.
+        dll_monitor_context = nullptr;
+
         return true;
     }
 
     void start_dll_listener() {
-        kb::dll_monitor::init_listener({{STEAMCLIENT_DLL, on_steamclient_loaded}});
+        dll_monitor_context = kb::dll_monitor::init_listener(
+            {{STEAMCLIENT_DLL, on_steamclient_loaded}}
+        );
     }
 }
 
@@ -153,14 +161,13 @@ namespace smoke_api {
                 steamapi_handle = nullptr;
             }
 
-            kb::dll_monitor::shutdown_listener(nullptr);
+            kb::dll_monitor::shutdown_listener(dll_monitor_context);
 
             // TODO: Unhook everything
 
             LOG_INFO("Shutdown complete");
         } catch(const std::exception& e) {
-            const auto msg = std::format("Shutdown error: {}", e.what());
-            LOG_ERROR(msg);
+            LOG_ERROR("Shutdown error: {}", e.what());
         }
 
         kb::logger::shutdown();
