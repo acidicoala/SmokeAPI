@@ -54,7 +54,6 @@
       <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/LINE_BREAK_AFTER_DEREF_IN_TRAILING_RETURN_TYPES/@EntryValue" value="ON_SINGLE_LINE" type="string" />
       <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/LINE_BREAK_BEFORE_FUNCTION_TRY_BLOCK/@EntryValue" value="LINE_BREAK" type="string" />
       <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/LINE_BREAK_AFTER_COMMA_IN_MEMBER_INITIALIZER_LISTS/@EntryValue" value="true" type="bool" />
-      <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/KEEP_USER_LINEBREAKS/@EntryValue" />
       <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/WRAP_LIMIT/@EntryValue" value="100" type="long" />
       <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/WRAP_BRACED_INIT_LIST_STYLE/@EntryValue" value="CHOP_IF_LONG" type="string" />
       <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/WRAP_BASE_CLAUSE_STYLE/@EntryValue" value="CHOP_IF_LONG" type="string" />
@@ -75,7 +74,6 @@
       <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/ALIGN_MULTILINE_BINARY_EXPRESSIONS_CHAIN/@EntryValue" value="true" type="bool" />
       <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/INT_ALIGN_ENUM_INITIALIZERS/@EntryValue" value="true" type="bool" />
       <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/INT_ALIGN_BITFIELD_SIZES/@EntryValue" value="true" type="bool" />
-      <option name="/Default/CodeStyle/CodeFormatting/CppFormatting/SIMPLE_BLOCK_STYLE/@EntryValue" />
     </RiderCodeStyleSettings>
     <editorconfig>
       <option name="ENABLED" value="false" />

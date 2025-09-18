@@ -1,11 +1,8 @@
 #pragma once
 
-#include <cstdint>
-#include <map>
-#include <string>
-
 #include <nlohmann/json.hpp>
 
+#include <koalabox/core.hpp>
 #include <koalabox/hook.hpp>
 
 #define VIRTUAL(TYPE) __declspec(noinline) TYPE __fastcall // NOLINT(*-macro-parentheses)

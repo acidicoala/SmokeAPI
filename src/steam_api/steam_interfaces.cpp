@@ -7,7 +7,7 @@
 
 #include "steam_api/steam_interfaces.hpp"
 
-#include "koalabox/module.hpp"
+#include "koalabox/lib.hpp"
 #include "smoke_api/smoke_api.hpp"
 #include "smoke_api/steamclient/steamclient.hpp"
 #include "virtuals/steam_api_virtuals.hpp"
@@ -196,7 +196,7 @@ namespace steam_interfaces {
     }
 
     void hook_steamclient_interface(
-        const HMODULE steamclient_handle,
+        void* steamclient_handle,
         const std::string& steam_client_interface_version
     ) noexcept {
         try {
@@ -208,7 +208,6 @@ namespace steam_interfaces {
 
             // Map virtual hook map to a set of keys
             const auto prefixes = std::views::keys(virtual_hook_map) | std::ranges::to<std::set>();
-
 
             const auto CreateInterface$ = KB_MOD_GET_FUNC(steamclient_handle, CreateInterface);
             const auto* const THIS = CreateInterface$(steam_client_interface_version.c_str(), nullptr);

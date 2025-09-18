@@ -2,12 +2,11 @@
 #include <set>
 
 #include <koalabox/config.hpp>
-#include <koalabox/dll_monitor.hpp>
+#include <koalabox/lib_monitor.hpp>
 #include <koalabox/globals.hpp>
 #include <koalabox/hook.hpp>
-#include <koalabox/loader.hpp>
 #include <koalabox/logger.hpp>
-#include <koalabox/module.hpp>
+#include <koalabox/lib.hpp>
 #include <koalabox/path.hpp>
 #include <koalabox/paths.hpp>
 #include <koalabox/util.hpp>
@@ -41,17 +40,16 @@
 namespace {
     namespace kb = koalabox;
 
-    void* steamapi_handle = nullptr;
-    const kb::dll_monitor::callback_context_t* dll_monitor_context = nullptr;
+    void* original_steamapi_handle = nullptr;
 
-    std::set<std::string> find_steamclient_versions() {
+    std::set<std::string> find_steamclient_versions(void* steamapi_handle) {
         if(!steamapi_handle) {
             kb::util::panic("Invalid state. steamapi_handle is null.");
         }
 
         std::set<std::string> versions;
 
-        const auto rdata_section = kb::module::get_section_or_throw(steamapi_handle, kb::module::CONST_STR_SECTION);
+        const auto rdata_section = kb::lib::get_section_or_throw(steamapi_handle, kb::lib::CONST_STR_SECTION);
         const auto rdata = rdata_section.to_string();
 
         const std::regex pattern(R"(SteamClient\d{3})");
@@ -65,26 +63,36 @@ namespace {
         return versions;
     }
 
-    bool on_steamclient_loaded(const HMODULE steamclient_handle) {
+    void warn_if_late_injection(const std::string& steamclient_version) {
+#ifdef KB_WIN
+        if(kb::util::is_wine_env()) {
+            return;
+        }
+
+        LOG_WARN(
+            "'{}' was already initialized. SmokeAPI might not work as expected.", steamclient_version
+        );
+        LOG_WARN(
+            "Probable cause: SmokeAPI was injected too late. If possible, try injecting it earlier."
+        );
+        LOG_WARN("NOTE: You can safely ignore this warning if running under Proton or native Linux");
+#endif
+    }
+
+    bool on_steamclient_loaded(void* steamclient_handle) {
         static const auto CreateInterface$ = KB_MOD_GET_FUNC(steamclient_handle, CreateInterface);
 
+        auto* steamapi_handle = original_steamapi_handle
+                                    ? original_steamapi_handle
+                                    : kb::lib::get_library_handle(STEAM_API_MODULE);
         if(steamapi_handle) {
             // SteamAPI might have been initialized.
             // Hence, we need to query SteamClient interfaces and hook them if needed.
-            const auto steamclient_versions = find_steamclient_versions();
+            const auto steamclient_versions = find_steamclient_versions(steamapi_handle);
             for(const auto& steamclient_version : steamclient_versions) {
                 if(CreateInterface$(steamclient_version.c_str(), nullptr)) {
-#ifdef KB_WIN
-                    if(!kb::util::is_wine_env()) {
-                        LOG_WARN(
-                            "'{}' was already initialized. SmokeAPI might not work as expected.", steamclient_version
-                        );
-                        LOG_WARN(
-                            "Probable cause: SmokeAPI was injected too late. If possible, try injecting it earlier."
-                        );
-                        LOG_WARN("NOTE: You can safely ignore this warning if running under Proton or native Linux");
-                    }
-#endif
+                    warn_if_late_injection(steamclient_version);
+
                     steam_interfaces::hook_steamclient_interface(steamclient_handle, steamclient_version);
                 } else {
                     LOG_INFO("'{}' has not been initialized. Waiting for initialization.", steamclient_version);
@@ -94,16 +102,11 @@ namespace {
 
         KB_HOOK_DETOUR_MODULE(CreateInterface, steamclient_handle);
 
-        // TODO: There is an implicit lifetime dependency here and potential for leaks.
-        //       This mechanism requires rework.
-        // DLL monitor will have destroyed it.
-        dll_monitor_context = nullptr;
-
         return true;
     }
 
-    void start_dll_listener() {
-        dll_monitor_context = kb::dll_monitor::init_listener(
+    void init_lib_monitor() {
+        kb::lib_monitor::init_listener(
             {{STEAMCLIENT_DLL, on_steamclient_loaded}}
         );
     }
@@ -123,7 +126,7 @@ namespace smoke_api {
             LOG_INFO("{} v{} | Built at '{}'", PROJECT_NAME, PROJECT_VERSION, __TIMESTAMP__);
             LOG_DEBUG("Parsed config:\n{}", nlohmann::ordered_json(config::instance).dump(2));
 
-            const auto exe_path = kb::module::get_fs_path(nullptr);
+            const auto exe_path = kb::lib::get_fs_path(nullptr);
             const auto exe_name = kb::path::to_str(exe_path.filename());
 
             LOG_DEBUG("Process name: '{}' [{}-bit]", exe_name, kb::util::BITNESS);
@@ -135,14 +138,14 @@ namespace smoke_api {
             if(kb::hook::is_hook_mode(module_handle, STEAM_API_MODULE)) {
                 LOG_INFO("Detected hook mode");
 
-                start_dll_listener();
+                init_lib_monitor();
             } else {
                 LOG_INFO("Detected proxy mode");
 
-                start_dll_listener();
+                init_lib_monitor();
 
                 const auto self_path = kb::paths::get_self_dir();
-                steamapi_handle = kb::loader::load_original_library(
+                original_steamapi_handle = kb::lib::load_original_library(
                     self_path,
                     STEAM_API_MODULE
                 );
@@ -156,12 +159,14 @@ namespace smoke_api {
 
     void shutdown() {
         try {
-            if(steamapi_handle != nullptr) {
-                kb::module::unload_library(steamapi_handle);
-                steamapi_handle = nullptr;
+            if(original_steamapi_handle != nullptr) {
+                kb::lib::unload_library(original_steamapi_handle);
+                original_steamapi_handle = nullptr;
             }
 
-            kb::dll_monitor::shutdown_listener(dll_monitor_context);
+            if(kb::lib_monitor::is_initialized()) {
+                kb::lib_monitor::shutdown_listener();
+            }
 
             // TODO: Unhook everything
 

@@ -1,8 +1,5 @@
-#include <filesystem>
-#include <iostream>
 #include <random>
 #include <regex>
-#include <string>
 
 #include <koalabox/http_client.hpp>
 #include <koalabox/logger.hpp>
@@ -33,12 +30,13 @@ namespace {
     }
 
     void print_help() {
-        std::cout << "Steamworks SDK downloader for SmokeAPI v1.0" << std::endl
-            << "Usage:   steamworks_downloader version1 version2 ... versionN" << std::endl
-            << "Example: steamworks_downloader 100 158a 162" << std::endl
-            << "Alternative usage: steamworks_downloader C:/path/to/downloaded_sdk/"
-            << "SDK version list available at: "
-            << "https://partner.steamgames.com/downloads/list" << std::endl;
+        LOG_INFO(
+            "Steamworks SDK downloader for SmokeAPI v1.0\n"
+            "Usage:   steamworks_downloader version1 version2 ... versionN\n"
+            "Example: steamworks_downloader 100 158a 162\n"
+            "Alternative usage: steamworks_downloader C:/path/to/downloaded_sdk/\n"
+            "SDK version list available at: https://partner.steamgames.com/downloads/list"
+        );
     }
 
     void unzip_sdk(const fs::path& zip_file_path, const fs::path& unzip_dir) {
@@ -62,7 +60,7 @@ namespace {
                 if(
                     name.starts_with("sdk/redistributable_bin/linux") &&
                     name.ends_with("libsteam_api.so")
-                    ) {
+                ) {
                     return unzip_dir / "binaries" / name.substr(name.find("linux"));
                 }
 
@@ -85,7 +83,7 @@ namespace {
             const auto unzip_dir = steamworks_dir / version;
             unzip_sdk(zip_file_path, unzip_dir);
         } catch(std::exception& e) {
-            std::cerr << "Unzip error: " << e.what() << std::endl;
+            LOG_ERROR("Unzip error: {}", e.what());
         }
 
         fs::remove(zip_file_path);
@@ -97,6 +95,8 @@ namespace {
  * for further processing by other tools.
  */
 int MAIN(const int argc, const TCHAR* argv[]) { // NOLINT(*-use-internal-linkage)
+    kb::logger::init_console_logger();
+
     if(argc == 1) {
         print_help();
         return 0;

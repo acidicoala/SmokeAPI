@@ -6,15 +6,17 @@
 namespace steam_client {
     void* GetGenericInterface(
         const std::string& function_name,
-        const std::string& interface_version,
+        const char* interface_version, // This can be null
         const std::function<void*()>& original_function
     ) noexcept {
         try {
             auto* const interface = original_function();
 
-            LOG_DEBUG("{} -> '{}' @ {}", function_name, interface_version, interface);
+            if(interface_version) {
+                LOG_DEBUG("{} -> '{}' @ {}", function_name, interface_version, interface);
 
-            steam_interfaces::hook_virtuals(interface, interface_version);
+                steam_interfaces::hook_virtuals(interface, interface_version);
+            }
 
             return interface;
         } catch(const std::exception& e) {

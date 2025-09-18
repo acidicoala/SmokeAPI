@@ -12,7 +12,7 @@ namespace steam_interfaces {
      * such as in the case of late injection.
      */
     void hook_steamclient_interface(
-        HMODULE steamclient_handle,
+        void* steamclient_handle,
         const std::string& steam_client_interface_version
     ) noexcept;
 }

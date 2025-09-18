@@ -1,8 +1,5 @@
 #include <chrono>
-#include <deque>
-#include <filesystem>
 #include <fstream>
-#include <functional>
 #include <set>
 
 #include <BS_thread_pool.hpp>
@@ -131,7 +128,7 @@ namespace {
 
     /**
      * Certain Steam macros break C++ AST parser, if left unprocessed.
-     * This function does that in a very naive manner. Stupid, but works.
+     * This function preprocesses them in a very naive manner. Stupid, but works.
      */
     std::string manually_preprocess_header(const fs::path& header_path) {
         const auto header_contents = kb::io::read_file(header_path);
@@ -143,11 +140,7 @@ namespace {
         return processed_contents;
     }
 
-    void parse_sdk(
-        const fs::path& sdk_path,
-        nlohmann::ordered_json& lookup,
-        BS::thread_pool<>& pool
-    ) {
+    void parse_sdk(const fs::path& sdk_path, nlohmann::ordered_json& lookup, BS::thread_pool<>& pool) {
         const auto headers_dir = sdk_path / "headers\\steam";
         const auto headers_dir_str = kb::path::to_str(headers_dir);
 
@@ -161,7 +154,8 @@ namespace {
         // Go over each file in headers directory
         for(const auto& entry : fs::directory_iterator(headers_dir)) {
             if(const auto& header_path = entry.path(); header_path.extension() == ".h") {
-                const auto task = pool.submit_task( // NOLINT(*-unused-local-non-trivial-variable)
+                const auto task = pool.submit_task(
+                    // NOLINT(*-unused-local-non-trivial-variable)
                     [&, header_path] {
                         try {
                             LOG_DEBUG("Parsing header: {}", kb::path::to_str(header_path));
@@ -178,11 +172,9 @@ namespace {
         }
     }
 
-    void generate_lookup_json(
-        const fs::path& steamworks_dir,
-        //
-        const std::set<std::string>& sdk_filter
-    ) {
+    void generate_lookup_json(const fs::path& steamworks_dir, const std::set<std::string>& sdk_filter) {
+        // Ideally the top level lookup should be unordered json (i.e. keys sorted alphabetically).
+        // But the library doesn't support inserting ordered_json instances as values in json objects.
         nlohmann::ordered_json lookup;
 
         // The thread pool noticeably speeds up the overall parsing.
