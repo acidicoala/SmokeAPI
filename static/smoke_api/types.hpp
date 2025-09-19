@@ -46,12 +46,12 @@
 #define PARAMS(...) const void* RCX __VA_OPT__(,) __VA_ARGS__
 #define ARGS(...) RCX __VA_OPT__(,) __VA_ARGS__
 #define THIS RCX
-#define DECLARE_EDX()
+#define DECLARE_ARGS() const void* RCX = nullptr;
 #else
 #define PARAMS(...) const void* ECX, const void* EDX __VA_OPT__(,) __VA_ARGS__
 #define ARGS(...) ECX, EDX __VA_OPT__(,) __VA_ARGS__
 #define THIS ECX
-#define DECLARE_EDX() const void* EDX = nullptr;
+#define DECLARE_ARGS() const void* ECX = nullptr; const void* EDX = nullptr;
 #endif
 
 using AppId_t = uint32_t;
@@ -112,8 +112,9 @@ public:
 
     explicit DLC() = default;
 
-    explicit DLC(std::string appid, std::string name) : appid{std::move(appid)},
-                                                        name{std::move(name)} {}
+    explicit DLC(std::string appid, std::string name)
+    : appid{std::move(appid)},
+      name{std::move(name)} {}
 
     [[nodiscard]] std::string get_id_str() const {
         return appid;

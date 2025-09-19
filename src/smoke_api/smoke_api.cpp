@@ -16,6 +16,7 @@
 #include "smoke_api/config.hpp"
 #include "smoke_api/steamclient/steamclient.hpp"
 #include "steam_api/steam_interfaces.hpp"
+#include "steam_api/virtuals/steam_api_virtuals.hpp"
 
 #include "build_config.h"
 
@@ -179,14 +180,46 @@ namespace smoke_api {
     }
 
     AppId_t get_app_id() {
+        static AppId_t app_id = 0;
+        if(app_id) {
+            return app_id; // cached value
+        }
+
         try {
-            const auto* const app_id_str = std::getenv("SteamAppId");
-            if(app_id_str == nullptr) {
-                LOG_WARN("No SteamAppId is set in current environment");
+            if(const auto app_id_str = kb::util::get_env("SteamAppId")) {
+                app_id = std::stoi(*app_id_str);
+                LOG_DEBUG("Found AppID from environment: {}", app_id);
+
+                return app_id;
+            }
+        } catch(std::exception&) {
+            LOG_WARN("No SteamAppId in environment. Falling back to ISteamUtils::GetAppID.");
+        }
+
+        // TODO: Then try to read steam_appid.txt here. SteamAppId env var is not available when it's present.
+
+        try {
+            DECLARE_ARGS();
+
+            THIS = CreateInterface("SteamClient007", nullptr);
+            if(!THIS) {
+                LOG_ERROR("Failed to create SteamClient interface");
                 return 0;
             }
 
-            static auto app_id = std::stoi(app_id_str);
+            THIS = ISteamClient_GetISteamGenericInterface(ARGS(1, 1, "SteamUtils002"));
+            if(!THIS) {
+                LOG_ERROR("Failed to get SteamUtils interface");
+                return 0;
+            }
+
+            app_id = ISteamUtils_GetAppID(ARGS());
+            if(!app_id) {
+                LOG_ERROR("ISteamUtils::GetAppID returned 0");
+                return 0;
+            }
+
+            LOG_DEBUG("Found AppID from ISteamUtils: {}", app_id);
             return app_id;
         } catch(const std::exception& e) {
             LOG_ERROR("Failed to get app id: {}", e.what());

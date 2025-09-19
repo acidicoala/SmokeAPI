@@ -4,12 +4,12 @@
 
 #include <koalabox/hook.hpp>
 #include <koalabox/logger.hpp>
+#include "koalabox/lib.hpp"
+
+#include "smoke_api/steamclient/steamclient.hpp"
 
 #include "steam_api/steam_interfaces.hpp"
-
-#include "koalabox/lib.hpp"
 #include "smoke_api/smoke_api.hpp"
-#include "smoke_api/steamclient/steamclient.hpp"
 #include "virtuals/steam_api_virtuals.hpp"
 
 namespace {
@@ -101,6 +101,15 @@ namespace {
                     .fallback_version = "SteamUser023",
                     .entry_map = {
                         ENTRY(ISteamUser, UserHasLicenseForApp),
+                    }
+                }
+            },
+            {
+                STEAM_UTILS,
+                interface_data_t{
+                    .fallback_version = "SteamUtils009",
+                    .entry_map = {
+                        ENTRY(ISteamUtils, GetAppID),
                     }
                 }
             },
@@ -210,7 +219,9 @@ namespace steam_interfaces {
             const auto prefixes = std::views::keys(virtual_hook_map) | std::ranges::to<std::set>();
 
             const auto CreateInterface$ = KB_MOD_GET_FUNC(steamclient_handle, CreateInterface);
-            const auto* const THIS = CreateInterface$(steam_client_interface_version.c_str(), nullptr);
+
+            DECLARE_ARGS();
+            THIS = CreateInterface$(steam_client_interface_version.c_str(), nullptr);
             hook_virtuals(THIS, steam_client_interface_version);
 
             const auto interface_lookup = read_interface_lookup();
@@ -234,7 +245,6 @@ namespace steam_interfaces {
                     continue;
                 }
 
-                DECLARE_EDX();
                 const auto* const interface_ptr = ISteamClient_GetISteamGenericInterface(
                     ARGS(steam_user, steam_pipe, interface_version.c_str())
                 );

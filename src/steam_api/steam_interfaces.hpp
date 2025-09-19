@@ -1,6 +1,6 @@
 #pragma once
 
-#include "smoke_api/types.hpp"
+#include <string>
 
 namespace steam_interfaces {
     void hook_virtuals(const void* interface_ptr, const std::string& version_string);
