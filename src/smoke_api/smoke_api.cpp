@@ -180,7 +180,12 @@ namespace smoke_api {
 
     AppId_t get_app_id() {
         try {
-            const auto app_id_str = kb::util::get_env_var("SteamAppId");
+            const auto* const app_id_str = std::getenv("SteamAppId");
+            if(app_id_str == nullptr) {
+                LOG_WARN("No SteamAppId is set in current environment");
+                return 0;
+            }
+
             static auto app_id = std::stoi(app_id_str);
             return app_id;
         } catch(const std::exception& e) {

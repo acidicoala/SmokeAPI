@@ -4,6 +4,8 @@
       <w>abcdefghijklmnopqrstuvwxyz</w>
       <w>acidicoala</w>
       <w>ajaxgetdlclist</w>
+      <w>dlmopen</w>
+      <w>dlopen</w>
       <w>indicies</w>
       <w>inlinentd</w>
       <w>isteamapps</w>
@@ -13,6 +15,7 @@
       <w>koalabox</w>
       <w>koality</w>
       <w>koaloader</w>
+      <w>libgtk</w>
       <w>polyhook</w>
       <w>simplecpp</w>
       <w>steamapps</w>

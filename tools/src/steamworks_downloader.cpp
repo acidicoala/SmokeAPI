@@ -67,6 +67,11 @@ namespace {
                 return fs::path();
             }
         );
+
+        // TODO: Some older libsteam_api.so binaries have set the `PF_X` flag from `PT_GNU_STACK`.
+        //       This prevents us from loading them on modern Linux distros. Hence, we need to
+        //       clear it using tools like elfio or libelf.
+        //       Affected versions (all 32-bit): 106-107
     }
 
     void download_sdk(const fs::path& steamworks_dir, const std::string_view& version) {

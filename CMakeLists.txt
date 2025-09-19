@@ -86,8 +86,15 @@ target_link_libraries(SmokeAPI_static PUBLIC SmokeAPI::common)
 add_library(SmokeAPI SHARED ${SMOKE_API_SOURCES})
 target_link_libraries(SmokeAPI PUBLIC SmokeAPI::common)
 set_target_properties(SmokeAPI PROPERTIES OUTPUT_NAME ${SMOKE_API_FILENAME})
-
 configure_include_directories()
+
+## https://github.com/batterycenter/embed
+target_compile_definitions(SmokeAPI PUBLIC B_PRODUCTION_MODE)
+CPMAddPackage(
+    URI "gh:batterycenter/embed@1.2.19"
+    OPTIONS "B_PRODUCTION_MODE ON"
+)
+b_embed(SmokeAPI "res/interface_lookup.json")
 
 if(WIN32)
     configure_version_resource(
@@ -110,19 +117,11 @@ if(WIN32)
         DLL_FILES_GLOB "C:/Windows/System32/version.dll"
     )
 else()
-    configure_linker_exports(
-        TARGET SmokeAPI
-        HEADER_NAME "libsteam_api_exports.cpp"
-        FORWARDED_DLL "${STEAM_API_MODULE}_o.so"
-        DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${LINUX_DIR}/${STEAM_API_MODULE}.so"
-        INPUT_SOURCES_DIR ""
-    )
+#    configure_linker_exports(
+#        TARGET SmokeAPI
+#        HEADER_NAME "libsteam_api_exports.cpp"
+#        FORWARDED_DLL "${STEAM_API_MODULE}_o.so"
+#        DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${LINUX_DIR}/${STEAM_API_MODULE}.so"
+#        INPUT_SOURCES_DIR ""
+#    )
 endif()
-
-## https://github.com/batterycenter/embed
-target_compile_definitions(SmokeAPI PUBLIC B_PRODUCTION_MODE)
-CPMAddPackage(
-    URI "gh:batterycenter/embed@1.2.19"
-    OPTIONS "B_PRODUCTION_MODE ON"
-)
-b_embed(SmokeAPI "res/interface_lookup.json")

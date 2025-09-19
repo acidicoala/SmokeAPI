@@ -2,11 +2,15 @@
 
 #include <nlohmann/json.hpp>
 
-#include <koalabox/core.hpp>
 #include <koalabox/hook.hpp>
 
+#ifdef KB_WIN
 #define VIRTUAL(TYPE) __declspec(noinline) TYPE __fastcall // NOLINT(*-macro-parentheses)
 #define C_DECL(TYPE) extern "C" __declspec(noinline) TYPE __cdecl
+#elifdef KB_LINUX
+#define VIRTUAL(TYPE) __attribute__ ((__noinline__)) TYPE
+#define C_DECL(TYPE) extern "C" __attribute__ ((__noinline__)) TYPE
+#endif
 
 // These macros are meant to be used for callbacks that should return original result
 
