@@ -1,6 +1,9 @@
 #include <random>
 #include <regex>
 
+#include <elfio/elfio.hpp>
+#include <glob/glob.h>
+
 #include <koalabox/http_client.hpp>
 #include <koalabox/logger.hpp>
 #include <koalabox/path.hpp>
@@ -39,6 +42,53 @@ namespace {
         );
     }
 
+    void fix_linux_binary_flags(const fs::path& bin_path) {
+        const auto bin_path_str = kb::path::to_str(bin_path);
+
+        ELFIO::elfio reader;
+        if(!reader.load(bin_path_str)) {
+            LOG_ERROR("Failed to read Linux binary: {}", bin_path_str);
+            return;
+        }
+
+        // Iterate over program headers to find PT_GNU_STACK
+        for(const auto& segment : reader.segments) {
+            if(segment->get_type() != ELFIO::PT_GNU_STACK) { continue; }
+            ELFIO::Elf_Xword flags = segment->get_flags();
+
+            if(flags & ELFIO::PF_X) {
+                flags &= ~ELFIO::PF_X;
+                segment->set_flags(flags);
+
+                LOG_INFO("Cleared PF_X on PT_GNU_STACK in binary: {}", bin_path_str);
+            }
+
+            break; // No need to iterate other segments
+        }
+
+        if(!reader.save(bin_path_str)) {
+            LOG_ERROR("Failed to save Linux binary: {}", bin_path_str);
+        }
+    }
+
+    /**
+     * Some older libsteam_api.so binaries have PF_X (execute) flag from the PT_GNU_STACK enabled.
+     * This prevents us from loading them on modern Linux systems. Hence, we need to clear it ourselves.
+     * Affected versions (all 32-bit): 106-107
+     */
+    void fix_linux_binaries(const fs::path& binary_directory) {
+        const auto so_files_glob = kb::path::to_str(binary_directory / "**" / "*.so");
+        const auto linux_binary_list = glob::rglob(so_files_glob);
+
+        for(const auto& bin_path : linux_binary_list) {
+            if(not fs::exists(bin_path)) {
+                continue;
+            }
+
+            fix_linux_binary_flags(bin_path);
+        }
+    }
+
     void unzip_sdk(const fs::path& zip_file_path, const fs::path& unzip_dir) {
         kb::zip::extract_files(
             zip_file_path,
@@ -68,10 +118,7 @@ namespace {
             }
         );
 
-        // TODO: Some older libsteam_api.so binaries have set the `PF_X` flag from `PT_GNU_STACK`.
-        //       This prevents us from loading them on modern Linux distros. Hence, we need to
-        //       clear it using tools like elfio or libelf.
-        //       Affected versions (all 32-bit): 106-107
+        fix_linux_binaries(unzip_dir);
     }
 
     void download_sdk(const fs::path& steamworks_dir, const std::string_view& version) {

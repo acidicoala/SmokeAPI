@@ -54,5 +54,6 @@ They will be added to the list of missing DLC IDs to facilitate config-less oper
 {% block extra_oss_libs %}
 - [bshoshany/thread-pool](https://github.com/bshoshany/thread-pool)
 - [batterycenter/embed](https://github.com/batterycenter/embed)
+- [serge1/ELFIO](https://github.com/serge1/ELFIO)
 {% endblock %}
 {% endblock %}

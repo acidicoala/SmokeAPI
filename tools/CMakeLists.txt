@@ -17,8 +17,12 @@ target_include_directories(BS_thread_pool INTERFACE ${BS_thread_pool_SOURCE_DIR}
 
 ### Steamworks Downloader executable
 
+CPMAddPackage("gh:serge1/ELFIO#Release_3.12")
 add_executable(steamworks_downloader src/steamworks_downloader.cpp)
-target_link_libraries(steamworks_downloader PRIVATE KoalaBox)
+target_link_libraries(steamworks_downloader PRIVATE
+    KoalaBox
+    elfio
+)
 
 ### Steamworks Parser executable
 
