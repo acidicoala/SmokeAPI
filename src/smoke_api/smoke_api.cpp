@@ -122,6 +122,8 @@ namespace smoke_api {
 
             if(config::instance.logging) {
                 kb::logger::init_file_logger(kb::paths::get_log_path());
+            } else {
+                kb::logger::init_null_logger();
             }
 
             LOG_INFO("{} v{} | Built at '{}'", PROJECT_NAME, PROJECT_VERSION, __TIMESTAMP__);
