@@ -16,7 +16,7 @@ constexpr auto STEAM_GAME_SERVER = "SteamGameServer";
 
 namespace smoke_api {
 
-    void init(HMODULE module_handle);
+    void init(void* module_handle);
     void shutdown();
 
     AppId_t get_app_id();
