@@ -8,7 +8,7 @@
     "sdk_dll_names": "`steam_api.dll` or `steam_api64.dll`",
     "sdk_dll_orig_names": "`steam_api_o.dll` or `steam_api64_o.dll`",
     "show_3rd_party_point": true,
-    "unlocker_dll_names": "`SmokeAPI32.dll` or `SmokeAPI64.dll`",
+    "unlocker_dll_names": "`smoke_api32.dll` or `smoke_api64.dll`",
     "config_filename": "SmokeAPI.config.json",
     "github_repo_url": "https://github.com/acidicoala/SmokeAPI",
     "forum_topic_url": "https://cs.rin.ru/forum/viewtopic.php?p=2597932#p2597932",

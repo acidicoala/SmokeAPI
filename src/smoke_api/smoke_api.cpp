@@ -42,6 +42,7 @@ namespace {
     namespace kb = koalabox;
 
     void* original_steamapi_handle = nullptr;
+    bool is_hook_mode;
 
     std::set<std::string> find_steamclient_versions(void* steamapi_handle) {
         if(!steamapi_handle) {
@@ -80,13 +81,19 @@ namespace {
 #endif
     }
 
+    // ReSharper disable once CppDFAConstantFunctionResult
     bool on_steamclient_loaded(void* steamclient_handle) {
-        static const auto CreateInterface$ = KB_MOD_GET_FUNC(steamclient_handle, CreateInterface);
+        KB_HOOK_DETOUR_MODULE(CreateInterface, steamclient_handle);
 
-        auto* steamapi_handle = original_steamapi_handle
-                                    ? original_steamapi_handle
-                                    : kb::lib::get_library_handle(STEAM_API_MODULE);
-        if(steamapi_handle) {
+        if(!is_hook_mode) {
+            return true;
+        }
+
+        // Check for late hooking
+
+        static const auto CreateInterface$ = KB_LIB_GET_FUNC(steamclient_handle, CreateInterface);
+
+        if(auto* steamapi_handle = kb::lib::get_library_handle(STEAM_API_MODULE)) {
             // SteamAPI might have been initialized.
             // Hence, we need to query SteamClient interfaces and hook them if needed.
             const auto steamclient_versions = find_steamclient_versions(steamapi_handle);
@@ -101,15 +108,11 @@ namespace {
             }
         }
 
-        KB_HOOK_DETOUR_MODULE(CreateInterface, steamclient_handle);
-
         return true;
     }
 
     void init_lib_monitor() {
-        kb::lib_monitor::init_listener(
-            {{STEAMCLIENT_DLL, on_steamclient_loaded}}
-        );
+        kb::lib_monitor::init_listener({{STEAMCLIENT_DLL, on_steamclient_loaded}});
     }
 }
 
@@ -133,7 +136,7 @@ namespace smoke_api {
             const auto exe_name = kb::path::to_str(exe_path.filename());
 
             LOG_DEBUG("Process name: '{}' [{}-bit]", exe_name, kb::util::BITNESS);
-            LOG_DEBUG("Self handle: {}", module_handle);
+            LOG_DEBUG("Self name: '{}'", kb::path::to_str(kb::lib::get_fs_path(module_handle).filename()));
 
             // We need to hook functions in either mode
             kb::hook::init(true);
@@ -141,17 +144,16 @@ namespace smoke_api {
             if(kb::hook::is_hook_mode(module_handle, STEAM_API_MODULE)) {
                 LOG_INFO("Detected hook mode");
 
+                is_hook_mode = true;
                 init_lib_monitor();
             } else {
                 LOG_INFO("Detected proxy mode");
 
+                is_hook_mode = true;
                 init_lib_monitor();
 
                 const auto self_path = kb::paths::get_self_dir();
-                original_steamapi_handle = kb::lib::load_original_library(
-                    self_path,
-                    STEAM_API_MODULE
-                );
+                original_steamapi_handle = kb::lib::load_original_library(self_path, STEAM_API_MODULE);
             }
 
             LOG_INFO("Initialization complete");

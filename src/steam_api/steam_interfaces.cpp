@@ -218,7 +218,7 @@ namespace steam_interfaces {
             // Map virtual hook map to a set of keys
             const auto prefixes = std::views::keys(virtual_hook_map) | std::ranges::to<std::set>();
 
-            const auto CreateInterface$ = KB_MOD_GET_FUNC(steamclient_handle, CreateInterface);
+            const auto CreateInterface$ = KB_LIB_GET_FUNC(steamclient_handle, CreateInterface);
 
             DECLARE_ARGS();
             THIS = CreateInterface$(steam_client_interface_version.c_str(), nullptr);

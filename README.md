@@ -82,7 +82,7 @@ If that didn't work, refer to the _Troubleshooting_ section below.
 ### 🪝 Hook mode
 
 - Download the [latest SmokeAPI release zip].
-- From this downloaded zip extract `SmokeAPI32.dll` or `SmokeAPI64.dll`, depending on a game's bitness.
+- From this downloaded zip extract `smoke_api32.dll` or `smoke_api64.dll`, depending on a game's bitness.
 - Rename the unzipped DLL to `version.dll`.
 - Place this `version.dll` next to the game's `.exe` file.
 
@@ -99,8 +99,8 @@ For example, assuming that the game loads `winmm.dll`:
     - Place `winmm.dll` next to the game's `.exe` file.
 - Install SmokeAPI
     - Download the [latest SmokeAPI release zip].
-    - From this downloaded zip extract `SmokeAPI32.dll` or `SmokeAPI64.dll`, depending on a game's bitness.
-    - Place `SmokeAPI32.dll` or `SmokeAPI64.dll` next to the game's `.exe` file.
+    - From this downloaded zip extract `smoke_api32.dll` or `smoke_api64.dll`, depending on a game's bitness.
+    - Place `smoke_api32.dll` or `smoke_api64.dll` next to the game's `.exe` file.
 
 #### 🪝 Hook mode with Special K
 
@@ -111,7 +111,7 @@ In such cases, it might be worth trying [Special K], which can inject SmokeAPI a
 
 - Find a `steam_api.dll` or `steam_api64.dll` file in game directory, and rename it to `steam_api_o.dll` or `steam_api64_o.dll`.
 - Download the [latest SmokeAPI release zip].
-- From this downloaded zip extract `SmokeAPI32.dll` or `SmokeAPI64.dll`, depending on a game's bitness.
+- From this downloaded zip extract `smoke_api32.dll` or `smoke_api64.dll`, depending on a game's bitness.
 - Rename this extracted DLL to `steam_api.dll` or `steam_api64.dll`, depending on a game's bitness.
 - Place this renamed unlocker DLL next to the `steam_api_o.dll` or `steam_api64_o.dll` file.
 
@@ -309,6 +309,7 @@ This project makes use of the following open source projects:
 - [pantor/inja](https://github.com/pantor/inja)
 - [bshoshany/thread-pool](https://github.com/bshoshany/thread-pool)
 - [batterycenter/embed](https://github.com/batterycenter/embed)
+- [serge1/ELFIO](https://github.com/serge1/ELFIO)
 
 ## 📄 License
 
