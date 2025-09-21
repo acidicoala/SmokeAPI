@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/acidicoala/SmokeAPI/refs/tags/v3.1.2/res/SmokeAPI.schema.json",
+  "$id": "https://raw.githubusercontent.com/acidicoala/SmokeAPI/refs/tags/v3.1.5/res/SmokeAPI.schema.json",
   "title": "SmokeAPI configuration",
   "type": "object",
   "additionalProperties": false,
@@ -120,7 +120,7 @@
   },
   "examples": [
     {
-      "$schema": "https://raw.githubusercontent.com/acidicoala/SmokeAPI/refs/tags/v3.1.2/res/SmokeAPI.schema.json",
+      "$schema": "https://raw.githubusercontent.com/acidicoala/SmokeAPI/refs/tags/v3.1.5/res/SmokeAPI.schema.json",
       "$version": 4,
       "logging": true,
       "log_steam_http": true,

@@ -129,7 +129,7 @@ namespace smoke_api {
                 kb::logger::init_null_logger();
             }
 
-            LOG_INFO("{} v{} | Built at '{}'", PROJECT_NAME, PROJECT_VERSION, __TIMESTAMP__);
+            LOG_INFO("{} v{}{} | Built at '{}'", PROJECT_NAME, PROJECT_VERSION, VERSION_SUFFIX, __TIMESTAMP__);
             LOG_DEBUG("Parsed config:\n{}", nlohmann::ordered_json(config::instance).dump(2));
 
             const auto exe_path = kb::lib::get_fs_path(nullptr);
