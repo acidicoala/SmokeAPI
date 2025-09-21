@@ -117,6 +117,13 @@ if(WIN32)
         INPUT_SOURCES_DIR ""
         DLL_FILES_GLOB "C:/Windows/System32/version.dll"
     )
+    configure_linker_exports(
+        TARGET SmokeAPI
+        HEADER_NAME "linker_exports_for_winmm.h"
+        FORWARDED_DLL "C:/Windows/System32/winmm.dll"
+        INPUT_SOURCES_DIR ""
+        DLL_FILES_GLOB "C:/Windows/System32/winmm.dll"
+    )
 else()
 #    configure_linker_exports(
 #        TARGET SmokeAPI

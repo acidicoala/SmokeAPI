@@ -83,20 +83,20 @@ If that didn't work, refer to the _Troubleshooting_ section below.
 
 - Download the [latest SmokeAPI release zip].
 - From this downloaded zip extract `smoke_api32.dll` or `smoke_api64.dll`, depending on a game's bitness.
-- Rename the unzipped DLL to `version.dll`.
-- Place this `version.dll` next to the game's `.exe` file.
+- Rename the unzipped DLL to `version.dll` or `winmm.dll`.
+- Place this `version.dll` or `winmm.dll` next to the game's `.exe` file.
 
 #### 🪝 Hook mode with Koaloader
 
-If a game doesn't load
-`version.dll`, you can use an alternative injector to load SmokeAPI into the game process.
+If a game doesn't load `version.dll` or `winmm.dll`, you can use an alternative injector to load
+SmokeAPI into the game process.
 One such injector is [Koaloader], which supports different DLLs that a typical game might load.
-For example, assuming that the game loads `winmm.dll`:
+For example, assuming that the game loads `d3d11.dll`:
 
 - Install Koaloader:
     - Download the [latest Koaloader release zip].
-    - From this downloaded zip extract `winmm.dll` from `winmm-32` or `winmm-64`, depending on a game's bitness.
-    - Place `winmm.dll` next to the game's `.exe` file.
+    - From this downloaded zip extract `d3d11.dll` from `d3d11-32` or `d3d11-64`, depending on a game's bitness.
+    - Place `d3d11.dll` next to the game's `.exe` file.
 - Install SmokeAPI
     - Download the [latest SmokeAPI release zip].
     - From this downloaded zip extract `smoke_api32.dll` or `smoke_api64.dll`, depending on a game's bitness.

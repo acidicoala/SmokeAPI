@@ -14,7 +14,8 @@
     "forum_topic_url": "https://cs.rin.ru/forum/viewtopic.php?p=2597932#p2597932",
     "dlc_database": "SteamDB",
     "dlc_database_url": "https://steamdb.info/",
-    "json_schema_path": "./res/SmokeAPI.schema.json"
+    "json_schema_path": "./res/SmokeAPI.schema.json",
+    "self_inject_dll": "`version.dll` or `winmm.dll`"
   },
   "tasks": [
     {
