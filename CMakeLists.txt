@@ -109,26 +109,35 @@ if(WIN32)
         INPUT_SOURCES_DIR ""
         DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${STEAM_API_MODULE}.dll"
     )
-    configure_linker_exports(
-        TARGET SmokeAPI
-        HEADER_NAME "linker_exports_for_version.h"
-        FORWARDED_DLL "C:/Windows/System32/version.dll"
-        INPUT_SOURCES_DIR ""
-        DLL_FILES_GLOB "C:/Windows/System32/version.dll"
+
+    set(HEADER_CONTENT "#pragma once\n\n")
+
+    foreach(WIN_DLL version winhttp winmm)
+        set(HEADER_NAME "linker_exports_for_${WIN_DLL}.h")
+        configure_linker_exports(
+            TARGET SmokeAPI
+            HEADER_NAME "${HEADER_NAME}"
+            FORWARDED_DLL "C:/Windows/System32/${WIN_DLL}.dll"
+            INPUT_SOURCES_DIR ""
+            DLL_FILES_GLOB "C:/Windows/System32/${WIN_DLL}.dll"
+        )
+
+        set(HEADER_CONTENT "${HEADER_CONTENT}#include <${HEADER_NAME}>\n")
+    endforeach()
+
+    file(GENERATE
+        OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/generated/linker_exports_for_windows_dlls.h"
+        CONTENT "${HEADER_CONTENT}"
     )
-    configure_linker_exports(
-        TARGET SmokeAPI
-        HEADER_NAME "linker_exports_for_winmm.h"
-        FORWARDED_DLL "C:/Windows/System32/winmm.dll"
-        INPUT_SOURCES_DIR ""
-        DLL_FILES_GLOB "C:/Windows/System32/winmm.dll"
-    )
+
+    # Ignore linker warnings regarding COM-related private exports
+    set_target_properties(SmokeAPI PROPERTIES LINK_FLAGS "/ignore:4104")
 else()
-#    configure_linker_exports(
-#        TARGET SmokeAPI
-#        HEADER_NAME "libsteam_api_exports.cpp"
-#        FORWARDED_DLL "${STEAM_API_MODULE}_o.so"
-#        DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${LINUX_DIR}/${STEAM_API_MODULE}.so"
-#        INPUT_SOURCES_DIR ""
-#    )
+    # configure_linker_exports(
+    #     TARGET SmokeAPI
+    #     HEADER_NAME "libsteam_api_exports.cpp"
+    #     FORWARDED_DLL "${STEAM_API_MODULE}_o.so"
+    #     DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${LINUX_DIR}/${STEAM_API_MODULE}.so"
+    #     INPUT_SOURCES_DIR ""
+    # )
 endif()
