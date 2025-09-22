@@ -15,7 +15,7 @@
     "dlc_database": "SteamDB",
     "dlc_database_url": "https://steamdb.info/",
     "json_schema_path": "./res/SmokeAPI.schema.json",
-    "self_inject_dll": "`version.dll` or `winmm.dll`"
+    "self_inject_dll": "`version.dll` or `winhttp.dll` or `winmm.dll`"
   },
   "tasks": [
     {
