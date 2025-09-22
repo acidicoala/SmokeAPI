@@ -140,7 +140,7 @@ namespace {
 
         fs::remove(zip_file_path);
     }
-} // namespace
+}
 
 /**
  * A tool for downloading Steamworks SDK and unpacking its headers and binaries

@@ -46,12 +46,12 @@
 #define PARAMS(...) const void* RCX __VA_OPT__(,) __VA_ARGS__
 #define ARGS(...) RCX __VA_OPT__(,) __VA_ARGS__
 #define THIS RCX
-#define DECLARE_ARGS() const void* RCX = nullptr;
+#define DECLARE_ARGS() void* RCX = nullptr;
 #else
 #define PARAMS(...) const void* ECX, const void* EDX __VA_OPT__(,) __VA_ARGS__
 #define ARGS(...) ECX, EDX __VA_OPT__(,) __VA_ARGS__
 #define THIS ECX
-#define DECLARE_ARGS() const void* ECX = nullptr; const void* EDX = nullptr;
+#define DECLARE_ARGS() void* ECX = nullptr; const void* EDX = nullptr;
 #endif
 
 using AppId_t = uint32_t;

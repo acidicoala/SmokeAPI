@@ -13,6 +13,7 @@ VIRTUAL(void*) ISteamClient_GetISteamApps(PARAMS(HSteamUser, HSteamPipe, const c
 VIRTUAL(void*) ISteamClient_GetISteamUser(PARAMS(HSteamUser, HSteamPipe, const char*)) noexcept;
 VIRTUAL(void*) ISteamClient_GetISteamGenericInterface(PARAMS(HSteamUser, HSteamPipe, const char*)) noexcept;
 VIRTUAL(void*) ISteamClient_GetISteamInventory(PARAMS(HSteamUser, HSteamPipe, const char*)) noexcept;
+VIRTUAL(void*) ISteamClient_GetISteamUtils(PARAMS(HSteamPipe, const char*)) noexcept; // Unhooked
 
 // ISteamHTTP
 VIRTUAL(bool) ISteamHTTP_GetHTTPResponseBodyData(PARAMS(HTTPRequestHandle, const uint8_t*, uint32_t)) noexcept;
@@ -43,7 +44,7 @@ VIRTUAL(bool) ISteamInventory_CheckResultSteamID(PARAMS(SteamInventoryResult_t, 
 VIRTUAL(EUserHasLicenseForAppResult) ISteamUser_UserHasLicenseForApp(PARAMS(CSteamID, AppId_t)) noexcept;
 
 // ISteamUtils
-VIRTUAL(AppId_t) ISteamUtils_GetAppID(PARAMS()) noexcept;
+VIRTUAL(AppId_t) ISteamUtils_GetAppID(PARAMS()) noexcept; // Unhooked
 
 // ISteamGameServer
 VIRTUAL(EUserHasLicenseForAppResult) ISteamGameServer_UserHasLicenseForApp(PARAMS(CSteamID, AppId_t)) noexcept;

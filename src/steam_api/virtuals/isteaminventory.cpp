@@ -17,7 +17,7 @@ VIRTUAL(bool) ISteamInventory_GetResultItems(
         SteamItemDetails_t* pOutItemsArray,
         uint32_t* punOutItemsArraySize
     )
-)  noexcept {
+) noexcept {
     return smoke_api::steam_inventory::GetResultItems(
         __func__,
         resultHandle,

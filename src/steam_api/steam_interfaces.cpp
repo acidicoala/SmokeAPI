@@ -104,15 +104,8 @@ namespace {
                     }
                 }
             },
-            {
-                STEAM_UTILS,
-                interface_data_t{
-                    .fallback_version = "SteamUtils009",
-                    .entry_map = {
-                        ENTRY(ISteamUtils, GetAppID),
-                    }
-                }
-            },
+            // Hooking SteamUtils for GetAppID should be avoided, since it leads to crashes in TW:WH3.
+            // No idea why...
         };
     }
 
@@ -256,5 +249,47 @@ namespace steam_interfaces {
         } catch(const std::exception& e) {
             LOG_ERROR("{} -> Unhandled exception: {}", __func__, e.what());
         }
+    }
+
+    void* find_function(
+        const void* instance_ptr,
+        const std::string& interface_name,
+        const std::string& function_name
+    ) {
+        if(!get_interface_name_to_version_map().contains(interface_name)) {
+            LOG_ERROR("Unsupported interface name: '{}'", interface_name);
+            return nullptr;
+        }
+        const auto& interface_version = get_interface_name_to_version_map().at(interface_name);
+
+        static const auto lookup = read_interface_lookup();
+
+        if(!lookup.contains(interface_version)) {
+            LOG_ERROR("Interface '{}' not found in lookup map", interface_version);
+            return nullptr;
+        }
+
+        const auto interface_lookup = lookup.at(interface_version);
+
+        if(!interface_lookup.contains(function_name)) {
+            LOG_ERROR("Function '{}' not found in the map of '{}'", function_name, interface_version);
+            return nullptr;
+        }
+
+        const auto ordinal = interface_lookup.at(function_name);
+
+        const auto virtual_class = static_cast<const kb::hook::virtual_class_t*>(instance_ptr);
+        return virtual_class->vtable[ordinal];
+    }
+
+    const std::map<std::string, std::string>& get_interface_name_to_version_map() {
+        // Choose minimal supported versions for maximum compatibility
+        // Is it better to get the interface version found in steam_api library?
+        static const std::map<std::string, std::string> map = {
+            {"ISteamClient", "SteamClient007"},
+            {"ISteamUtils", "SteamUtils002"},
+        };
+
+        return map;
     }
 }

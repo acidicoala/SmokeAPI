@@ -114,6 +114,50 @@ namespace {
     void init_lib_monitor() {
         kb::lib_monitor::init_listener({{STEAMCLIENT_DLL, on_steamclient_loaded}});
     }
+
+    std::optional<AppId_t> get_app_id_from_env() noexcept {
+        if(const auto app_id_str = kb::util::get_env("SteamAppId")) {
+            try {
+                const auto app_id = std::stoi(*app_id_str);
+
+                LOG_DEBUG("Found AppID from environment: {}", app_id);
+                return app_id;
+            } catch(const std::exception& e) {
+                LOG_ERROR("Failed to parse AppID '{}' from environment: {}", *app_id_str, e.what());
+            }
+        }
+
+        return std::nullopt;
+    }
+
+    std::optional<AppId_t> get_app_id_from_steam_client() noexcept {
+        try {
+            DECLARE_ARGS();
+
+            const auto& version_map = steam_interfaces::get_interface_name_to_version_map();
+            if((THIS = CreateInterface(version_map.at("ISteamClient").c_str(), nullptr))) {
+                if(const auto get_steam_utils = SMK_FIND_INTERFACE_FUNC(THIS, ISteamClient, GetISteamUtils)) {
+                    constexpr auto steam_pipe = 1;
+                    const auto& utils_version = version_map.at("ISteamUtils");
+                    if((THIS = get_steam_utils(ARGS(steam_pipe, utils_version.c_str())))) {
+                        if(const auto get_app_id = SMK_FIND_INTERFACE_FUNC(THIS, ISteamUtils, GetAppID)) {
+                            if(const auto app_id = get_app_id(ARGS())) {
+                                LOG_DEBUG("Found AppID from ISteamUtils: {}", app_id);
+                                return app_id;
+                            }
+                            LOG_ERROR("ISteamUtils::GetAppID returned 0");
+                        }
+                    }
+                }
+            } else {
+                LOG_ERROR("Failed to create interface '{}'", version_map.at("ISteamClient"))
+            }
+        } catch(const std::exception& e) {
+            LOG_ERROR("Failed to get app id. Unhandled exception: {}", e.what());
+        }
+
+        return std::nullopt;
+    }
 }
 
 namespace smoke_api {
@@ -184,50 +228,28 @@ namespace smoke_api {
     }
 
     AppId_t get_app_id() {
-        static AppId_t app_id = 0;
-        if(app_id) {
-            return app_id; // cached value
+        static AppId_t cached_app_id = 0;
+        if(cached_app_id) {
+            return cached_app_id;
         }
 
-        try {
-            if(const auto app_id_str = kb::util::get_env("SteamAppId")) {
-                app_id = std::stoi(*app_id_str);
-                LOG_DEBUG("Found AppID from environment: {}", app_id);
+        LOG_DEBUG("No cached App ID found. Searching in environment variables.");
 
-                return app_id;
-            }
-        } catch(std::exception&) {
-            LOG_WARN("No SteamAppId in environment. Falling back to ISteamUtils::GetAppID.");
+        if(const auto opt_app_id = get_app_id_from_env()) {
+            return cached_app_id = *opt_app_id;
         }
 
-        // TODO: Then try to read steam_appid.txt here. SteamAppId env var is not available when it's present.
+        LOG_WARN("Failed to find App ID in environment variables. Falling back to ISteamUtils::GetAppID.");
 
-        try {
-            DECLARE_ARGS();
+        // IDEA: Try to read steam_appid.txt here. SteamAppId env var is not available when it's present.
+        //       But what if the ID specified in steam_appid.txt is invalid?
 
-            THIS = CreateInterface("SteamClient007", nullptr);
-            if(!THIS) {
-                LOG_ERROR("Failed to create SteamClient interface");
-                return 0;
-            }
-
-            THIS = ISteamClient_GetISteamGenericInterface(ARGS(1, 1, "SteamUtils002"));
-            if(!THIS) {
-                LOG_ERROR("Failed to get SteamUtils interface");
-                return 0;
-            }
-
-            app_id = ISteamUtils_GetAppID(ARGS());
-            if(!app_id) {
-                LOG_ERROR("ISteamUtils::GetAppID returned 0");
-                return 0;
-            }
-
-            LOG_DEBUG("Found AppID from ISteamUtils: {}", app_id);
-            return app_id;
-        } catch(const std::exception& e) {
-            LOG_ERROR("Failed to get app id: {}", e.what());
-            return 0;
+        if(const auto opt_app_id = get_app_id_from_steam_client()) {
+            return cached_app_id = *opt_app_id;
         }
+
+        LOG_ERROR("Failed to find App ID");
+
+        return 0;
     }
 }
