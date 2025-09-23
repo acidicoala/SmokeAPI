@@ -20,6 +20,10 @@
 
 #include "build_config.h"
 
+#ifdef KB_WIN
+#include "koalabox/win.hpp"
+#endif
+
 // Hooking steam_api has shown itself to be less desirable than steamclient
 // for the reasons outlined below:
 //
@@ -132,14 +136,16 @@ namespace {
 
     std::optional<AppId_t> get_app_id_from_steam_client() noexcept {
         try {
-            DECLARE_ARGS();
+            const DECLARE_ARGS();
 
             const auto& version_map = steam_interfaces::get_interface_name_to_version_map();
-            if((THIS = CreateInterface(version_map.at("ISteamClient").c_str(), nullptr))) {
+            THIS = CreateInterface(version_map.at("ISteamClient").c_str(), nullptr);
+            if(THIS) {
                 if(const auto get_steam_utils = SMK_FIND_INTERFACE_FUNC(THIS, ISteamClient, GetISteamUtils)) {
                     constexpr auto steam_pipe = 1;
                     const auto& utils_version = version_map.at("ISteamUtils");
-                    if((THIS = get_steam_utils(ARGS(steam_pipe, utils_version.c_str())))) {
+                    THIS = get_steam_utils(ARGS(steam_pipe, utils_version.c_str()));
+                    if(THIS) {
                         if(const auto get_app_id = SMK_FIND_INTERFACE_FUNC(THIS, ISteamUtils, GetAppID)) {
                             if(const auto app_id = get_app_id(ARGS())) {
                                 LOG_DEBUG("Found AppID from ISteamUtils: {}", app_id);
@@ -181,6 +187,10 @@ namespace smoke_api {
 
             LOG_DEBUG("Process name: '{}' [{}-bit]", exe_name, kb::util::BITNESS);
             LOG_DEBUG("Self name: '{}'", kb::path::to_str(kb::lib::get_fs_path(module_handle).filename()));
+
+#ifdef KB_WIN
+            kb::win::check_self_duplicates();
+#endif
 
             // We need to hook functions in either mode
             kb::hook::init(true);
