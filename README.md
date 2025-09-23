@@ -33,7 +33,8 @@ Therefore, **you have to first research the game's topic**, to see if it support
 
 Additionally, there are several points to bear in mind when it comes to unlocking DLCs with SmokeAPI:
 
-* SmokeAPI most definitely will not work with games that use 3rd party DRM, such as games from Ubisoft, Rockstar, etc.* SmokeAPI is unlikely to unlock anything in Free-To-Play games since they typically store all player data on the corresponding game server and hence all the checks are server-side.
+* SmokeAPI most definitely will not work with games that use 3rd party DRM, such as games from Ubisoft, Rockstar, etc.* SmokeAPI most likely will not work with games that use Denuvo SecureDLC.
+* SmokeAPI is unlikely to unlock anything in Free-To-Play games since they typically store all player data on the corresponding game server and hence all the checks are server-side.
 * SmokeAPI will not work with games that employ additional ownership protection or if the game is using alternative DLC verification mechanism.
 * SmokeAPI is unlikely to work with games that use an anti-cheat, since they typically detect any DLL/EXE that has been tampered with. Sometimes it is possible to disable an anti-cheat, but that typically entails the loss of online capabilities. Search in the respective game topic for more information about how to disable anti-cheat.
 * Some games include DLC files in their base game, regardless of whether you own the DLC or not. However, some games download additional DLC files only after a user has bought the corresponding DLC. In this case, not only will you need to install SmokeAPI, but you also have to get the additional DLC files from somewhere else and put them into the game folder. Up-to-date DLC files often can be found in corresponding game topics.
