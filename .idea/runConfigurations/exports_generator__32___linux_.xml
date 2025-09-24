@@ -1,7 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="exports_generator [32] [linux]" type="CMakeRunConfiguration" factoryName="Application" PROGRAM_PARAMS="FALSE libsteam_api_o $ProjectFileDir$/res/steamworks/*/binaries/linux32/libsteam_api.so $CMakeCurrentGenerationDir$/generated/libsteam_api_exports.cpp" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" EMULATE_TERMINAL="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="SmokeAPI" TARGET_NAME="exports_generator" CONFIG_NAME="Debug [32]" RUN_TARGET_PROJECT_NAME="SmokeAPI" RUN_TARGET_NAME="exports_generator">
-    <method v="2">
-      <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-    </method>
-  </configuration>
-</component>

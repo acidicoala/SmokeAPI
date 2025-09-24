@@ -53,7 +53,6 @@ if(WIN32)
 
     list(APPEND SMOKE_API_SOURCES src/main_win.cpp)
 else()
-    set_32_and_64(LINUX_DIR linux32 linux64)
     set(STEAM_API_MODULE libsteam_api)
     set(STEAMCLIENT_DLL steamclient)
 
@@ -133,11 +132,10 @@ if(WIN32)
     # Ignore linker warnings regarding COM-related private exports
     set_target_properties(SmokeAPI PROPERTIES LINK_FLAGS "/ignore:4104")
 else()
-    # configure_linker_exports(
-    #     TARGET SmokeAPI
-    #     HEADER_NAME "libsteam_api_exports.cpp"
-    #     FORWARDED_DLL "${STEAM_API_MODULE}_o.so"
-    #     DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${LINUX_DIR}/${STEAM_API_MODULE}.so"
-    #     INPUT_SOURCES_DIR ""
-    # )
+    set_32_and_64(LINUX_DIR linux32 linux64)
+    configure_proxy_exports(
+        TARGET SmokeAPI
+        INPUT_LIBS_GLOB "${CMAKE_SOURCE_DIR}/res/steamworks/*/binaries/${LINUX_DIR}/libsteam_api.so"
+        OUTPUT_NAME "proxy_exports"
+    )
 endif()
