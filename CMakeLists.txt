@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(SmokeAPI VERSION 3.1.5)
+project(SmokeAPI VERSION 3.1.6)
 
 include(KoalaBox/cmake/KoalaBox.cmake)
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
