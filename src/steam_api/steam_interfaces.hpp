@@ -9,6 +9,8 @@
     )
 
 namespace steam_interfaces {
+    constexpr auto STEAM_CLIENT = "SteamClient";
+
     void hook_virtuals(const void* interface_ptr, const std::string& version_string);
 
     /**

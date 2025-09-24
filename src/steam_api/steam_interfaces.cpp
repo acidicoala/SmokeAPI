@@ -9,7 +9,6 @@
 #include "smoke_api/steamclient/steamclient.hpp"
 
 #include "steam_api/steam_interfaces.hpp"
-#include "smoke_api/smoke_api.hpp"
 #include "virtuals/steam_api_virtuals.hpp"
 
 namespace {
@@ -37,7 +36,7 @@ namespace {
 
         return {
             {
-                STEAM_APPS,
+                "STEAMAPPS_INTERFACE_VERSION",
                 interface_data_t{
                     .fallback_version = "STEAMAPPS_INTERFACE_VERSION008",
                     .entry_map = {
@@ -49,7 +48,7 @@ namespace {
                 }
             },
             {
-                STEAM_CLIENT,
+                steam_interfaces::STEAM_CLIENT,
                 interface_data_t{
                     .fallback_version = "SteamClient021",
                     .entry_map = {
@@ -61,7 +60,7 @@ namespace {
                 }
             },
             {
-                STEAM_GAME_SERVER,
+                "SteamGameServer",
                 interface_data_t{
                     .fallback_version = "SteamGameServer015",
                     .entry_map = {
@@ -70,7 +69,7 @@ namespace {
                 }
             },
             {
-                STEAM_HTTP,
+                "STEAMHTTP_INTERFACE_VERSION",
                 interface_data_t{
                     .fallback_version = "STEAMHTTP_INTERFACE_VERSION003",
                     .entry_map = {
@@ -81,7 +80,7 @@ namespace {
                 }
             },
             {
-                STEAM_INVENTORY,
+                "STEAMINVENTORY_INTERFACE_V",
                 interface_data_t{
                     .fallback_version = "STEAMINVENTORY_INTERFACE_V003",
                     .entry_map = {
@@ -96,7 +95,7 @@ namespace {
                 }
             },
             {
-                STEAM_USER,
+                "SteamUser",
                 interface_data_t{
                     .fallback_version = "SteamUser023",
                     .entry_map = {

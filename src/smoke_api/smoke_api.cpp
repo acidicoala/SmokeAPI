@@ -213,17 +213,7 @@ namespace smoke_api {
                 original_steamapi_handle = kb::lib::load_original_library(self_path, STEAM_API_MODULE);
 
 #ifdef KB_LINUX
-                // We need to enable writing into the instruction memory
-                // TODO: Move to generated file
-                const auto code_section = kb::lib::get_section_or_throw(module_handle, kb::lib::CODE_SECTION);
-                PLH::MemAccessor mem_accessor;
-                PLH::MemoryProtector const protector(
-                    reinterpret_cast<uint64_t>(code_section.start_address),
-                    code_section.size,
-                    PLH::ProtFlag::RWX,
-                    mem_accessor
-                );
-                proxy_exports::init(original_steamapi_handle);
+                proxy_exports::init(module_handle, original_steamapi_handle);
 #endif
             }
 
