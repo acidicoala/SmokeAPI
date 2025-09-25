@@ -72,7 +72,6 @@ target_include_directories(SmokeAPI_common INTERFACE
 )
 target_link_libraries(SmokeAPI_common INTERFACE KoalaBox $<TARGET_OBJECTS:KoalaBox>)
 
-
 ### Static SmokeAPI
 
 add_library(SmokeAPI_static STATIC ${SMOKE_API_STATIC_SOURCES})
@@ -104,9 +103,9 @@ if(WIN32)
     configure_linker_exports(
         TARGET SmokeAPI
         HEADER_NAME "linker_exports_for_steam_api.h"
-        FORWARDED_DLL "${STEAM_API_MODULE}_o"
-        INPUT_SOURCES_DIR ""
-        DLL_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${STEAM_API_MODULE}.dll"
+        FORWARDED_DLL_NAME "${STEAM_API_MODULE}_o"
+        LIB_FILES_GLOB "${CMAKE_CURRENT_SOURCE_DIR}/res/steamworks/*/binaries/${STEAM_API_MODULE}.dll"
+        SOURCES_INPUT_PATH ""
     )
 
     set(HEADER_CONTENT "#pragma once\n\n")
@@ -116,9 +115,9 @@ if(WIN32)
         configure_linker_exports(
             TARGET SmokeAPI
             HEADER_NAME "${HEADER_NAME}"
-            FORWARDED_DLL "C:/Windows/System32/${WIN_DLL}.dll"
-            INPUT_SOURCES_DIR ""
-            DLL_FILES_GLOB "C:/Windows/System32/${WIN_DLL}.dll"
+            FORWARDED_DLL_NAME "C:/Windows/System32/${WIN_DLL}.dll"
+            LIB_FILES_GLOB "C:/Windows/System32/${WIN_DLL}.dll"
+            SOURCES_INPUT_PATH ""
         )
 
         set(HEADER_CONTENT "${HEADER_CONTENT}#include <${HEADER_NAME}>\n")

@@ -21,10 +21,11 @@
 #include "steam_api/virtuals/steam_api_virtuals.hpp"
 
 #include "build_config.h"
-#include "proxy_exports.hpp"
 
 #ifdef KB_WIN
 #include "koalabox/win.hpp"
+#elifdef KB_LINUX
+#include "proxy_exports.hpp"
 #endif
 
 // Hooking steam_api has shown itself to be less desirable than steamclient
