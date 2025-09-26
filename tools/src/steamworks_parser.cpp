@@ -8,13 +8,15 @@
 
 #include <koalabox/io.hpp>
 #include <koalabox/logger.hpp>
-#include <koalabox/parser.hpp>
 #include <koalabox/path.hpp>
 #include <koalabox/str.hpp>
+
+#include <koalabox_tools/parser.hpp>
 
 namespace {
     namespace fs = std::filesystem;
     namespace kb = koalabox;
+    namespace parser = kb::tools::parser;
 
     std::string_view unquote_if_quoted(const std::string_view& s) {
         if(s.size() >= 2 && s.front() == '"' && s.back() == '"') {
@@ -26,13 +28,13 @@ namespace {
     }
 
     void parse_header(const std::string_view& source, nlohmann::ordered_json& lookup) {
-        const auto tree = kb::parser::parse_source(source);
+        const auto tree = parser::parse_source(source);
         const auto root = tree.getRootNode();
 
         nlohmann::ordered_json current_lookup = {};
         std::string interface_version;
 
-        kb::parser::walk(
+        parser::walk(
             root,
             [&](const ts::Node& current_node) {
                 const auto current_type = current_node.getType();
@@ -43,7 +45,7 @@ namespace {
                     std::string interface_name;
                     [[maybe_unused]] int vt_idx = 0;
 
-                    kb::parser::walk(
+                    parser::walk(
                         current_node,
                         [&](const ts::Node& class_node) {
                             const auto type = class_node.getType();
@@ -53,12 +55,12 @@ namespace {
                                 interface_name = value;
                                 LOG_DEBUG("Found interface: {}", interface_name);
 
-                                return kb::parser::visit_result::Continue;
+                                return parser::visit_result::Continue;
                             }
 
                             if(type == "field_declaration" && value.starts_with("virtual ")) {
                                 if(value.starts_with("virtual ")) {
-                                    kb::parser::walk(
+                                    parser::walk(
                                         class_node,
                                         [&](const ts::Node& decl_node) {
                                             if(decl_node.getType() == "field_identifier") {
@@ -71,29 +73,29 @@ namespace {
                                                 // functions. Hence, no fixes have been implemented so far.
 
                                                 current_lookup[function_name] = vt_idx++;
-                                                return kb::parser::visit_result::Stop;
+                                                return parser::visit_result::Stop;
                                             }
-                                            return kb::parser::visit_result::Continue;
+                                            return parser::visit_result::Continue;
                                         }
                                     );
                                 }
 
-                                return kb::parser::visit_result::SkipChildren;
+                                return parser::visit_result::SkipChildren;
                             }
 
-                            return kb::parser::visit_result::Continue;
+                            return parser::visit_result::Continue;
                         }
                     );
                 } else if(current_type == "preproc_def") {
-                    kb::parser::walk(
+                    parser::walk(
                         current_node,
                         [&](const ts::Node& preproc_node) {
                             if(preproc_node.getType() == "identifier") {
                                 const auto identifier = preproc_node.getSourceRange(source);
 
                                 return identifier.ends_with("INTERFACE_VERSION")
-                                           ? kb::parser::visit_result::Continue
-                                           : kb::parser::visit_result::Stop;
+                                           ? parser::visit_result::Continue
+                                           : parser::visit_result::Stop;
                             }
 
                             if(preproc_node.getType() == "preproc_arg") {
@@ -102,17 +104,17 @@ namespace {
                                 interface_version = unquote_if_quoted(trimmed_version);
                                 LOG_DEBUG("Interface version: {}", interface_version);
 
-                                return kb::parser::visit_result::Stop;
+                                return parser::visit_result::Stop;
                             }
 
-                            return kb::parser::visit_result::Continue;
+                            return parser::visit_result::Continue;
                         }
                     );
                 } else if(current_type == "translation_unit" || current_type == "preproc_ifdef") {
-                    return kb::parser::visit_result::Continue;
+                    return parser::visit_result::Continue;
                 }
 
-                return kb::parser::visit_result::SkipChildren;
+                return parser::visit_result::SkipChildren;
             }
         );
 
@@ -155,7 +157,6 @@ namespace {
         for(const auto& entry : fs::directory_iterator(headers_dir)) {
             if(const auto& header_path = entry.path(); header_path.extension() == ".h") {
                 const auto task = pool.submit_task(
-                    // NOLINT(*-unused-local-non-trivial-variable)
                     [&, header_path] {
                         try {
                             LOG_DEBUG("Parsing header: {}", kb::path::to_str(header_path));
@@ -164,7 +165,7 @@ namespace {
                             parse_header(processed_header, lookup);
                         } catch(std::exception& e) {
                             LOG_CRITICAL(e.what());
-                            exit(-1);
+                            exit(EXIT_FAILURE);
                         }
                     }
                 );

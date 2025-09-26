@@ -1,33 +1,13 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(smoke-api-tools LANGUAGES CXX)
-
-### Thread pool library
-
-## https://github.com/bshoshany/thread-pool
-CPMAddPackage(
-    NAME BS_thread_pool
-    GITHUB_REPOSITORY bshoshany/thread-pool
-    VERSION 5.0.0
-    EXCLUDE_FROM_ALL
-    SYSTEM
-)
-add_library(BS_thread_pool INTERFACE)
-target_include_directories(BS_thread_pool INTERFACE ${BS_thread_pool_SOURCE_DIR}/include)
+project(SmokeAPITools LANGUAGES CXX)
 
 ### Steamworks Downloader executable
 
-CPMAddPackage("gh:serge1/ELFIO#Release_3.12")
 add_executable(steamworks_downloader src/steamworks_downloader.cpp)
-target_link_libraries(steamworks_downloader PRIVATE
-    KoalaBox
-    elfio
-)
+target_link_libraries(steamworks_downloader PRIVATE KoalaBoxTools)
 
 ### Steamworks Parser executable
 
 add_executable(steamworks_parser src/steamworks_parser.cpp)
-target_link_libraries(steamworks_parser PRIVATE
-    KoalaBox
-    BS_thread_pool
-)
+target_link_libraries(steamworks_parser PRIVATE KoalaBoxTools)
