@@ -8,7 +8,7 @@
 #define DLL_EXPORT(TYPE) extern "C" [[maybe_unused]] __declspec(dllexport) TYPE __cdecl
 
 namespace smoke_api {
-    void init(void* module_handle);
+    void init(void* self_module_handle);
     void shutdown();
 
     AppId_t get_app_id();

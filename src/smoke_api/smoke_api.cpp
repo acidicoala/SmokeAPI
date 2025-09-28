@@ -1,22 +1,25 @@
 #include <regex>
 #include <set>
 
-#include <koalabox/config.hpp>
-#include <koalabox/lib_monitor.hpp>
-#include <koalabox/globals.hpp>
-#include <koalabox/hook.hpp>
-#include <koalabox/logger.hpp>
-#include <koalabox/lib.hpp>
-#include <koalabox/path.hpp>
-#include <koalabox/paths.hpp>
-#include <koalabox/util.hpp>
-
-#include "smoke_api.hpp"
-
+#include <glob/glob.h>
 #include <polyhook2/MemProtector.hpp>
 
+#include <koalabox/config.hpp>
+#include <koalabox/globals.hpp>
+#include <koalabox/hook.hpp>
+#include <koalabox/lib.hpp>
+#include <koalabox/lib_monitor.hpp>
+#include <koalabox/logger.hpp>
+#include <koalabox/path.hpp>
+#include <koalabox/paths.hpp>
+#include <koalabox/platform.hpp>
+#include <koalabox/util.hpp>
+
+// static
 #include "smoke_api/config.hpp"
 #include "smoke_api/steamclient/steamclient.hpp"
+
+#include "smoke_api.hpp"
 #include "steam_api/steam_interfaces.hpp"
 #include "steam_api/virtuals/steam_api_virtuals.hpp"
 
@@ -73,8 +76,8 @@ namespace {
         return versions;
     }
 
-    void warn_if_late_injection(const std::string& steamclient_version) {
 #ifdef KB_WIN
+    void warn_if_late_injection(const std::string& steamclient_version) {
         if(kb::util::is_wine_env()) {
             return;
         }
@@ -86,8 +89,8 @@ namespace {
             "Probable cause: SmokeAPI was injected too late. If possible, try injecting it earlier."
         );
         LOG_WARN("NOTE: You can safely ignore this warning if running under Proton or native Linux");
-#endif
     }
+#endif
 
     // ReSharper disable once CppDFAConstantFunctionResult
     bool on_steamclient_loaded(void* steamclient_handle) {
@@ -107,7 +110,9 @@ namespace {
             const auto steamclient_versions = find_steamclient_versions(steamapi_handle);
             for(const auto& steamclient_version : steamclient_versions) {
                 if(CreateInterface$(steamclient_version.c_str(), nullptr)) {
+#ifdef KB_WIN
                     warn_if_late_injection(steamclient_version);
+#endif
 
                     steam_interfaces::hook_steamclient_interface(steamclient_handle, steamclient_version);
                 } else {
@@ -120,7 +125,9 @@ namespace {
     }
 
     void init_lib_monitor() {
+#if defined(KB_WIN) || defined(KB_64)
         kb::lib_monitor::init_listener({{STEAMCLIENT_DLL, on_steamclient_loaded}});
+#endif
     }
 
     std::optional<AppId_t> get_app_id_from_env() noexcept {
@@ -168,12 +175,49 @@ namespace {
 
         return std::nullopt;
     }
+
+    void init_hook_mode(void* self_module_handle) {
+        is_hook_mode = true;
+#ifdef KB_LINUX
+        // Because we got injected via LD_PRELOAD,
+        // Linux loader will resolve all SteamAPI exports in unlocker instead of original library.
+        // Hence, we need to patch the stubs even in hook mode.
+
+        const std::string lib_name = STEAM_API_MODULE ".so";
+        for(const auto& lib_path : glob::rglob({"./" + lib_name, "**/" + lib_name})) {
+            if(const auto lib_bitness = kb::lib::get_bitness(lib_path)) {
+                if(static_cast<uint8_t>(*lib_bitness) == kb::platform::bitness) {
+                    if(const auto lib_handle = kb::lib::load_library(lib_path)) {
+                        LOG_INFO("Found original library: {}", kb::path::to_str(lib_path));
+
+                        original_steamapi_handle = *lib_handle;
+                        proxy_exports::init(self_module_handle, original_steamapi_handle);
+                        return;
+                    }
+                }
+            }
+        }
+
+        if(!original_steamapi_handle) {
+            kb::util::panic("Failed to find original " + lib_name);
+        }
+#endif
+    }
+
+    void init_proxy_mode(void* self_module_handle) {
+        is_hook_mode = true;
+
+        original_steamapi_handle = kb::lib::load_original_library(kb::paths::get_self_dir(), STEAM_API_MODULE);
+#ifdef KB_LINUX
+        proxy_exports::init(self_module_handle, original_steamapi_handle);
+#endif
+    }
 }
 
 namespace smoke_api {
-    void init(void* module_handle) {
+    void init(void* self_module_handle) {
         try {
-            kb::globals::init_globals(module_handle, PROJECT_NAME);
+            kb::globals::init_globals(self_module_handle, PROJECT_NAME);
 
             config::instance = kb::config::parse<config::Config>();
 
@@ -189,8 +233,8 @@ namespace smoke_api {
             const auto exe_path = kb::lib::get_fs_path(nullptr);
             const auto exe_name = kb::path::to_str(exe_path.filename());
 
-            LOG_DEBUG("Process name: '{}' [{}-bit]", exe_name, kb::util::BITNESS);
-            LOG_DEBUG("Self name: '{}'", kb::path::to_str(kb::lib::get_fs_path(module_handle).filename()));
+            LOG_DEBUG("Process name: '{}' [{}-bit]", exe_name, kb::platform::bitness);
+            LOG_DEBUG("Self name: '{}'", kb::path::to_str(kb::lib::get_fs_path(self_module_handle).filename()));
 
 #ifdef KB_WIN
             kb::win::check_self_duplicates();
@@ -199,24 +243,15 @@ namespace smoke_api {
             // We need to hook functions in either mode
             kb::hook::init(true);
 
-            if(kb::hook::is_hook_mode(module_handle, STEAM_API_MODULE)) {
+            if(kb::hook::is_hook_mode(self_module_handle, STEAM_API_MODULE)) {
                 LOG_INFO("Detected hook mode");
-
-                is_hook_mode = true;
-                init_lib_monitor();
+                init_hook_mode(self_module_handle);
             } else {
                 LOG_INFO("Detected proxy mode");
-
-                is_hook_mode = true;
-                init_lib_monitor();
-
-                const auto self_path = kb::paths::get_self_dir();
-                original_steamapi_handle = kb::lib::load_original_library(self_path, STEAM_API_MODULE);
-
-#ifdef KB_LINUX
-                proxy_exports::init(module_handle, original_steamapi_handle);
-#endif
+                init_proxy_mode(self_module_handle);
             }
+
+            init_lib_monitor();
 
             LOG_INFO("Initialization complete");
         } catch(const std::exception& e) {
