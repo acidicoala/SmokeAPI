@@ -1,11 +1,8 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(SmokeAPI VERSION 3.1.6)
+project(SmokeAPI VERSION 4.0.0)
 
 include(KoalaBox/cmake/KoalaBox.cmake)
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    add_definitions(-DKB_DEBUG)
-endif()
 add_subdirectory(KoalaBox)
 add_subdirectory(tools)
 
