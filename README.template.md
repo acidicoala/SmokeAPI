@@ -1,13 +1,14 @@
 {% extends "./KoalaBox/templates/README.base.md" %}
 {% block content %}
 
-_Legit DLC Unlocker for Steamworks._
+_Legit DLC ownership emulation for Steamworks._
 
 ## ✨ Features
 
 * `🔓` Emulate DLC ownership in legitimately owned games
 * `🛅` Emulate Inventory item ownership
 * `📄` Optional configuration
+* `🐧` Support for 32-bit and 64-bit Windows and Linux systems
 
 {% include "KoalaBox/templates/markdown/links.md" %}
 
