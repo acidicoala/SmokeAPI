@@ -4,7 +4,7 @@ on: push
 jobs:
   build:
     name: 🏗️ Build
-    uses: acidicoala/KoalaBox/.github/workflows/build.yml@8d9c273ceabf68d4ee69c2d47c2371d92715c958
+    uses: acidicoala/KoalaBox/.github/workflows/build.yml@0cd47aad6ceb193ebaa9af0ab3253cf8b6239754
     with:
       #language=json
       module: '[ "SmokeAPI" ] '
