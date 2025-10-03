@@ -42,6 +42,7 @@
  * will store the 1st actual argument to the function, so we
  * have to omit it from the function signature.
  */
+#ifdef KB_WIN
 #ifdef KB_64
 #define PARAMS(...) const void* RCX __VA_OPT__(,) __VA_ARGS__
 #define ARGS(...) RCX __VA_OPT__(,) __VA_ARGS__
@@ -52,6 +53,19 @@
 #define ARGS(...) ECX, EDX __VA_OPT__(,) __VA_ARGS__
 #define THIS ECX
 #define DECLARE_ARGS() void* ECX = nullptr; const void* EDX = nullptr;
+#endif
+#elifdef KB_LINUX
+#ifdef KB_64
+#define PARAMS(...) const void* $RDI __VA_OPT__(,) __VA_ARGS__
+#define ARGS(...) $RDI __VA_OPT__(,) __VA_ARGS__
+#define THIS $RDI
+#define DECLARE_ARGS() void* $RDI = nullptr;
+#else
+#define PARAMS(...) const void* $ARG1 __VA_OPT__(,) __VA_ARGS__
+#define ARGS(...) $ARG1 __VA_OPT__(,) __VA_ARGS__
+#define THIS $ARG1
+#define DECLARE_ARGS() void* $ARG1 = nullptr;
+#endif
 #endif
 
 using AppId_t = uint32_t;

@@ -125,9 +125,7 @@ namespace {
     }
 
     void init_lib_monitor() {
-#if defined(KB_WIN) || defined(KB_64)
         kb::lib_monitor::init_listener({{STEAMCLIENT_DLL, on_steamclient_loaded}});
-#endif
     }
 
     std::optional<AppId_t> get_app_id_from_env() noexcept {

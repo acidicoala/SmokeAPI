@@ -1,0 +1,10 @@
+name: 🏗️ Build
+on: push
+
+jobs:
+  build:
+    uses: acidicoala/KoalaBox/.github/workflows/build.yml@e75b11891faaaa51d859c546c8e330fbb7fccb9a
+    with:
+      module: '[ "SmokeAPI" ]'
+      os: '[ "Windows", "Linux" ]'
+      bitness: '[ 32, 64 ]'
