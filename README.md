@@ -3,12 +3,14 @@
 # SmokeAPI
 
 
+
 _Legit DLC Unlocker for Steamworks._
 
 ## ✨ Features
 
 * `🔓` Emulate DLC ownership in legitimately owned games
 * `🛅` Emulate Inventory item ownership
+* `📄` Optional configuration
 
 ## 🔗 Links
 
@@ -20,7 +22,7 @@ _Legit DLC Unlocker for Steamworks._
 
 ### ❓ What is SmokeAPI?
 
-SmokeAPI is a DLC unlocker for games that are _legitimately_ owned in your Steam account.
+SmokeAPI is a tool for Steamworks DLC ownership emulation in games that are _legitimately_ owned in Steam.
 It attempts to fool games that use Steamworks SDK (Steamworks) into thinking that you own the game's DLCs.
 However, SmokeAPI does not modify the rest of the Steamworks, hence features like multiplayer, achievements, and so on remain fully functional.
 
@@ -33,7 +35,9 @@ Therefore, **you have to first research the game's topic**, to see if it support
 
 Additionally, there are several points to bear in mind when it comes to unlocking DLCs with SmokeAPI:
 
-* SmokeAPI most definitely will not work with games that use 3rd party DRM, such as games from Ubisoft, Rockstar, etc.* SmokeAPI most likely will not work with games that use Denuvo SecureDLC.
+
+* SmokeAPI most definitely will not work with games that use 3rd party DRM, such as games from Ubisoft, Rockstar, etc.
+* SmokeAPI most likely will not work with games that use Denuvo SecureDLC.
 * SmokeAPI is unlikely to unlock anything in Free-To-Play games since they typically store all player data on the corresponding game server and hence all the checks are server-side.
 * SmokeAPI will not work with games that employ additional ownership protection or if the game is using alternative DLC verification mechanism.
 * SmokeAPI is unlikely to work with games that use an anti-cheat, since they typically detect any DLL/EXE that has been tampered with. Sometimes it is possible to disable an anti-cheat, but that typically entails the loss of online capabilities. Search in the respective game topic for more information about how to disable anti-cheat.
@@ -73,7 +77,7 @@ My advice is to try installing the unlocker in hook mode first.
 If it doesn't work, try installing it in proxy mode instead.
 If that didn't work, refer to the _Troubleshooting_ section below.
 
-## 🛠 Installation instructions
+## 🛠 Installation instructions (🪟 Windows)
 
 > [!NOTE]
 > To determine the bitness of a game you can open _Task Manager_, navigate to _Details_ tab,
@@ -116,6 +120,8 @@ For example, assuming that the game loads `d3d11.dll`:
 There are games which have extra protections that break hook mode.
 In such cases, it might be worth trying [Special K], which can inject SmokeAPI as a [custom plugin].
 
+---
+
 ### 🔀 Proxy mode
 
 - Find a `steam_api.dll` or `steam_api64.dll` file in game directory, and rename it to `steam_api_o.dll` or `steam_api64_o.dll`.
@@ -128,6 +134,37 @@ In such cases, it might be worth trying [Special K], which can inject SmokeAPI a
 [latest Koaloader release zip]: https://github.com/acidicoala/Koaloader/releases/latest
 [Special K]: https://www.special-k.info
 [custom plugin]: https://wiki.special-k.info/en/SpecialK/Tools#custom-plugin
+
+## 🛠 Installation instructions (🐧 Linux)
+
+Just like on Windows, SmokeAPI features 32 and 64-bit Linux builds.
+In release archive they are named as `libsmoke_api32.so` or `libsmoke_api64.so` respectively.
+
+### 🪝 Hook mode (🐧 Linux)
+
+Linux doesn't have the same easily exploitable library injection mechanism that Windows has.
+However, it is possible to force any Linux executable to load any library by using the
+`LD_PRELOAD` environment variable.
+For example:
+
+1. Extract and paste the `libsmoke_api32.so` or `libsmoke_api64.so` next to the game's executable.
+2. In Steam _Library_ open game's _Properties_, switch to the _General_ tab, and set the following _LAUNCH OPTIONS_:
+
+| Bitness | Launch Options                                           |
+|---------|----------------------------------------------------------|
+| 32-bit  | `LD_PRELOAD=./libsmoke_api32.so ./GameExecutable.x86`    |
+| 64-bit  | `LD_PRELOAD=./libsmoke_api64.so ./GameExecutable.x86_64` |
+
+Naturally, the exact options might change depending on how files are located on your filesystem
+or depending on other environment variables you might have configured.
+If you have other environment variables, and you don't know how to correctly combine them,
+then please make heavy use of search engines and LLMs for guidance examples instead of the official forum topic.
+
+### 🔀 Proxy mode (🐧 Linux)
+
+Same as on Windows:
+1. Rename the original `libsteam_api.so` to `libsteam_api.so`
+2. Extract and paste the `libsmoke_api32.so` or `libsmoke_api64.so` to the same directory, renaming it to `libsteam_api.so`.
 
 ## ⚙ Configuration
 
@@ -217,11 +254,12 @@ Below you can find an example config where nearly every option has been customiz
 ```
 </details>
 
+
 ## 🎓 Extra info
 
 ### 🔑 How SmokeAPI works in games with large number of DLCs
 
-Some games that have a large number of DLCs begin ownership verification by querying the Steamworks API for a list of all available DLCs.
+Some the games that have a large number of DLCs begin ownership verification by querying the Steamworks API for a list of all available DLCs.
 Once the game receives the list, it will go over each item and check the ownership.
 The issue arises from the fact that response from Steamworks SDK may max out at 64, depending on how much unowned DLCs the user has.
 To alleviate this issue, SmokeAPI will make a web request to Steam API for a full list of DLCs, which works well most of the time.
@@ -263,10 +301,10 @@ If you have made sure that you picked the right DLL for Koaloader, then try addi
 
 ### 💥 The game is crashing
 
-If the game is crashing or not opening as expected after installing an unlocker, then try to download and install the latest [Microsoft Visual C++ Redistributable for Visual Studio 2015, 2017, 2019, and 2022](https://support.microsoft.com/en-gb/help/2977003/the-latest-supported-visual-c-downloads)
-<details><summary>Download page</summary>
+If the game is crashing or not opening as expected after installing an unlocker, then try to download and install the [Latest supported Visual C++ Redistributable version](https://learn.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170#latest-supported-redistributable-version)
+<details><summary>Download page screenshot</summary>
 
-![Download page](https://i.ibb.co/n6K0X27/redist.jpg)
+![Download page](https://i.ibb.co/PZBXqHpB/vc-redist.jpg)
 </details>
 
 ## 🏗️ Building from source
@@ -299,6 +337,7 @@ For example:
 ```
 
 [Visual Studio Build Tools 2022]: https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022
+
 [CMake]: https://cmake.org/
 
 ## 📚 Acknowledgments
@@ -317,13 +356,16 @@ This project makes use of the following open source projects:
 - [p-ranav/glob](https://github.com/p-ranav/glob)
 - [pantor/inja](https://github.com/pantor/inja)
 - [jarro2783/cxxopts](https://github.com/jarro2783/cxxopts)
-- [serge1/ELFIO](https://github.com/serge1/ELFIO)
+- [serge1/ELFIO](https://github.com/serge1/ELFIO) 
 - [bshoshany/thread-pool](https://github.com/bshoshany/thread-pool)
 - [batterycenter/embed](https://github.com/batterycenter/embed)
+
+
 
 ## 📄 License
 
 This software is licensed under the [Unlicense](https://unlicense.org),
 terms of which are available in [UNLICENSE.txt](UNLICENSE.txt).
+
 
 [Koaloader]: https://github.com/acidicoala/Koaloader

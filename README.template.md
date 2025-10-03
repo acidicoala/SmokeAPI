@@ -7,18 +7,17 @@ _Legit DLC Unlocker for Steamworks._
 
 * `🔓` Emulate DLC ownership in legitimately owned games
 * `🛅` Emulate Inventory item ownership
+* `📄` Optional configuration
 
 {% include "KoalaBox/templates/markdown/links.md" %}
 
-
 {% include "KoalaBox/templates/markdown/intro.md" %}
-
 
 {% include "KoalaBox/templates/markdown/usage.md" %}
 
+{% include "KoalaBox/templates/markdown/install-win.md" %}
 
-{% include "KoalaBox/templates/markdown/installation.md" %}
-
+{% include "KoalaBox/templates/markdown/install-linux.md" %}
 
 {% include "KoalaBox/templates/markdown/configuration.md" %}
 
@@ -26,7 +25,7 @@ _Legit DLC Unlocker for Steamworks._
 
 ### 🔑 How SmokeAPI works in games with large number of DLCs
 
-Some games that have a large number of DLCs begin ownership verification by querying the Steamworks API for a list of all available DLCs.
+Some the games that have a large number of DLCs begin ownership verification by querying the Steamworks API for a list of all available DLCs.
 Once the game receives the list, it will go over each item and check the ownership.
 The issue arises from the fact that response from Steamworks SDK may max out at 64, depending on how much unowned DLCs the user has.
 To alleviate this issue, SmokeAPI will make a web request to Steam API for a full list of DLCs, which works well most of the time.
@@ -46,13 +45,9 @@ They will be added to the list of missing DLC IDs to facilitate config-less oper
 
 {% include "KoalaBox/templates/markdown/troubleshooting.md" %}
 
-
 {% include "KoalaBox/templates/markdown/building.md" %}
 
-
-{% include "KoalaBox/templates/markdown/acknowledgements.md" %}
-{% block extra_oss_libs %}
-- [bshoshany/thread-pool](https://github.com/bshoshany/thread-pool)
+{% include "KoalaBox/templates/markdown/acknowledgements.md" %}{% block extra_oss_libs %}- [bshoshany/thread-pool](https://github.com/bshoshany/thread-pool)
 - [batterycenter/embed](https://github.com/batterycenter/embed)
-{% endblock %}
+
 {% endblock %}
