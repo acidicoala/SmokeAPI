@@ -73,6 +73,8 @@ namespace {
             versions.insert(i->str());
         }
 
+        LOG_DEBUG("Found {} steamclient version(s) in read-only section: {}", versions.size(), versions);
+
         return versions;
     }
 

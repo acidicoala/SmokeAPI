@@ -151,10 +151,10 @@ For example:
 1. Extract and paste the `libsmoke_api32.so` or `libsmoke_api64.so` next to the game's executable.
 2. In Steam _Library_ open game's _Properties_, switch to the _General_ tab, and set the following _LAUNCH OPTIONS_:
 
-| Bitness | Launch Options                                           |
-|---------|----------------------------------------------------------|
-| 32-bit  | `LD_PRELOAD=./libsmoke_api32.so ./GameExecutable.x86`    |
-| 64-bit  | `LD_PRELOAD=./libsmoke_api64.so ./GameExecutable.x86_64` |
+| Bitness | Launch Options                                                     |
+|---------|--------------------------------------------------------------------|
+| 32-bit  | `LD_PRELOAD=./libsmoke_api32.so ./GameExecutable.x86    `          |
+| 64-bit  | `LD_PRELOAD=./libsmoke_api64.so ./GameExecutable.x86_64 %command%` |
 
 Naturally, the exact options might change depending on how files are located on your filesystem
 or depending on other environment variables you might have configured.
