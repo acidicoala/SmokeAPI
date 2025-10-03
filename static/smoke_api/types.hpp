@@ -4,10 +4,10 @@
 
 #include <koalabox/hook.hpp>
 
-#ifdef KB_WIN
+#if defined(KB_WIN)
 #define VIRTUAL(TYPE) __declspec(noinline) TYPE __fastcall // NOLINT(*-macro-parentheses)
 #define C_DECL(TYPE) extern "C" __declspec(noinline) TYPE __cdecl
-#elifdef KB_LINUX
+#elif defined(KB_LINUX)
 #define VIRTUAL(TYPE) __attribute__ ((__noinline__)) TYPE
 #define C_DECL(TYPE) extern "C" __attribute__ ((__noinline__)) TYPE
 #endif
@@ -42,7 +42,7 @@
  * will store the 1st actual argument to the function, so we
  * have to omit it from the function signature.
  */
-#ifdef KB_WIN
+#if defined(KB_WIN)
 #ifdef KB_64
 #define PARAMS(...) const void* RCX __VA_OPT__(,) __VA_ARGS__
 #define ARGS(...) RCX __VA_OPT__(,) __VA_ARGS__
@@ -54,7 +54,7 @@
 #define THIS ECX
 #define DECLARE_ARGS() void* ECX = nullptr; const void* EDX = nullptr;
 #endif
-#elifdef KB_LINUX
+#elif defined(KB_LINUX)
 #ifdef KB_64
 #define PARAMS(...) const void* $RDI __VA_OPT__(,) __VA_ARGS__
 #define ARGS(...) $RDI __VA_OPT__(,) __VA_ARGS__

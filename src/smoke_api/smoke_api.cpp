@@ -25,9 +25,9 @@
 
 #include "build_config.h"
 
-#ifdef KB_WIN
+#if defined(KB_WIN)
 #include "koalabox/win.hpp"
-#elifdef KB_LINUX
+#elif defined(KB_LINUX)
 #include "proxy_exports.hpp"
 #endif
 
