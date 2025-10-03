@@ -3,7 +3,7 @@ on: push
 
 jobs:
   build:
-    uses: acidicoala/KoalaBox/.github/workflows/build.yml@e924a6a2be99b1e15ba4e8915134b1fac23828e0
+    uses: acidicoala/KoalaBox/.github/workflows/build.yml@7db439061fbf53667bbb61c99404845c643de2b3
     with:
       module: '[ "SmokeAPI" ]'
       os: '[ "Windows", "Linux" ]'
