@@ -4,7 +4,7 @@ on: push
 jobs:
   build:
     name: 🏗️ Build
-    uses: .github/workflows/kb-build.yml@master
+    uses: ./kb-build.yml
     with:
       #language=json
       module: '[ "SmokeAPI" ] '
