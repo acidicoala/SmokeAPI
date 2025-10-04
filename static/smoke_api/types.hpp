@@ -21,6 +21,7 @@
 #define SWAPPED_CALL_CLOSURE(FUNC, ...) \
     [&] { SWAPPED_CALL(THIS, FUNC, __VA_ARGS__); }
 
+#if defined(KB_WIN)
 /**
  * By default, virtual functions are declared with __thiscall
  * convention, which is normal since they are class members.
@@ -42,7 +43,6 @@
  * will store the 1st actual argument to the function, so we
  * have to omit it from the function signature.
  */
-#if defined(KB_WIN)
 #ifdef KB_64
 #define PARAMS(...) const void* RCX __VA_OPT__(,) __VA_ARGS__
 #define ARGS(...) RCX __VA_OPT__(,) __VA_ARGS__
@@ -55,16 +55,23 @@
 #define DECLARE_ARGS() void* ECX = nullptr; const void* EDX = nullptr;
 #endif
 #elif defined(KB_LINUX)
+/**
+ * In 64-bit mode, Linux binaries pass first 6 arguments via registers.
+ * `this` pointer is passed as the first argument via the RDI register.
+ *
+ * In 32-bit mode, Linux binaries pass arguments via stack.
+ * `this` pointer is passed as the first argument via the first stack parameter.
+ */
 #ifdef KB_64
 #define PARAMS(...) const void* $RDI __VA_OPT__(,) __VA_ARGS__
 #define ARGS(...) $RDI __VA_OPT__(,) __VA_ARGS__
 #define THIS $RDI
 #define DECLARE_ARGS() void* $RDI = nullptr;
 #else
-#define PARAMS(...) const void* $ARG1 __VA_OPT__(,) __VA_ARGS__
-#define ARGS(...) $ARG1 __VA_OPT__(,) __VA_ARGS__
-#define THIS $ARG1
-#define DECLARE_ARGS() void* $ARG1 = nullptr;
+#define PARAMS(...) const void* $STACK1 __VA_OPT__(,) __VA_ARGS__
+#define ARGS(...) $STACK1 __VA_OPT__(,) __VA_ARGS__
+#define THIS $STACK1
+#define DECLARE_ARGS() void* $STACK1 = nullptr;
 #endif
 #endif
 

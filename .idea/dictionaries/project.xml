@@ -8,6 +8,7 @@
       <w>dlopen</w>
       <w>dlsym</w>
       <w>dynsym</w>
+      <w>elfio</w>
       <w>endfor</w>
       <w>indicies</w>
       <w>inja</w>
