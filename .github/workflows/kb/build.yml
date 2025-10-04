@@ -1,0 +1,128 @@
+name: 🏗️ Build
+on:
+  workflow_call:
+    inputs:
+      module:
+        description: 'Stringified JSON array of CMake projects to build'
+        required: true
+        type: string
+
+      os:
+        description: 'Stringified JSON array of target operating systems. Can be "Windows", "Linux", or both.'
+        required: true
+        type: string
+
+      bitness:
+        description: 'Stringified JSON array of target bitness. Can be 32, 64, or both.'
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: ${{ matrix.module }}-${{ matrix.os }}-${{ matrix.bitness }}
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      matrix:
+        module: ${{ fromJson(inputs.module) }}
+        os: ${{ fromJson(inputs.os) }}
+        bitness: ${{ fromJson(inputs.bitness) }}
+
+        include:
+          # Runner
+          - os: Windows
+            runner: windows-2025
+
+          - os: Linux
+            runner: ubuntu-24.04
+
+          # Compiler
+          - os: Linux
+            compiler: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+
+          # Architecture flags
+          - os: Windows
+            bitness: 32
+            arch: -A Win32
+
+          - os: Windows
+            bitness: 64
+            arch: -A x64
+
+          - os: Linux
+            bitness: 32
+            arch: -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_EXE_LINKER_FLAGS="-m32 -L/usr/lib/i386-linux-gnu" -DCMAKE_PREFIX_PATH=/usr/lib/i386-linux-gnu
+
+          - os: Linux
+            bitness: 64
+            arch: -DCMAKE_C_FLAGS=-m64 -DCMAKE_CXX_FLAGS=-m64 -DCMAKE_EXE_LINKER_FLAGS=-m64
+
+          # Output paths
+          - os: Windows
+            output: 'Release/*.dll'
+
+          - os: Linux
+            output: '*.so'
+
+    env:
+      BUILD_DIR: ${{ github.workspace }}/build
+
+    steps:
+      - name: '🛠️ Install dependencies'
+        if: ${{ matrix.os == 'Linux' }}
+        run: |
+          if [ "${{ matrix.bitness }}" = "32" ]; then
+            sudo dpkg --add-architecture i386
+            deps="libbrotli-dev:i386 libzstd-dev:i386 libssl-dev:i386 gcc-multilib g++-multilib"
+          else
+            deps="libbrotli-dev libzstd-dev"
+          fi
+          deps="$deps libgtk-3-dev gcc"
+          
+          sudo apt update
+          sudo rm /var/lib/man-db/auto-update
+          sudo apt install $deps
+
+      - name: '🛠️ Install LLVM and Clang'
+        if: ${{ matrix.os == 'Linux' }}
+        uses: KyleMayes/install-llvm-action@v2
+        with:
+          version: "20.0"
+
+      - name: '🛠️ Check Clang version'
+        if: ${{ matrix.os == 'Linux' }}
+        run: clang++ --version
+
+      - name: '📥 Check out repository code'
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: '🗃️ Cache CPM dependencies'
+        uses: actions/cache@v4
+        with:
+          key: ${{ matrix.os }}-${{ matrix.bitness }}
+          path: '${{ env.BUILD_DIR }}/.cache'
+
+      - name: '⚙️ Generate build files'
+        # Note: indenting arguments will lead to parsing errors
+        run: >
+          cmake
+          -B "${{ env.BUILD_DIR }}"
+          -DCMAKE_BUILD_TYPE=Release
+          -DMODULE=${{ matrix.module }}
+          ${{ matrix.arch }}
+          ${{ matrix.compiler }}
+          --debug-output
+
+      - name: Build the project
+        run: >
+          cmake
+          --build ${{ env.BUILD_DIR }}
+          --config Release
+          --target ${{ matrix.module }}
+
+      - name: Upload binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.module }}-${{ matrix.os }}-${{ matrix.arch }}
+          path: ${{ env.BUILD_DIR }}/${{ matrix.output }}
