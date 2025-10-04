@@ -86,7 +86,7 @@ jobs:
         if: ${{ matrix.os == 'Linux' }}
         uses: KyleMayes/install-llvm-action@v2
         with:
-          version: "20.0"
+          version: "20.1"
 
       - name: '🛠️ Check Clang version'
         if: ${{ matrix.os == 'Linux' }}
