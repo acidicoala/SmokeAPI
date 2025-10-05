@@ -65,15 +65,15 @@ jobs:
           ${{ env.LINUX_FLAGS }}
           --debug-output
 
-#      - name: Build the project
-#        run: >
-#          cmake
-#          --build ${{ env.BUILD_DIR }}
-#          --config Release
-#          --target ${{ github.event.input.module }}
+      - name: '🏗️ Build ${{ inputs.module }}'
+        run: >
+          cmake
+          --build ${{ env.BUILD_DIR }}
+          --config Release
+          --target ${{ inputs.module }}
 
-#      - name: Upload binaries
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: ${{ inputs.module }}-${{ inputs.os }}-${{ inputs.bitness }}
-#          path: ${{ env.BUILD_DIR }}/${{ env.OUTPUT_PATH }}
+      - name: '📤 Upload binaries'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.module }}-${{ inputs.os }}-${{ inputs.bitness }}
+          path: ${{ env.BUILD_DIR }}/${{ env.OUTPUT_PATH }}
