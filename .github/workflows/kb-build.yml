@@ -88,9 +88,11 @@ jobs:
         with:
           version: "20.1"
 
-      - name: '🛠️ Check Clang version'
+      - name: '🛠️ Check compiler versions'
         if: ${{ matrix.os == 'Linux' }}
-        run: clang++ --version
+        run: |
+          clang++ --version
+          g++ --version
 
       - name: '📥 Check out repository code'
         uses: actions/checkout@v5
