@@ -8,11 +8,12 @@ on:
 jobs:
   build-binaries:
     name: '🏗️ Build Binaries'
-    uses: acidicoala/SmokeAPI/.github/workflows/build.yml@master
+    uses: acidicoala/SmokeAPI/.github/workflows/matrix-build.yml@master
 
   create-release:
     name: '📦 Create Release'
-    uses: acidicoala/SmokeAPI/.github/workflows/kb-release.yml@master
+    uses: acidicoala/KoalaBox/.github/workflows/create-release.yml@master
     needs: build-binaries
     with:
+      version: ${{ github.ref_name }}
       zip_command: 'TODO'

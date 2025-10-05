@@ -6,4 +6,4 @@ on:
 jobs:
   dev-build:
     name: '🚧 Development Build'
-    uses: acidicoala/SmokeAPI/.github/workflows/build.yml@master
+    uses: acidicoala/SmokeAPI/.github/workflows/matrix-build.yml@master
