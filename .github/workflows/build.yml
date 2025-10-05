@@ -10,7 +10,8 @@ jobs:
       module: '[ "SmokeAPI" ] '
 
       #language=json
-      os: '[ "Windows" ]'
+      os: '[ "Linux" ]'
+
 #      os: '[ "Windows", "Linux" ]'
 
       #language=json
