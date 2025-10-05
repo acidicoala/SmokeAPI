@@ -11,6 +11,7 @@
       <w>dynsym</w>
       <w>elfio</w>
       <w>endfor</w>
+      <w>ghcr</w>
       <w>indicies</w>
       <w>inja</w>
       <w>inlinentd</w>

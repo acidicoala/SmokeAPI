@@ -21,7 +21,9 @@ jobs:
   build:
     name: ${{ matrix.module }}-${{ matrix.os }}-${{ matrix.bitness }}
     runs-on: ${{ matrix.runner }}
+    container: ${{ matrix.container }}
     strategy:
+      fail-fast: false
       matrix:
         module: ${{ fromJson(inputs.module) }}
         os: ${{ fromJson(inputs.os) }}
@@ -37,7 +39,9 @@ jobs:
 
           # Compiler
           - os: Linux
-            compiler: -DCMAKE_C_COMPILER=clang -DCMAKE_CXX_COMPILER=clang++
+            compiler: >
+              -DCMAKE_C_COMPILER=clang
+              -DCMAKE_CXX_COMPILER=clang++
 
           # Architecture flags
           - os: Windows
@@ -50,11 +54,18 @@ jobs:
 
           - os: Linux
             bitness: 32
-            arch: -DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_EXE_LINKER_FLAGS="-m32 -L/usr/lib/i386-linux-gnu" -DCMAKE_PREFIX_PATH=/usr/lib/i386-linux-gnu
+            arch: >
+              -DCMAKE_C_FLAGS=-m32
+              -DCMAKE_CXX_FLAGS=-m32
+              -DCMAKE_EXE_LINKER_FLAGS="-m32 -L/usr/lib/i386-linux-gnu"
+              -DCMAKE_PREFIX_PATH=/usr/lib/i386-linux-gnu
 
           - os: Linux
             bitness: 64
-            arch: -DCMAKE_C_FLAGS=-m64 -DCMAKE_CXX_FLAGS=-m64 -DCMAKE_EXE_LINKER_FLAGS=-m64
+            arch: >
+              -DCMAKE_C_FLAGS=-m64
+              -DCMAKE_CXX_FLAGS=-m64
+              -DCMAKE_EXE_LINKER_FLAGS=-m64
 
           # Output paths
           - os: Windows
@@ -63,30 +74,34 @@ jobs:
           - os: Linux
             output: '*.so'
 
+          # Container
+          - os: Linux
+            container: ghcr.io/acidicoala/koalabox:master@sha256:fd79048173e2fd77838ac34066c5ec5320930fbc436df1cff549cf11cd6e2454
+
     env:
       BUILD_DIR: ${{ github.workspace }}/build
 
     steps:
-      - name: '🛠️ Install dependencies'
-        if: ${{ matrix.os == 'Linux' }}
-        run: |
-          if [ "${{ matrix.bitness }}" = "32" ]; then
-            sudo dpkg --add-architecture i386
-            deps="libbrotli-dev:i386 libzstd-dev:i386 libssl-dev:i386 gcc-multilib g++-multilib"
-          else
-            deps="libbrotli-dev libzstd-dev"
-          fi
-          deps="$deps libgtk-3-dev gcc"
-          
-          sudo apt update
-          sudo rm /var/lib/man-db/auto-update
-          sudo apt install $deps
+#      - name: '🛠️ Install dependencies'
+#        if: ${{ matrix.os == 'Linux' }}
+#        run: |
+#          if [ "${{ matrix.bitness }}" = "32" ]; then
+#            sudo dpkg --add-architecture i386
+#            deps="libbrotli-dev:i386 libzstd-dev:i386 libssl-dev:i386 gcc-multilib g++-multilib"
+#          else
+#            deps="libbrotli-dev libzstd-dev"
+#          fi
+#          deps="$deps libgtk-3-dev gcc"
+#
+#          sudo apt update
+#          sudo rm /var/lib/man-db/auto-update
+#          sudo apt install $deps
 
-      - name: '🛠️ Install LLVM and Clang'
-        if: ${{ matrix.os == 'Linux' }}
-        uses: KyleMayes/install-llvm-action@v2
-        with:
-          version: "20.1"
+#      - name: '🛠️ Install LLVM and Clang'
+#        if: ${{ matrix.os == 'Linux' }}
+#        uses: KyleMayes/install-llvm-action@v2
+#        with:
+#          version: "20.1"
 
       - name: '🛠️ Check compiler versions'
         if: ${{ matrix.os == 'Linux' }}

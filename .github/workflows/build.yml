@@ -1,9 +1,9 @@
-name: 🏗️ Build
+name: 🏗️ Project Build
 on: push
 
 jobs:
   build:
-    name: 🏗️ Build
+    name: 🏗️ Project Build
     uses: acidicoala/SmokeAPI/.github/workflows/kb-build.yml@master
     with:
       #language=json
