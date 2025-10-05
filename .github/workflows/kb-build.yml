@@ -21,6 +21,11 @@ on:
         type: string
 
 jobs:
+  debug:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: echo "inputs.module = ${{ fromJson(inputs.module) }}"
+
   build:
     name: ${{ matrix.module }}-${{ matrix.os }}-${{ matrix.bitness }}
     runs-on: ${{ matrix.runner }}
