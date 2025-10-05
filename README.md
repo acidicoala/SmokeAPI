@@ -138,6 +138,47 @@ In such cases, it might be worth trying [Special K], which can inject SmokeAPI a
 
 ## 🛠 Installation instructions (🐧 Linux)
 
+### ✔️ Requirements
+
+Linux builds of SmokeAPI depend on several libraries. Make sure they are installed on your system.
+The following list features links in Arch Linux repositories, but if you are using a different distribution,
+you should use the equivalent package for your distro.
+
+Required libraries:
+- [brotli](https://archlinux.org/packages/core/x86_64/brotli/)
+  [[32-bit](https://archlinux.org/packages/multilib/x86_64/lib32-brotli/)]
+
+- [gcc-libs](https://archlinux.org/packages/core/x86_64/gcc-libs/)
+  [[32-bit](https://archlinux.org/packages/core/x86_64/lib32-gcc-libs/)]
+
+- [glibc](https://archlinux.org/packages/core/x86_64/glibc/)
+  [[32-bit](https://archlinux.org/packages/core/x86_64/lib32-glibc/)]
+
+- [libidn2](https://archlinux.org/packages/core/x86_64/libidn2/)
+  [[32-bit](https://archlinux.org/packages/multilib/x86_64/lib32-libidn2/)]
+
+- [libnghttp2](https://archlinux.org/packages/core/x86_64/libnghttp2/)
+  [[32-bit](https://archlinux.org/packages/multilib/x86_64/lib32-libnghttp2/)]
+
+- [libssh2](https://archlinux.org/packages/core/x86_64/libssh2/)
+  [[32-bit](https://archlinux.org/packages/multilib/x86_64/lib32-libssh2/)]
+
+- [openssl](https://archlinux.org/packages/core/x86_64/openssl/)
+  [[32-bit](https://archlinux.org/packages/multilib/x86_64/lib32-openssl/)]
+
+- [zlib](https://archlinux.org/packages/core/x86_64/zlib/)
+  [[32-bit](https://archlinux.org/packages/multilib/x86_64/lib32-zlib/)]
+
+- [zstd](https://archlinux.org/packages/core/x86_64/zstd/)
+  [[32-bit](https://archlinux.org/packages/multilib/x86_64/lib32-zstd/)]
+
+
+Optional libraries:
+- [gtk3](https://archlinux.org/packages/extra/x86_64/gtk3/)
+  [[32-bit](https://archlinux.org/packages/multilib/x86_64/lib32-gtk3/)]
+
+---
+
 Just like on Windows, SmokeAPI features 32 and 64-bit Linux builds.
 In release archive they are named as `libsmoke_api32.so` or `libsmoke_api64.so` respectively.
 
@@ -153,7 +194,7 @@ For example:
 
 | Bitness | Launch Options                                                     |
 |---------|--------------------------------------------------------------------|
-| 32-bit  | `LD_PRELOAD=./libsmoke_api32.so ./GameExecutable.x86    `          |
+| 32-bit  | `LD_PRELOAD=./libsmoke_api32.so ./GameExecutable.x86    %command%` |
 | 64-bit  | `LD_PRELOAD=./libsmoke_api64.so ./GameExecutable.x86_64 %command%` |
 
 Naturally, the exact options might change depending on how files are located on your filesystem
@@ -361,7 +402,7 @@ This project makes use of the following open source projects:
 - [bshoshany/thread-pool](https://github.com/bshoshany/thread-pool)
 - [batterycenter/embed](https://github.com/batterycenter/embed)
 
--
+u
 
 ## 📄 License
 
