@@ -12,7 +12,5 @@ jobs:
       #language=json
       os: '[ "Linux" ]'
 
-#      os: '[ "Windows", "Linux" ]'
-
       #language=json
       bitness: '[ 32, 64 ]'
