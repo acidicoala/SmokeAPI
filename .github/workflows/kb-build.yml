@@ -28,7 +28,7 @@ jobs:
       CXX_COMPILER: ${{ inputs.os == 'Linux' && 'clang++' || 'cl' }}
       OUTPUT_PATH: ${{ inputs.os == 'Linux' && '*.so' || 'Release/*.dll' }}
       WIN_FLAGS: ${{ inputs.os == 'Windows' && inputs.bitness == 32 && '-A=Win32' || '' }}
-      LINUX_FLAGS: ${{ inputs.os == 'Linux' && inputs.bitness == 32 && '-DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_EXE_LINKER_FLAGS=-m32' || '' }}
+      LINUX_FLAGS: ${{ inputs.os == 'Linux' && inputs.bitness == 32 && '-DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32' || '' }}
     steps:
       # Fix dubious ownership errors in docker container
       - name: '✔️ Mark GitHub workspace as safe'

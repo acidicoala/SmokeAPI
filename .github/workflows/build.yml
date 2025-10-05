@@ -1,5 +1,7 @@
-name: 🏗️ Project Build
-on: push
+name: Matrix Build
+
+on:
+  workflow_call:
 
 jobs:
   build:

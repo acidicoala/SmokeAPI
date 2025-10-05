@@ -1,0 +1,49 @@
+name: Create release
+on:
+  workflow_call:
+    zip_command:
+      description: 'A shell command for creating a release zip'
+      required: true
+      type: string
+jobs:
+  package-project:
+    name: Package the artifacts into a release zip
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Setup version tag
+        run: echo "VERSION_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Setup zip name
+        env:
+          PROJECT_NAME: ${{ github.event.repository.name }}
+        run: echo "ZIP_NAME=$PROJECT_NAME-$VERSION_TAG.zip" >> $GITHUB_ENV
+
+      - name: Install required tools
+        run: |
+          sudo apt update
+          sudo apt install zip tree
+
+      - name: Check out repository code
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      - name: Download all workflow run artifacts
+        uses: actions/download-artifact@v5
+        with:
+          path: artifacts
+
+      - name: Print artifact tree
+        run: tree artifacts
+
+#      - name: Make release zip
+#        run: ${{ inputs.zip_command }}
+
+#      - name: 'Test upload'
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: release
+#          path: ${{ env.BUILD_DIR }}/${{ env.OUTPUT_PATH }}

@@ -1,0 +1,9 @@
+name: 'Development Build'
+
+on:
+  push:
+
+jobs:
+  dev-build:
+    name: '🚧 Development Build'
+    uses: acidicoala/SmokeAPI/.github/workflows/build.yml@master
