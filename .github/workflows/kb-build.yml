@@ -23,8 +23,13 @@ on:
 jobs:
   debug:
     runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        os: ${{ fromJson(inputs.os) }}
     steps:
-      - run: echo "inputs.module = ${{ fromJson(inputs.module) }}"
+      - run: |
+          echo "inputs.os = ${{ fromJson(inputs.os) }}"
+          echo "os = ${{ matrix.os }}"
 
   build:
     name: ${{ matrix.module }}-${{ matrix.os }}-${{ matrix.bitness }}
