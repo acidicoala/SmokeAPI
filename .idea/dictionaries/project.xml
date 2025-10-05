@@ -4,6 +4,7 @@
       <w>abcdefghijklmnopqrstuvwxyz</w>
       <w>acidicoala</w>
       <w>ajaxgetdlclist</w>
+      <w>cstring</w>
       <w>dlmopen</w>
       <w>dlopen</w>
       <w>dlsym</w>
@@ -23,6 +24,8 @@
       <w>libgtk</w>
       <w>libsteam</w>
       <w>memcpy</w>
+      <w>movabs</w>
+      <w>movl</w>
       <w>peparse</w>
       <w>phnt</w>
       <w>polyhook</w>
