@@ -78,20 +78,21 @@ jobs:
 
           # Container
           - os: Linux
-            container: ghcr.io/acidicoala/koalabox:master@sha256:6c71a8064ea02c6f20f2c456293af1947e6f78b784154c0b11cba10263b4501d
+            container: ghcr.io/acidicoala/koalabox:master@sha256:7b2c80f23a1f5e777234a625db2ca1cc472d6fbccbf8e8da42f77052f2dcced1
 
     env:
       BUILD_DIR: ${{ github.workspace }}/build
 
     steps:
+      # Fix dubious ownership errors
+      - name: '✔️ Mark GitHub workspace as safe'
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: '🛠️ Check compiler versions'
         if: ${{ matrix.os == 'Linux' }}
         run: |
           clang++ --version
           g++ --version
-          
-          ls -la .
-          ls -la /__w/SmokeAPI/
 
       - name: '📥 Check out repository code'
         uses: actions/checkout@v5
