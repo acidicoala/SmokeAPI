@@ -86,6 +86,9 @@ jobs:
         run: |
           clang++ --version
           g++ --version
+          
+          ls -la .
+          ls -la /__w/SmokeAPI/
 
       - name: '📥 Check out repository code'
         uses: actions/checkout@v5
