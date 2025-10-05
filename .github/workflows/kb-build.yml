@@ -21,7 +21,9 @@ jobs:
   build:
     name: ${{ matrix.module }}-${{ matrix.os }}-${{ matrix.bitness }}
     runs-on: ${{ matrix.runner }}
-    container: ${{ matrix.container }}
+    container:
+      image: ${{ matrix.container }}
+      options: --user builder
     strategy:
       fail-fast: false
       matrix:
@@ -57,8 +59,7 @@ jobs:
             arch: >
               -DCMAKE_C_FLAGS=-m32
               -DCMAKE_CXX_FLAGS=-m32
-              -DCMAKE_EXE_LINKER_FLAGS="-m32 -L/usr/lib/i386-linux-gnu"
-              -DCMAKE_PREFIX_PATH=/usr/lib/i386-linux-gnu
+              -DCMAKE_EXE_LINKER_FLAGS=-m32
 
           - os: Linux
             bitness: 64
@@ -76,7 +77,7 @@ jobs:
 
           # Container
           - os: Linux
-            container: ghcr.io/acidicoala/koalabox:master@sha256:fd79048173e2fd77838ac34066c5ec5320930fbc436df1cff549cf11cd6e2454
+            container: ghcr.io/acidicoala/koalabox:master@sha256:b389a8f522ce3d38f2e50570fb772beebbf0211b2d748210628091d42ee0bce5
 
     env:
       BUILD_DIR: ${{ github.workspace }}/build
