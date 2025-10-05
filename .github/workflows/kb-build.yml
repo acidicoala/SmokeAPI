@@ -1,154 +1,41 @@
-#file: noinspection GithubFunctionSignatureValidation
-# The rule above suppresses false warning regarding missing function 'fromJson'
-
 name: 🏗️ Build
 on:
   workflow_call:
     inputs:
       module:
-        description: 'Stringified JSON array of CMake projects to build'
+        description: 'Module to be used in CMake config'
         required: true
         type: string
 
       os:
-        description: 'Stringified JSON array of target operating systems. Can be "Windows", "Linux", or both.'
+        description: '"Windows" or "Linux"'
         required: true
         type: string
 
       bitness:
-        description: 'Stringified JSON array of target bitness. Can be 32, 64, or both.'
+        description: '32 or 64'
         required: true
-        type: string
+        type: number
 
 jobs:
-  debug:
-    runs-on: ubuntu-24.04
-    strategy:
-      matrix:
-        os: ${{ fromJson(inputs.os) }}
-
-        include:
-          # Runner
-          - os: Windows
-            runner: windows-2025
-
-          - os: Linux
-            runner: ubuntu-24.04
-
-          # Compiler
-          - os: Linux
-            compiler: >
-              -DCMAKE_C_COMPILER=clang
-              -DCMAKE_CXX_COMPILER=clang++
-
-          # Architecture flags
-          - os: Windows
-            bitness: 32
-            arch: -A Win32
-
-          - os: Windows
-            bitness: 64
-            arch: -A x64
-
-          - os: Linux
-            bitness: 32
-            arch: >
-              -DCMAKE_C_FLAGS=-m32
-              -DCMAKE_CXX_FLAGS=-m32
-              -DCMAKE_EXE_LINKER_FLAGS=-m32
-
-          - os: Linux
-            bitness: 64
-            arch: >
-              -DCMAKE_C_FLAGS=-m64
-              -DCMAKE_CXX_FLAGS=-m64
-              -DCMAKE_EXE_LINKER_FLAGS=-m64
-
-          # Output paths
-          - os: Windows
-            output: 'Release/*.dll'
-
-          - os: Linux
-            output: '*.so'
-
-          # Container
-          - os: Linux
-            container: ghcr.io/acidicoala/koalabox:master@sha256:7b2c80f23a1f5e777234a625db2ca1cc472d6fbccbf8e8da42f77052f2dcced1
-
-    steps:
-      - run: |
-          echo "inputs.os = ${{ fromJson(inputs.os) }}"
-          echo "os = ${{ matrix.os }}"
-
   build:
-    name: ${{ matrix.module }}-${{ matrix.os }}-${{ matrix.bitness }}
-    runs-on: ${{ matrix.runner }}
-    container: ${{ matrix.container }}
-    strategy:
-      fail-fast: false
-      matrix:
-        module: ${{ fromJson(inputs.module) }}
-        os: ${{ fromJson(inputs.os) }}
-        bitness: ${{ fromJson(inputs.bitness) }}
-
-        include:
-          # Runner
-          - os: Windows
-            runner: windows-2025
-
-          - os: Linux
-            runner: ubuntu-24.04
-
-          # Compiler
-          - os: Linux
-            compiler: >
-              -DCMAKE_C_COMPILER=clang
-              -DCMAKE_CXX_COMPILER=clang++
-
-          # Architecture flags
-          - os: Windows
-            bitness: 32
-            arch: -A Win32
-
-          - os: Windows
-            bitness: 64
-            arch: -A x64
-
-          - os: Linux
-            bitness: 32
-            arch: >
-              -DCMAKE_C_FLAGS=-m32
-              -DCMAKE_CXX_FLAGS=-m32
-              -DCMAKE_EXE_LINKER_FLAGS=-m32
-
-          - os: Linux
-            bitness: 64
-            arch: >
-              -DCMAKE_C_FLAGS=-m64
-              -DCMAKE_CXX_FLAGS=-m64
-              -DCMAKE_EXE_LINKER_FLAGS=-m64
-
-          # Output paths
-          - os: Windows
-            output: 'Release/*.dll'
-
-          - os: Linux
-            output: '*.so'
-
-          # Container
-          - os: Linux
-            container: ghcr.io/acidicoala/koalabox:master@sha256:7b2c80f23a1f5e777234a625db2ca1cc472d6fbccbf8e8da42f77052f2dcced1
-
+    name: ${{ github.event.input.module }}-${{ matrix.os }}-${{ matrix.bitness }}
+    runs-on: ${{ github.event.inputs.os == 'Linux' &&  'ubuntu-24.04' || 'windows-2025'}}
+    container: ${{ github.event.inputs.os == 'Linux' && 'ghcr.io/acidicoala/koalabox:master' || '' }}
     env:
       BUILD_DIR: ${{ github.workspace }}/build
-
+      C_COMPILER: ${{ github.event.inputs.os == 'Linux' && 'clang' || 'cl' }}
+      CXX_COMPILER: ${{ github.event.inputs.os == 'Linux' && 'clang++' || 'cl' }}
+      WIN_FLAGS: ${{ github.event.inputs.os == 'Windows' &&  github.event.inputs.bitness == 32 && 'Win32' || 'x64'}}
+      LINUX_FLAGS: ${{ github.event.inputs.os == 'Linux' &&  github.event.inputs.bitness == 32 && '-m32' || '-m64'}}
+      OUTPUT_PATH: ${{ github.event.inputs.os == 'Linux' && '*.so' || 'Release/*.dll' }}
     steps:
       # Fix dubious ownership errors
       - name: '✔️ Mark GitHub workspace as safe'
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: '🛠️ Check compiler versions'
-        if: ${{ matrix.os == 'Linux' }}
+        if: ${{ github.event.inputs.os == 'Linux' }}
         run: |
           clang++ --version
           g++ --version
@@ -161,7 +48,7 @@ jobs:
       - name: '🗃️ Cache CPM dependencies'
         uses: actions/cache@v4
         with:
-          key: ${{ matrix.os }}-${{ matrix.bitness }}
+          key: ${{ matrix.os }}-CPM-cache
           path: '${{ env.BUILD_DIR }}/.cache'
 
       - name: '⚙️ Generate build files'
@@ -170,9 +57,13 @@ jobs:
           cmake
           -B "${{ env.BUILD_DIR }}"
           -DCMAKE_BUILD_TYPE=Release
-          -DMODULE=${{ matrix.module }}
-          ${{ matrix.arch }}
-          ${{ matrix.compiler }}
+          -DMODULE=${{ github.event.inputs.module }}
+          -DCMAKE_C_COMPILER=${{ env.C_COMPILER }}
+          -DCMAKE_CXX_COMPILER=${{ env.CXX_COMPILER }}
+          -DCMAKE_C_FLAGS=${{ env.LINUX_FLAGS }}
+          -DCMAKE_CXX_FLAGS=${{ env.LINUX_FLAGS }}
+          -DCMAKE_EXE_LINKER_FLAGS=${{ env.LINUX_FLAGS }}
+          -A=${{ env.WIN_FLAGS }}
           --debug-output
 
 #      - name: Build the project
@@ -180,10 +71,10 @@ jobs:
 #          cmake
 #          --build ${{ env.BUILD_DIR }}
 #          --config Release
-#          --target ${{ matrix.module }}
+#          --target ${{ github.event.input.module }}
 
 #      - name: Upload binaries
 #        uses: actions/upload-artifact@v4
 #        with:
-#          name: ${{ matrix.module }}-${{ matrix.os }}-${{ matrix.arch }}
-#          path: ${{ env.BUILD_DIR }}/${{ matrix.output }}
+#          name: ${{ github.event.input.module }}-${{ matrix.os }}-${{ matrix.arch }}
+#          path: ${{ env.BUILD_DIR }}/${{ env.OUTPUT_PATH }}

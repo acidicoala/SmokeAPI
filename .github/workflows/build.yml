@@ -4,13 +4,16 @@ on: push
 jobs:
   build:
     name: 🏗️ Project Build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        module: [ SmokeAPI ]
+        os: [ Linux, Windows ]
+        bitness: [ 32, 64 ]
+
     uses: acidicoala/SmokeAPI/.github/workflows/kb-build.yml@master
     with:
-      #language=json
-      module: '[ "SmokeAPI" ] '
-
-      #language=json
-      os: '[ "Linux" ]'
-
-      #language=json
-      bitness: '[ 32, 64 ]'
+      module: ${{ matrix.module }}
+      os: ${{ matrix.os }}
+      bitness: ${{ matrix.bitness }}
