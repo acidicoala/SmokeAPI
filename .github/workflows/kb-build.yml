@@ -26,6 +26,55 @@ jobs:
     strategy:
       matrix:
         os: ${{ fromJson(inputs.os) }}
+
+        include:
+          # Runner
+          - os: Windows
+            runner: windows-2025
+
+          - os: Linux
+            runner: ubuntu-24.04
+
+          # Compiler
+          - os: Linux
+            compiler: >
+              -DCMAKE_C_COMPILER=clang
+              -DCMAKE_CXX_COMPILER=clang++
+
+          # Architecture flags
+          - os: Windows
+            bitness: 32
+            arch: -A Win32
+
+          - os: Windows
+            bitness: 64
+            arch: -A x64
+
+          - os: Linux
+            bitness: 32
+            arch: >
+              -DCMAKE_C_FLAGS=-m32
+              -DCMAKE_CXX_FLAGS=-m32
+              -DCMAKE_EXE_LINKER_FLAGS=-m32
+
+          - os: Linux
+            bitness: 64
+            arch: >
+              -DCMAKE_C_FLAGS=-m64
+              -DCMAKE_CXX_FLAGS=-m64
+              -DCMAKE_EXE_LINKER_FLAGS=-m64
+
+          # Output paths
+          - os: Windows
+            output: 'Release/*.dll'
+
+          - os: Linux
+            output: '*.so'
+
+          # Container
+          - os: Linux
+            container: ghcr.io/acidicoala/koalabox:master@sha256:7b2c80f23a1f5e777234a625db2ca1cc472d6fbccbf8e8da42f77052f2dcced1
+
     steps:
       - run: |
           echo "inputs.os = ${{ fromJson(inputs.os) }}"
