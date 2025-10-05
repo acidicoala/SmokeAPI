@@ -1,3 +1,6 @@
+#file: noinspection GithubFunctionSignatureValidation
+# The rule above suppresses false warning regarding missing function 'fromJson'
+
 name: 🏗️ Build
 on:
   workflow_call:
@@ -75,7 +78,7 @@ jobs:
 
           # Container
           - os: Linux
-            container: ghcr.io/acidicoala/koalabox:master@sha256:b389a8f522ce3d38f2e50570fb772beebbf0211b2d748210628091d42ee0bce5
+            container: ghcr.io/acidicoala/koalabox:master@sha256:6c71a8064ea02c6f20f2c456293af1947e6f78b784154c0b11cba10263b4501d
 
     env:
       BUILD_DIR: ${{ github.workspace }}/build
@@ -112,15 +115,15 @@ jobs:
           ${{ matrix.compiler }}
           --debug-output
 
-      - name: Build the project
-        run: >
-          cmake
-          --build ${{ env.BUILD_DIR }}
-          --config Release
-          --target ${{ matrix.module }}
+#      - name: Build the project
+#        run: >
+#          cmake
+#          --build ${{ env.BUILD_DIR }}
+#          --config Release
+#          --target ${{ matrix.module }}
 
-      - name: Upload binaries
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.module }}-${{ matrix.os }}-${{ matrix.arch }}
-          path: ${{ env.BUILD_DIR }}/${{ matrix.output }}
+#      - name: Upload binaries
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: ${{ matrix.module }}-${{ matrix.os }}-${{ matrix.arch }}
+#          path: ${{ env.BUILD_DIR }}/${{ matrix.output }}
