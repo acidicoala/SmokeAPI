@@ -21,9 +21,7 @@ jobs:
   build:
     name: ${{ matrix.module }}-${{ matrix.os }}-${{ matrix.bitness }}
     runs-on: ${{ matrix.runner }}
-    container:
-      image: ${{ matrix.container }}
-      options: --user builder
+    container: ${{ matrix.container }}
     strategy:
       fail-fast: false
       matrix:
@@ -83,27 +81,6 @@ jobs:
       BUILD_DIR: ${{ github.workspace }}/build
 
     steps:
-#      - name: '🛠️ Install dependencies'
-#        if: ${{ matrix.os == 'Linux' }}
-#        run: |
-#          if [ "${{ matrix.bitness }}" = "32" ]; then
-#            sudo dpkg --add-architecture i386
-#            deps="libbrotli-dev:i386 libzstd-dev:i386 libssl-dev:i386 gcc-multilib g++-multilib"
-#          else
-#            deps="libbrotli-dev libzstd-dev"
-#          fi
-#          deps="$deps libgtk-3-dev gcc"
-#
-#          sudo apt update
-#          sudo rm /var/lib/man-db/auto-update
-#          sudo apt install $deps
-
-#      - name: '🛠️ Install LLVM and Clang'
-#        if: ${{ matrix.os == 'Linux' }}
-#        uses: KyleMayes/install-llvm-action@v2
-#        with:
-#          version: "20.1"
-
       - name: '🛠️ Check compiler versions'
         if: ${{ matrix.os == 'Linux' }}
         run: |
