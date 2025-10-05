@@ -1,4 +1,4 @@
-name: 🏗️ Build
+name: Build
 on:
   workflow_call:
     inputs:
@@ -19,23 +19,23 @@ on:
 
 jobs:
   build:
-    name: ${{ github.event.input.module }}-${{ matrix.os }}-${{ matrix.bitness }}
-    runs-on: ${{ github.event.inputs.os == 'Linux' &&  'ubuntu-24.04' || 'windows-2025'}}
-    container: ${{ github.event.inputs.os == 'Linux' && 'ghcr.io/acidicoala/koalabox:master' || '' }}
+    name: ${{ inputs.os == 'Linux' && '🐧' || '🪟'}}-${{ inputs.bitness }}
+    runs-on: ${{ inputs.os == 'Linux' &&  'ubuntu-24.04' || 'windows-2025'}}
+    container: ${{ inputs.os == 'Linux' && 'ghcr.io/acidicoala/koalabox:master' || '' }}
     env:
       BUILD_DIR: ${{ github.workspace }}/build
-      C_COMPILER: ${{ github.event.inputs.os == 'Linux' && 'clang' || 'cl' }}
-      CXX_COMPILER: ${{ github.event.inputs.os == 'Linux' && 'clang++' || 'cl' }}
-      WIN_FLAGS: ${{ github.event.inputs.os == 'Windows' &&  github.event.inputs.bitness == 32 && 'Win32' || 'x64'}}
-      LINUX_FLAGS: ${{ github.event.inputs.os == 'Linux' &&  github.event.inputs.bitness == 32 && '-m32' || '-m64'}}
-      OUTPUT_PATH: ${{ github.event.inputs.os == 'Linux' && '*.so' || 'Release/*.dll' }}
+      C_COMPILER: ${{ inputs.os == 'Linux' && 'clang' || 'cl' }}
+      CXX_COMPILER: ${{ inputs.os == 'Linux' && 'clang++' || 'cl' }}
+      WIN_FLAGS: ${{ inputs.os == 'Windows' &&  inputs.bitness == 32 && 'Win32' || 'x64'}}
+      LINUX_FLAGS: ${{ inputs.os == 'Linux' &&  inputs.bitness == 32 && '-m32' || '-m64'}}
+      OUTPUT_PATH: ${{ inputs.os == 'Linux' && '*.so' || 'Release/*.dll' }}
     steps:
       # Fix dubious ownership errors
       - name: '✔️ Mark GitHub workspace as safe'
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: '🛠️ Check compiler versions'
-        if: ${{ github.event.inputs.os == 'Linux' }}
+        if: ${{ inputs.os == 'Linux' }}
         run: |
           clang++ --version
           g++ --version
