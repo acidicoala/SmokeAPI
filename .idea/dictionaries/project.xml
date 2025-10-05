@@ -23,6 +23,7 @@
       <w>libgtk</w>
       <w>libsteam</w>
       <w>memcpy</w>
+      <w>peparse</w>
       <w>phnt</w>
       <w>polyhook</w>
       <w>rtld</w>
@@ -30,6 +31,8 @@
       <w>steamapi</w>
       <w>steamapps</w>
       <w>steamclient</w>
+      <w>winhttp</w>
+      <w>winmm</w>
       <w>wstr</w>
     </words>
   </dictionary>

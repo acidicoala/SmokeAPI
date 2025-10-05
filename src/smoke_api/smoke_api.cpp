@@ -106,7 +106,7 @@ namespace {
 
         static const auto CreateInterface$ = KB_LIB_GET_FUNC(steamclient_handle, CreateInterface);
 
-        if(auto* steamapi_handle = kb::lib::get_library_handle(STEAM_API_MODULE)) {
+        if(auto* steamapi_handle = kb::lib::get_lib_handle(STEAM_API_MODULE)) {
             // SteamAPI might have been initialized.
             // Hence, we need to query SteamClient interfaces and hook them if needed.
             const auto steamclient_versions = find_steamclient_versions(steamapi_handle);
@@ -176,7 +176,7 @@ namespace {
         return std::nullopt;
     }
 
-    void init_hook_mode(void* self_module_handle) {
+    void init_hook_mode([[maybe_unused]] void* self_module_handle) {
         is_hook_mode = true;
 #ifdef KB_LINUX
         // Because we got injected via LD_PRELOAD,
@@ -187,7 +187,7 @@ namespace {
         for(const auto& lib_path : glob::rglob({"./" + lib_name, "**/" + lib_name})) {
             if(const auto lib_bitness = kb::lib::get_bitness(lib_path)) {
                 if(static_cast<uint8_t>(*lib_bitness) == kb::platform::bitness) {
-                    if(const auto lib_handle = kb::lib::load_library(lib_path)) {
+                    if(const auto lib_handle = kb::lib::load(lib_path)) {
                         LOG_INFO("Found original library: {}", kb::path::to_str(lib_path));
 
                         original_steamapi_handle = *lib_handle;
@@ -204,7 +204,7 @@ namespace {
 #endif
     }
 
-    void init_proxy_mode(void* self_module_handle) {
+    void init_proxy_mode([[maybe_unused]] void* self_module_handle) {
         is_hook_mode = true;
 
         original_steamapi_handle = kb::lib::load_original_library(kb::paths::get_self_dir(), STEAM_API_MODULE);
@@ -262,7 +262,7 @@ namespace smoke_api {
     void shutdown() {
         try {
             if(original_steamapi_handle != nullptr) {
-                kb::lib::unload_library(original_steamapi_handle);
+                kb::lib::unload(original_steamapi_handle);
                 original_steamapi_handle = nullptr;
             }
 

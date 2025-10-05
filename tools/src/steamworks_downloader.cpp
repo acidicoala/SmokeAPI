@@ -8,7 +8,7 @@
 #include <koalabox/logger.hpp>
 #include <koalabox/path.hpp>
 #include <koalabox/str.hpp>
-#include <koalabox/zip.hpp>
+#include <koalabox_tools/zip.hpp>
 
 namespace {
     namespace fs = std::filesystem;
@@ -90,7 +90,7 @@ namespace {
     }
 
     void unzip_sdk(const fs::path& zip_file_path, const fs::path& unzip_dir) {
-        kb::zip::extract_files(
+        kb::tools::zip::extract_files(
             zip_file_path,
             [&](const std::string& name, const bool) {
                 if(name.starts_with("sdk/public/steam/") && name.ends_with(".h")) {
