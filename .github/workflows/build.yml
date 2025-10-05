@@ -3,7 +3,7 @@ on: push
 
 jobs:
   build:
-    name: ${{ github.event.input.module }}-${{ matrix.os }}-${{ matrix.bitness }}
+    name: ${{ matrix.module }}-${{ matrix.os }}-${{ matrix.bitness }}
 
     strategy:
       fail-fast: false

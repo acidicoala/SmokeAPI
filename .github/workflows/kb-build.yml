@@ -26,12 +26,13 @@ jobs:
       BUILD_DIR: ${{ github.workspace }}/build
       C_COMPILER: ${{ inputs.os == 'Linux' && 'clang' || 'cl' }}
       CXX_COMPILER: ${{ inputs.os == 'Linux' && 'clang++' || 'cl' }}
-      WIN_FLAGS: ${{ inputs.os == 'Windows' &&  inputs.bitness == 32 && 'Win32' || 'x64'}}
-      LINUX_FLAGS: ${{ inputs.os == 'Linux' &&  inputs.bitness == 32 && '-m32' || '-m64'}}
       OUTPUT_PATH: ${{ inputs.os == 'Linux' && '*.so' || 'Release/*.dll' }}
+      WIN_FLAGS: ${{ inputs.os == 'Linux' && inputs.bitness == 32 && '-A=Win32' || '' }}
+      LINUX_FLAGS: ${{ inputs.os == 'Linux' && inputs.bitness == 32 && '-DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_EXE_LINKER_FLAGS=-m32' || '' }}
     steps:
-      # Fix dubious ownership errors
+      # Fix dubious ownership errors in docker container
       - name: '✔️ Mark GitHub workspace as safe'
+        if: ${{ inputs.os == 'Linux' }}
         run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: '🛠️ Check compiler versions'
@@ -48,7 +49,7 @@ jobs:
       - name: '🗃️ Cache CPM dependencies'
         uses: actions/cache@v4
         with:
-          key: ${{ matrix.os }}-CPM-cache
+          key: ${{ inputs.os }}-CPM-cache
           path: '${{ env.BUILD_DIR }}/.cache'
 
       - name: '⚙️ Generate build files'
@@ -56,14 +57,12 @@ jobs:
         run: >
           cmake
           -B "${{ env.BUILD_DIR }}"
-          -DCMAKE_BUILD_TYPE=Release
           -DMODULE=${{ github.event.inputs.module }}
+          -DCMAKE_BUILD_TYPE=Release
           -DCMAKE_C_COMPILER=${{ env.C_COMPILER }}
           -DCMAKE_CXX_COMPILER=${{ env.CXX_COMPILER }}
-          -DCMAKE_C_FLAGS=${{ env.LINUX_FLAGS }}
-          -DCMAKE_CXX_FLAGS=${{ env.LINUX_FLAGS }}
-          -DCMAKE_EXE_LINKER_FLAGS=${{ env.LINUX_FLAGS }}
-          -A=${{ env.WIN_FLAGS }}
+          ${{ env.WIN_FLAGS }}
+          ${{ env.LINUX_FLAGS }}
           --debug-output
 
 #      - name: Build the project
@@ -76,5 +75,5 @@ jobs:
 #      - name: Upload binaries
 #        uses: actions/upload-artifact@v4
 #        with:
-#          name: ${{ github.event.input.module }}-${{ matrix.os }}-${{ matrix.arch }}
+#          name: ${{ inputs.module }}-${{ inputs.os }}-${{ inputs.bitness }}
 #          path: ${{ env.BUILD_DIR }}/${{ env.OUTPUT_PATH }}
