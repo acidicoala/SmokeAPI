@@ -28,7 +28,11 @@
 #if defined(KB_WIN)
 #include "koalabox/win.hpp"
 #elif defined(KB_LINUX)
-#include "proxy_exports.hpp"
+#if defined(KB_32)
+#include "generated/32/proxy_exports.hpp"
+#else
+#include "generated/64/proxy_exports.hpp"
+#endif
 #endif
 
 // Hooking steam_api has shown itself to be less desirable than steamclient

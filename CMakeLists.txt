@@ -26,8 +26,20 @@ set(SMOKE_API_STATIC_SOURCES
     static/smoke_api/steamclient/steamclient.hpp
 )
 
+set(GENERATED_SOURCES_DIR src/generated/${BITNESS})
+file(MAKE_DIRECTORY ${GENERATED_SOURCES_DIR})
+set(GENERATED_SOURCES
+    ${GENERATED_SOURCES_DIR}/proxy_exports.hpp
+    ${GENERATED_SOURCES_DIR}/proxy_exports.cpp
+)
+
+foreach(SRC IN LISTS GENERATED_SOURCES)
+    file(TOUCH ${SRC})
+endforeach()
+
 set(SMOKE_API_SOURCES
     ${SMOKE_API_STATIC_SOURCES}
+    ${GENERATED_SOURCES}
     src/smoke_api/smoke_api.cpp
     src/smoke_api/smoke_api.hpp
     src/steam_api/virtuals/isteamapps.cpp
@@ -127,11 +139,4 @@ if(WIN32)
 
     # Ignore linker warnings regarding COM-related private exports
     set_target_properties(SmokeAPI PROPERTIES LINK_FLAGS "/ignore:4104")
-else()
-    set_32_and_64(LINUX_DIR linux32 linux64)
-    configure_proxy_exports(
-        TARGET SmokeAPI
-        INPUT_LIBS_GLOB "${CMAKE_SOURCE_DIR}/res/steamworks/*/binaries/${LINUX_DIR}/libsteam_api.so"
-        OUTPUT_NAME "proxy_exports"
-    )
 endif()
