@@ -25,14 +25,13 @@
 
 #include "build_config.h"
 
+// Nested #if directives lead to unexpected evaluates, so it's best to keep conditions flat.
 #if defined(KB_WIN)
 #include "koalabox/win.hpp"
-#elif defined(KB_LINUX)
-#if defined(KB_32)
+#elif defined(KB_LINUX) && defined(KB_32)
 #include "generated/32/proxy_exports.hpp"
-#else
+#elif defined(KB_LINUX) && defined(KB_64)
 #include "generated/64/proxy_exports.hpp"
-#endif
 #endif
 
 // Hooking steam_api has shown itself to be less desirable than steamclient
