@@ -1,4 +1,4 @@
-name: 'Create Release'
+name: '🏷️ Tag Release'
 
 on:
   push:
