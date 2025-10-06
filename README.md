@@ -143,7 +143,6 @@ In such cases, it might be worth trying [Special K], which can inject SmokeAPI a
 > If none of the methods below work for you, then consider running a Windows version of a game
 > via Proton compatibility layer and follow the instructions in the Windows section.
 
-
 ### ✔️ Requirements
 
 Linux builds of SmokeAPI depend on several libraries. Make sure they are installed on your system.
@@ -209,15 +208,24 @@ hence we can use it as well. But we have to include that overlay library as well
 
 For example:
 
-1. Extract and paste the `libsmoke_api32.so` or `libsmoke_api64.so` next to the game's executable.
+1. Extract and paste the `libsmoke_api32.so` or `libsmoke_api64.so` in the root of game's installation directory.
 2. In Steam _Library_ open game's _Properties_, switch to the _General_ tab, and set the following _LAUNCH OPTIONS_:
 
-| Bitness | Launch Options                                                                                                                   |
-|---------|----------------------------------------------------------------------------------------------------------------------------------|
-| 32-bit  | `LD_PRELOAD="./libsmoke_api32.so $HOME/.local/share/Steam/ubuntu12_32/gameoverlayrenderer.so" ./GameExecutable.x86    %command%` |
-| 64-bit  | `LD_PRELOAD="./libsmoke_api64.so $HOME/.local/share/Steam/ubuntu12_64/gameoverlayrenderer.so" ./GameExecutable.x86_64 %command%` |
+| Bitness | Launch Options                                                                                                         |
+|---------|------------------------------------------------------------------------------------------------------------------------|
+| 32-bit  | `LD_PRELOAD="./libsmoke_api32.so $HOME/.local/share/Steam/ubuntu12_32/gameoverlayrenderer.so" ./<GameExe32> %command%` |
+| 64-bit  | `LD_PRELOAD="./libsmoke_api64.so $HOME/.local/share/Steam/ubuntu12_64/gameoverlayrenderer.so" ./<GameExe64> %command%` |
 
-Naturally, the exact options might change depending on where files are located on your filesystem
+Where `<GameExe32>` and `<GameExe64>` correspond to the actual filename of the game executable. For example:
+- `TheEscapists2.x86` (32-bit)
+- `TheEscapists2.x86_64` (64-bit)
+- `_linux/darkest.bin.x86` (32-bit)
+- `_linux/darkest.bin.x86_64` (64-bit)
+- `bin/linux_x64/eurotrucks2` (64-bit)
+- `binaries/victoria3` (64-bit)
+
+And so on. Notice that Linux executables do not have `.exe` extension like on Windows, so make sure to copy the entire
+file name as it is. Naturally, the exact options might change depending on where files are located on your filesystem
 and other environment variables you might have specified previously.
 If you have other environment variables, and you don't know how to correctly combine them,
 then please make extensive use of search engines and LLMs for guidance and examples
@@ -418,7 +426,7 @@ This project makes use of the following open source projects:
 - [bshoshany/thread-pool](https://github.com/bshoshany/thread-pool)
 - [batterycenter/embed](https://github.com/batterycenter/embed)
 
-u
+r
 
 ## 📄 License
 

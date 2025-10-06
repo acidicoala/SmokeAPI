@@ -25,7 +25,6 @@
 
 #include "build_config.h"
 
-// Nested #if directives lead to unexpected evaluates, so it's best to keep conditions flat.
 #if defined(KB_WIN)
 #include "koalabox/win.hpp"
 #elif defined(KB_LINUX) && defined(KB_32)

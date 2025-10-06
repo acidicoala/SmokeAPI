@@ -26,16 +26,18 @@ set(SMOKE_API_STATIC_SOURCES
     static/smoke_api/steamclient/steamclient.hpp
 )
 
-set(GENERATED_SOURCES_DIR src/generated/${BITNESS})
-file(MAKE_DIRECTORY ${GENERATED_SOURCES_DIR})
-set(GENERATED_SOURCES
-    ${GENERATED_SOURCES_DIR}/proxy_exports.hpp
-    ${GENERATED_SOURCES_DIR}/proxy_exports.cpp
-)
+if(IS_LINUX)
+    set(GENERATED_SOURCES_DIR src/generated/${BITNESS})
+    file(MAKE_DIRECTORY ${GENERATED_SOURCES_DIR})
+    set(GENERATED_SOURCES
+        ${GENERATED_SOURCES_DIR}/proxy_exports.hpp
+        ${GENERATED_SOURCES_DIR}/proxy_exports.cpp
+    )
 
-foreach(SRC IN LISTS GENERATED_SOURCES)
-    file(TOUCH ${SRC})
-endforeach()
+    foreach(SRC IN LISTS GENERATED_SOURCES)
+        file(TOUCH ${SRC})
+    endforeach()
+endif()
 
 set(SMOKE_API_SOURCES
     ${SMOKE_API_STATIC_SOURCES}
