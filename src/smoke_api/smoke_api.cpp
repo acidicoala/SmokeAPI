@@ -217,6 +217,14 @@ namespace {
 namespace smoke_api {
     void init(void* self_module_handle) {
         try {
+            static std::mutex section;
+            const std::lock_guard lock(section);
+
+            static bool init_complete = false;
+            if(init_complete) {
+                LOG_ERROR("{} is already initialized", PROJECT_NAME);
+            }
+
             kb::globals::init_globals(self_module_handle, PROJECT_NAME);
 
             config::instance = kb::config::parse<config::Config>();
@@ -253,6 +261,7 @@ namespace smoke_api {
 
             init_lib_monitor();
 
+            init_complete = true;
             LOG_INFO("Initialization complete");
         } catch(const std::exception& e) {
             kb::util::panic(std::format("Initialization error: {}", e.what()));
@@ -261,6 +270,11 @@ namespace smoke_api {
 
     void shutdown() {
         try {
+            static bool shutdown_complete = false;
+            if(shutdown_complete) {
+                LOG_ERROR("{} is already shut down", PROJECT_NAME);
+            }
+
             if(original_steamapi_handle != nullptr) {
                 kb::lib::unload(original_steamapi_handle);
                 original_steamapi_handle = nullptr;
@@ -272,6 +286,7 @@ namespace smoke_api {
 
             // TODO: Unhook everything
 
+            shutdown_complete = true;
             LOG_INFO("Shutdown complete");
         } catch(const std::exception& e) {
             LOG_ERROR("Shutdown error: {}", e.what());

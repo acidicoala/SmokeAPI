@@ -72,7 +72,7 @@ SmokeAPI supports **2** installation modes: _Hook mode_ and _Proxy mode_.
 - **Advantages**:
     - Guaranteed to load
 - **Disadvantages**:
-    - Might need reinstallation aftera game update
+    - Might need reinstallation after a game update
 
 My advice is to try installing the unlocker in hook mode first.
 If it doesn't work, try installing it in proxy mode instead.
@@ -187,26 +187,11 @@ Optional libraries:
 
 Just like on Windows, SmokeAPI features 32 and 64-bit Linux builds.
 In release archive they are named as `libsmoke_api32.so` or `libsmoke_api64.so` respectively.
-
-### 🪝 Hook mode (🐧 Linux)
-
-Linux doesn't have the same easily exploitable library injection mechanism that Windows has.
-However, it is possible to force any Linux executable to load any library by using the
-`LD_PRELOAD` environment variable.
-For example:
-
-1. Extract and paste the `libsmoke_api32.so` or `libsmoke_api64.so` next to the game's executable.
-2. In Steam _Library_ open game's _Properties_, switch to the _General_ tab, and set the following _LAUNCH OPTIONS_:
-
-| Bitness | Launch Options                                                     |
-|---------|--------------------------------------------------------------------|
-| 32-bit  | `LD_PRELOAD=./libsmoke_api32.so ./GameExecutable.x86    %command%` |
-| 64-bit  | `LD_PRELOAD=./libsmoke_api64.so ./GameExecutable.x86_64 %command%` |
-
-Naturally, the exact options might change depending on how files are located on your filesystem
-or depending on other environment variables you might have configured.
-If you have other environment variables, and you don't know how to correctly combine them,
-then please make heavy use of search engines and LLMs for guidance and examples instead of the official forum topic.
+However, unlike Windows, it is recommended to use proxy mode, rather than hook mode.
+This is because the current hook mode installation method has to directly launch game
+executable. However, by default Steam doesn't do that, instead it launches certain wrappers
+that setup game environment with optimal parameters. Hence, launching a game without those
+wrappers might cause issues. That is why proxy mode is recommended on Linux for now.
 
 ### 🔀 Proxy mode (🐧 Linux)
 
@@ -214,9 +199,29 @@ Same as on Windows:
 1. Rename the original `libsteam_api.so` to `libsteam_api.so`
 2. Extract and paste the `libsmoke_api32.so` or `libsmoke_api64.so` to the same directory, renaming it to `libsteam_api.so`.
 
-### 🐞 Known issues
+### 🪝 Hook mode (🐧 Linux)
 
-- Steam overlay is not working in hook mode
+Linux doesn't have the same easily exploitable library injection mechanism that Windows has.
+However, it is possible to force any Linux executable to load any library by using the
+`LD_PRELOAD` environment variable. In fact, Steam itself already uses that to inject its overlay,
+hence we can use it as well. But we have to include that overlay library as well when specifying
+`LD_PRELOAD`, otherwise the game will be launched with SmokeAPI, but without Steam overlay.
+
+For example:
+
+1. Extract and paste the `libsmoke_api32.so` or `libsmoke_api64.so` next to the game's executable.
+2. In Steam _Library_ open game's _Properties_, switch to the _General_ tab, and set the following _LAUNCH OPTIONS_:
+
+| Bitness | Launch Options                                                                                                                   |
+|---------|----------------------------------------------------------------------------------------------------------------------------------|
+| 32-bit  | `LD_PRELOAD="./libsmoke_api32.so $HOME/.local/share/Steam/ubuntu12_32/gameoverlayrenderer.so" ./GameExecutable.x86    %command%` |
+| 64-bit  | `LD_PRELOAD="./libsmoke_api64.so $HOME/.local/share/Steam/ubuntu12_64/gameoverlayrenderer.so" ./GameExecutable.x86_64 %command%` |
+
+Naturally, the exact options might change depending on where files are located on your filesystem
+and other environment variables you might have specified previously.
+If you have other environment variables, and you don't know how to correctly combine them,
+then please make extensive use of search engines and LLMs for guidance and examples
+before seeking help the official forum topic.
 
 
 ## ⚙ Configuration
@@ -413,7 +418,7 @@ This project makes use of the following open source projects:
 - [bshoshany/thread-pool](https://github.com/bshoshany/thread-pool)
 - [batterycenter/embed](https://github.com/batterycenter/embed)
 
-r
+u
 
 ## 📄 License
 
