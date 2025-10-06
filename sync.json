@@ -8,7 +8,7 @@
     "sdk_libs_win": "`steam_api.dll` or `steam_api64.dll`",
     "sdk_libs_linux": "`libsteam_api.so`",
     "sdk_libs_orig_win": "`steam_api_o.dll` or `steam_api64_o.dll`",
-    "sdk_libs_orig_linux": "`libsteam_api.so`",
+    "sdk_libs_orig_linux": "`libsteam_api_o.so`",
     "show_3rd_party_point": true,
     "unlocker_libs_win": "`smoke_api32.dll` or `smoke_api64.dll`",
     "unlocker_libs_linux": "`libsmoke_api32.so` or `libsmoke_api64.so`",

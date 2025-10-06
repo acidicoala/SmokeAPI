@@ -15,5 +15,6 @@ jobs:
     uses: acidicoala/KoalaBox/.github/workflows/create-release.yml@master
     needs: build-binaries
     with:
-      version: ${{ github.ref_name }}
-      zip_command: 'TODO'
+      zip_files: >
+        res/README.txt
+        res/SmokeAPI.config.json

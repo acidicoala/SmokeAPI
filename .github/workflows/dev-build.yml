@@ -2,6 +2,8 @@ name: 'Development Build'
 
 on:
   push:
+    branches:
+      - '**' # This prevents dev builds on tag pushes
 
 jobs:
   dev-build:

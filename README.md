@@ -196,7 +196,7 @@ wrappers might cause issues. That is why proxy mode is recommended on Linux for 
 ### 🔀 Proxy mode (🐧 Linux)
 
 Same as on Windows:
-1. Rename the original `libsteam_api.so` to `libsteam_api.so`
+1. Rename the original `libsteam_api.so` to `libsteam_api_o.so`
 2. Extract and paste the `libsmoke_api32.so` or `libsmoke_api64.so` to the same directory, renaming it to `libsteam_api.so`.
 
 ### 🪝 Hook mode (🐧 Linux)
