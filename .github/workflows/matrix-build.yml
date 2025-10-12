@@ -8,12 +8,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        module: [ SmokeAPI ]
         os: [ Linux, Windows ]
         bitness: [ 32, 64 ]
 
     uses: acidicoala/KoalaBox/.github/workflows/build-cmake.yml@master
     with:
-      module: ${{ matrix.module }}
+      module: SmokeAPI
       os: ${{ matrix.os }}
       bitness: ${{ matrix.bitness }}
