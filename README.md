@@ -286,7 +286,7 @@ Below you can find an example config where nearly every option has been customiz
 
 ```json
 {
-  "$schema": "https://raw.githubusercontent.com/acidicoala/SmokeAPI/refs/tags/v3.1.6/res/SmokeAPI.schema.json",
+  "$schema": "https://raw.githubusercontent.com/acidicoala/SmokeAPI/refs/tags/v4.0.0/res/SmokeAPI.schema.json",
   "$version": 4,
   "logging": true,
   "log_steam_http": true,
