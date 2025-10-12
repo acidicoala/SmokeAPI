@@ -139,7 +139,7 @@ In such cases, it might be worth trying [Special K], which can inject SmokeAPI a
 ## 🛠️ Installation instructions (🐧 Linux)
 
 > [!NOTE]
-> Linux support in SmokeAPI is highly experimental and has known issues.
+> Linux support in SmokeAPI is highly experimental/unstable and has known issues.
 > If none of the methods below work for you, then consider running a Windows version of a game
 > via Proton compatibility layer and follow the instructions in the Windows section.
 
@@ -190,7 +190,10 @@ However, unlike Windows, it is recommended to use proxy mode, rather than hook m
 This is because the current hook mode installation method has to directly launch game
 executable. However, by default Steam doesn't do that, instead it launches certain wrappers
 that setup game environment with optimal parameters. Hence, launching a game without those
-wrappers might cause issues. That is why proxy mode is recommended on Linux for now.
+wrappers might cause issues in theory. However, in practice real tests show that hook mode has higher
+chance of success compared to proxy mode. So, at the end of the day, try both modes to see which one works
+best for you.
+
 
 ### 🔀 Proxy mode (🐧 Linux)
 
