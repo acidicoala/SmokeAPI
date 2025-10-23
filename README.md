@@ -10,6 +10,7 @@ _Legit DLC ownership emulation for Steamworks._
 
 * `🔓` Emulate DLC ownership in legitimately owned games
 * `🛅` Emulate Inventory item ownership
+* `🏆` Optional achievement tracking to JSON file
 * `📄` Optional configuration
 * `🐧` Support for 32-bit and 64-bit Windows and Linux systems
 
@@ -262,6 +263,7 @@ Below you can find the detailed description of each available config option. In 
 | `override_dlc_status` | Overrides the status of individual DLCs, regardless of the corresponding app status. | Object | `{}` | An object with `"key": "value"` pairs, where key is DLC ID and value is DLC status. |
 | `auto_inject_inventory` | Specifies whether SmokeAPI should automatically inject a list of all registered inventory items, when a game queries user inventory | Boolean | `true` | `true` or `false`. |
 | `extra_inventory_items` | A list of inventory item IDs that will be added in addition to the automatically injected items. | Array | `[]` | An array of integer App IDs. |
+| `track_achievements` | Enables achievement tracking to `achievements_notification.json` file for external monitoring applications. | Boolean | `false` | `true` or `false`. |
 | `extra_dlcs` | See [Extra info](#-how-smokeapi-works-in-games-with-large-number-of-dlcs) to understand the use case for this option. | Object | `{}` | An object with `"key": "value"`, where the key is App ID and value is an object with `"dlcs"` property. See the complete example for more. |
 
 
@@ -306,6 +308,7 @@ Below you can find an example config where nearly every option has been customiz
     8765,
     7654
   ],
+  "track_achievements": false,
   "extra_dlcs": {
     "1234": {
       "dlcs": {
@@ -325,6 +328,32 @@ Below you can find an example config where nearly every option has been customiz
 
 
 ## 🎓 Extra info
+
+### 🏆 Achievement Tracking
+
+SmokeAPI includes an optional achievement tracking feature that monitors achievement-related Steam API calls and logs them to a JSON file. This is useful for:
+- External notification applications that display achievement popups
+- Achievement progress tracking tools
+- Game development and debugging
+- Achievement statistics collection
+
+When enabled via the `track_achievements` config option, SmokeAPI creates an `achievements_notification.json` file in the same directory as the DLL. This file contains a JSON array of achievement events with timestamps and unlock status.
+
+**Example output:**
+```json
+[
+    {
+        "event": "achievement_queried",
+        "timestamp": "2025-10-23T14:41:43Z",
+        "achievement": {
+            "id": "FIRST_BOSS",
+            "unlocked": true
+        }
+    }
+]
+```
+
+The tracking system automatically deduplicates achievements, so each achievement appears only once in the file with its most recent state. This feature has minimal performance impact and is disabled by default.
 
 ### 🔑 How SmokeAPI works in games with large number of DLCs
 

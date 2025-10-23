@@ -3,6 +3,7 @@
   "$version": 4,
   "logging": true,
   "log_steam_http": false,
+  "track_achievements": false,
   "default_app_status": "unlocked",
   "override_app_status": {},
   "override_dlc_status": {},

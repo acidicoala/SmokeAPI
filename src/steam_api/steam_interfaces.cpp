@@ -56,6 +56,7 @@ namespace {
                         ENTRY(ISteamClient, GetISteamUser),
                         ENTRY(ISteamClient, GetISteamGenericInterface),
                         ENTRY(ISteamClient, GetISteamInventory),
+                        ENTRY(ISteamClient, GetISteamUserStats),
                     }
                 }
             },
@@ -100,6 +101,19 @@ namespace {
                     .fallback_version = "SteamUser023",
                     .entry_map = {
                         ENTRY(ISteamUser, UserHasLicenseForApp),
+                    }
+                }
+            },
+            {
+                "STEAMUSERSTATS_INTERFACE_VERSION",
+                interface_data_t{
+                    .fallback_version = "STEAMUSERSTATS_INTERFACE_VERSION012",
+                    .entry_map = {
+                        ENTRY(ISteamUserStats, GetAchievement),
+                        ENTRY(ISteamUserStats, SetAchievement),
+                        ENTRY(ISteamUserStats, ClearAchievement),
+                        ENTRY(ISteamUserStats, IndicateAchievementProgress),
+                        ENTRY(ISteamUserStats, StoreStats),
                     }
                 }
             },
@@ -208,7 +222,10 @@ namespace steam_interfaces {
             virtual_hook_map.erase(STEAM_CLIENT);
 
             // Map virtual hook map to a set of keys
-            const auto prefixes = std::views::keys(virtual_hook_map) | std::ranges::to<std::set>();
+            const auto prefixes = std::set<std::string>(
+                std::views::keys(virtual_hook_map).begin(),
+                std::views::keys(virtual_hook_map).end()
+            );
 
             const auto CreateInterface$ = KB_LIB_GET_FUNC(steamclient_handle, CreateInterface);
 

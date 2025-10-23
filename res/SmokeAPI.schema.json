@@ -30,6 +30,12 @@
       "description": "Toggles logging of SteamHTTP traffic",
       "x-valid-values": "`true` or `false`."
     },
+    "track_achievements": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enables achievement tracking. When enabled, achievement API calls (get, set, clear, progress) are logged to achievements_notification.json next to the DLL for external monitoring.",
+      "x-valid-values": "`true` or `false`."
+    },
     "default_app_status": {
       "type": "string",
       "description": "Specifies default DLC status.",
@@ -124,6 +130,7 @@
       "$version": 4,
       "logging": true,
       "log_steam_http": true,
+      "track_achievements": false,
       "default_app_status": "unlocked",
       "override_app_status": {
         "1234": "original",

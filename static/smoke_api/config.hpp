@@ -22,6 +22,7 @@ namespace smoke_api::config {
         uint32_t $version = 4;
         bool logging = false;
         bool log_steam_http = false;
+        bool track_achievements = false;
         AppStatus default_app_status = AppStatus::UNLOCKED;
         std::map<std::string, AppStatus> override_app_status;
         std::map<std::string, AppStatus> override_dlc_status;
@@ -34,6 +35,7 @@ namespace smoke_api::config {
             $version,
             logging,
             log_steam_http,
+            track_achievements,
             default_app_status,
             override_app_status,
             override_dlc_status,

@@ -15,6 +15,8 @@ set(SMOKE_API_STATIC_SOURCES
     static/smoke_api/interfaces/steam_inventory.cpp
     static/smoke_api/interfaces/steam_user.hpp
     static/smoke_api/interfaces/steam_user.cpp
+    static/smoke_api/interfaces/steam_user_stats.hpp
+    static/smoke_api/interfaces/steam_user_stats.cpp
     static/smoke_api/api.hpp
     static/smoke_api/api.cpp
     static/smoke_api/cache.hpp
@@ -44,12 +46,14 @@ set(SMOKE_API_SOURCES
     ${GENERATED_SOURCES}
     src/smoke_api/smoke_api.cpp
     src/smoke_api/smoke_api.hpp
+    src/steam_api/steam_api_flat.cpp
     src/steam_api/virtuals/isteamapps.cpp
     src/steam_api/virtuals/isteamclient.cpp
     src/steam_api/virtuals/isteamgameserver.cpp
     src/steam_api/virtuals/isteamhttp.cpp
     src/steam_api/virtuals/isteaminventory.cpp
     src/steam_api/virtuals/isteamuser.cpp
+    src/steam_api/virtuals/isteamuserstats.cpp
     src/steam_api/virtuals/steam_api_virtuals.hpp
     src/steam_api/steam_client.hpp
     src/steam_api/steam_client.cpp
@@ -60,7 +64,7 @@ set(SMOKE_API_SOURCES
 
 if(WIN32)
     set_32_and_64(STEAM_API_MODULE steam_api)
-    set_32_and_64(STEAMCLIENT_DLL steamclient)
+    set_32_and_64(STEAMCLIENT_DLL steamclient64.dll steamclient.dll)
 
     list(APPEND SMOKE_API_SOURCES src/main_win.cpp)
 else()

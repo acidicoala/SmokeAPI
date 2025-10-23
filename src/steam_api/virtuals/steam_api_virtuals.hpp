@@ -13,6 +13,7 @@ VIRTUAL(void*) ISteamClient_GetISteamApps(PARAMS(HSteamUser, HSteamPipe, const c
 VIRTUAL(void*) ISteamClient_GetISteamUser(PARAMS(HSteamUser, HSteamPipe, const char*)) noexcept;
 VIRTUAL(void*) ISteamClient_GetISteamGenericInterface(PARAMS(HSteamUser, HSteamPipe, const char*)) noexcept;
 VIRTUAL(void*) ISteamClient_GetISteamInventory(PARAMS(HSteamUser, HSteamPipe, const char*)) noexcept;
+VIRTUAL(void*) ISteamClient_GetISteamUserStats(PARAMS(HSteamUser, HSteamPipe, const char*)) noexcept;
 VIRTUAL(void*) ISteamClient_GetISteamUtils(PARAMS(HSteamPipe, const char*)) noexcept; // Unhooked
 
 // ISteamHTTP
@@ -42,6 +43,13 @@ VIRTUAL(bool) ISteamInventory_CheckResultSteamID(PARAMS(SteamInventoryResult_t, 
 
 // ISteamUser
 VIRTUAL(EUserHasLicenseForAppResult) ISteamUser_UserHasLicenseForApp(PARAMS(CSteamID, AppId_t)) noexcept;
+
+// ISteamUserStats
+VIRTUAL(bool) ISteamUserStats_GetAchievement(PARAMS(const char*, bool*)) noexcept;
+VIRTUAL(bool) ISteamUserStats_SetAchievement(PARAMS(const char*)) noexcept;
+VIRTUAL(bool) ISteamUserStats_ClearAchievement(PARAMS(const char*)) noexcept;
+VIRTUAL(bool) ISteamUserStats_IndicateAchievementProgress(PARAMS(const char*, uint32_t, uint32_t)) noexcept;
+VIRTUAL(bool) ISteamUserStats_StoreStats(PARAMS()) noexcept;
 
 // ISteamUtils
 VIRTUAL(AppId_t) ISteamUtils_GetAppID(PARAMS()) noexcept; // Unhooked

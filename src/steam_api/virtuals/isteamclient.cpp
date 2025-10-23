@@ -64,3 +64,20 @@ VIRTUAL(void*) ISteamClient_GetISteamInventory(
         )
     );
 }
+
+VIRTUAL(void*) ISteamClient_GetISteamUserStats(
+    PARAMS(
+        const HSteamUser hSteamUser,
+        const HSteamPipe hSteamPipe,
+        const char* pchVersion
+    )
+) noexcept {
+    return steam_client::GetGenericInterface(
+        __func__,
+        pchVersion,
+        SWAPPED_CALL_CLOSURE(
+            ISteamClient_GetISteamUserStats,
+            ARGS(hSteamUser, hSteamPipe, pchVersion)
+        )
+    );
+}

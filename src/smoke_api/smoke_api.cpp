@@ -152,7 +152,26 @@ namespace {
             const DECLARE_ARGS();
 
             const auto& version_map = steam_interfaces::get_interface_name_to_version_map();
-            THIS = CreateInterface(version_map.at("ISteamClient").c_str(), nullptr);
+            
+            // In proxy mode, we need to call the original library's CreateInterface directly
+            // In hook mode, we use the hooked CreateInterface from our steamclient.cpp
+            void* steam_client_ptr = nullptr;
+            
+            // Get steamclient handle
+            auto steamclient_handle = kb::lib::get_lib_handle(STEAMCLIENT_DLL);
+            if (!steamclient_handle) {
+                LOG_ERROR("Failed to get handle to {}", STEAMCLIENT_DLL);
+                return std::nullopt;
+            }
+            
+            using CreateInterface_t = void* (*)(const char*, void*);
+            auto CreateInterface_orig = reinterpret_cast<CreateInterface_t>(
+                kb::lib::get_function_address_or_throw(steamclient_handle, "CreateInterface")
+            );
+            
+            steam_client_ptr = CreateInterface_orig(version_map.at("ISteamClient").c_str(), nullptr);
+            
+            THIS = steam_client_ptr;
             if(THIS) {
                 if(const auto get_steam_utils = SMK_FIND_INTERFACE_FUNC(THIS, ISteamClient, GetISteamUtils)) {
                     constexpr auto steam_pipe = 1;
@@ -321,5 +340,9 @@ namespace smoke_api {
         LOG_ERROR("Failed to find App ID");
 
         return 0;
+    }
+    
+    void* get_original_library() {
+        return original_steamapi_handle;
     }
 }
