@@ -429,7 +429,7 @@ This project makes use of the following open source projects:
 - [bshoshany/thread-pool](https://github.com/bshoshany/thread-pool)
 - [batterycenter/embed](https://github.com/batterycenter/embed)
 
- 
+
 
 ## 📄 License
 
