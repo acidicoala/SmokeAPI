@@ -93,6 +93,7 @@ namespace {
         kb::tools::zip::extract_files(
             zip_file_path,
             [&](const std::string& name, const bool) {
+                // C/C++ headers
                 if(name.starts_with("sdk/public/steam/") && name.ends_with(".h")) {
                     return unzip_dir / "headers/steam" / fs::path(name).filename();
                 }
@@ -108,7 +109,8 @@ namespace {
 
                 // Linux binaries
                 if(
-                    name.starts_with("sdk/redistributable_bin/linux") &&
+                    name.starts_with("sdk/redistributable_bin/linux32") &&
+                    !name.contains("linuxarm") &&
                     name.ends_with("libsteam_api.so")
                 ) {
                     return unzip_dir / "binaries" / name.substr(name.find("linux"));
