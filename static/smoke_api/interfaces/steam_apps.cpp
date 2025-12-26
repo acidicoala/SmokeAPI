@@ -131,11 +131,16 @@ namespace smoke_api::steam_apps {
             }
 
             LOG_DEBUG(
-                "Game has {} or more DLCs. Fetching DLCs from remote sources.",
-                original_count
+                "{} -> Game has {} or more DLCs. Fetching DLCs from remote sources.",
+                function_name, original_count
             );
 
             fetch_and_cache_dlcs(app_id);
+
+            if(app_dlcs.empty()) {
+                LOG_DEBUG("{} -> No cached DLCs, responding with original count", function_name);
+                return total_count(original_count);
+            }
 
             return total_count(static_cast<int>(app_dlcs[app_id].size()));
         } catch(const std::exception& e) {
@@ -183,7 +188,7 @@ namespace smoke_api::steam_apps {
                 pchName[bytes_to_copy] = '\0'; // Ensure null-termination
             };
 
-            if(app_dlcs.contains(app_id)) {
+            if(!app_dlcs.empty() && app_dlcs.contains(app_id)) {
                 const auto& dlcs = app_dlcs[app_id];
 
                 if(iDLC >= 0 && iDLC < dlcs.size()) {
