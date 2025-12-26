@@ -143,7 +143,7 @@ namespace {
     }
 
     void parse_sdk(const fs::path& sdk_path, nlohmann::ordered_json& lookup, BS::thread_pool<>& pool) {
-        const auto headers_dir = sdk_path / "headers\\steam";
+        const auto headers_dir = sdk_path / "headers" / "steam";
         const auto headers_dir_str = kb::path::to_str(headers_dir);
 
         if(not fs::exists(headers_dir)) {
