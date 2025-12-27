@@ -346,6 +346,11 @@ They will be added to the list of missing DLC IDs to facilitate config-less oper
 
 [extra DLCs]: https://github.com/acidicoala/public-entitlements/blob/main/steam/v2/dlc.json
 
+### 🔢 Supported Steamworks SDK versions
+
+SmokeAPI aims to support all Steamworks SDK version.
+At the time of writing, the latest supported version is **1.63**.
+
 ## 🔧 Troubleshooting
 
 ### 🔐 DLCs are not unlocked
@@ -408,6 +413,14 @@ For example:
 [Visual Studio Build Tools 2022]: https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022
 
 [CMake]: https://cmake.org/
+
+### 🆕 Adding support for new Steamworks SDK
+
+- Run `steamworks_downloader [prompt]` providing directory which contains Steamworks SDK zip files.
+- Run `steamworks_parser`
+- Run `linux_exports_generator [32]`
+- Run `linux_exports_generator [64]`
+
 
 ## 📚 Acknowledgments
 

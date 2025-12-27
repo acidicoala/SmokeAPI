@@ -44,9 +44,22 @@ They will be added to the list of missing DLC IDs to facilitate config-less oper
 
 [extra DLCs]: https://github.com/acidicoala/public-entitlements/blob/main/steam/v2/dlc.json
 
+### 🔢 Supported Steamworks SDK versions
+
+{{ project_name }} aims to support all Steamworks SDK version.
+At the time of writing, the latest supported version is **1.63**.
+
 {% include "KoalaBox/templates/markdown/troubleshooting.md" %}
 
 {% include "KoalaBox/templates/markdown/building.md" %}
+
+### 🆕 Adding support for new Steamworks SDK
+
+- Run `steamworks_downloader [prompt]` providing directory which contains Steamworks SDK zip files.
+- Run `steamworks_parser`
+- Run `linux_exports_generator [32]`
+- Run `linux_exports_generator [64]`
+
 
 {% include "KoalaBox/templates/markdown/acknowledgements.md" %}{% block extra_oss_libs %}- [bshoshany/thread-pool](https://github.com/bshoshany/thread-pool)
 - [batterycenter/embed](https://github.com/batterycenter/embed)
