@@ -25,7 +25,7 @@
 
 #include "build_config.h"
 
-#if defined(KB_WIN)
+#ifdef KB_WIN
 #include "koalabox/win.hpp"
 #elif defined(KB_LINUX) && defined(KB_32)
 #include "generated/32/proxy_exports.hpp"
@@ -64,7 +64,9 @@ namespace {
 
         std::set<std::string> versions;
 
-        const auto rdata_section = kb::lib::get_section_or_throw(steamapi_handle, kb::lib::CONST_STR_SECTION);
+        // On Linux the section name depends on individual lib file, so we can't use generic constants
+        const std::string str_section_name = kb::platform::is_windows ? ".text" : ".rodata.str";
+        const auto rdata_section = kb::lib::get_section_or_throw(steamapi_handle, str_section_name);
         const auto rdata = rdata_section.to_string();
 
         const std::regex pattern(R"(SteamClient\d{3})");
@@ -229,16 +231,16 @@ namespace smoke_api {
 
             kb::globals::init_globals(self_module_handle, PROJECT_NAME);
 
-            config::instance = kb::config::parse<config::Config>();
+            config::get() = kb::config::parse<config::Config>();
 
-            if(config::instance.logging) {
+            if(config::get().logging) {
                 kb::logger::init_file_logger(kb::paths::get_log_path());
             } else {
                 kb::logger::init_null_logger();
             }
 
             LOG_INFO("{} v{}{} | Built at '{}'", PROJECT_NAME, PROJECT_VERSION, VERSION_SUFFIX, __TIMESTAMP__);
-            LOG_DEBUG("Parsed config:\n{}", nlohmann::ordered_json(config::instance).dump(2));
+            LOG_DEBUG("Parsed config:\n{}", nlohmann::ordered_json(config::get()).dump(2));
 
             const auto exe_path = kb::lib::get_fs_path(nullptr);
             const auto exe_name = kb::path::to_str(exe_path.filename());

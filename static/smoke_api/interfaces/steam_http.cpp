@@ -14,7 +14,7 @@ namespace smoke_api::steam_http {
         try {
             const auto result = original_function();
 
-            if(config::instance.log_steam_http) {
+            if(config::get().log_steam_http) {
                 const std::string_view buffer =
                     pBodyDataBuffer && unBufferSize
                         ? std::string_view(
@@ -50,7 +50,7 @@ namespace smoke_api::steam_http {
         try {
             const auto result = original_function();
 
-            if(config::instance.log_steam_http) {
+            if(config::get().log_steam_http) {
                 const std::string_view buffer =
                     pBodyDataBuffer && unBufferSize
                         ? std::string_view(
@@ -87,7 +87,7 @@ namespace smoke_api::steam_http {
         try {
             const auto result = original_function();
 
-            if(config::instance.log_steam_http) {
+            if(config::get().log_steam_http) {
                 const std::string_view content_type =
                     pchContentType ? pchContentType : "smoke_api::N/A";
 

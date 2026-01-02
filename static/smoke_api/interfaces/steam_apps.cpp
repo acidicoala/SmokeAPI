@@ -14,8 +14,15 @@ namespace {
     /// This means we have to get extra DLC IDs from local config, remote config, or cache.
     constexpr auto MAX_DLC = 64;
 
-    std::map<uint32_t, std::vector<DLC>> app_dlcs; // NOLINT(cert-err58-cpp)
-    std::set<uint32_t> fully_fetched; // NOLINT(cert-err58-cpp)
+    auto& get_fully_fetched_apps() {
+        static std::set<uint32_t> fully_fetched_apps;
+        return fully_fetched_apps;
+    }
+
+    auto& get_app_dlc_map() {
+        static std::map<uint32_t, std::vector<DLC>> app_dlc_map;
+        return app_dlc_map;
+    }
 
     std::string get_app_id_log(const uint32_t app_id) {
         return app_id ? std::format("App ID: {:>8}, ", app_id) : "";
@@ -31,13 +38,13 @@ namespace {
 
         if(app_id == 0) {
             LOG_ERROR("{} -> App ID is 0", __func__);
-            app_dlcs[app_id] = {}; // Dummy value to avoid checking for presence on each access
+            get_app_dlc_map()[app_id] = {}; // Dummy value to avoid checking for presence on each access
             return;
         }
 
         // We want to fetch data only once. However, if any of the remote sources have failed
         // previously, we want to attempt fetching again.
-        if(fully_fetched.contains(app_id)) {
+        if(get_fully_fetched_apps().contains(app_id)) {
             return;
         }
 
@@ -67,13 +74,13 @@ namespace {
         }
 
         if(github_dlcs_opt && steam_dlcs_opt) {
-            fully_fetched.insert(app_id);
+            get_fully_fetched_apps().insert(app_id);
         } else {
             append_dlcs(smoke_api::cache::get_dlcs(app_id), "disk cache");
         }
 
         // Cache DLCs in memory and cache for future use
-        app_dlcs[app_id] = aggregated_dlcs;
+        get_app_dlc_map()[app_id] = aggregated_dlcs;
 
         smoke_api::cache::save_dlcs(app_id, aggregated_dlcs);
     }
@@ -137,12 +144,12 @@ namespace smoke_api::steam_apps {
 
             fetch_and_cache_dlcs(app_id);
 
-            if(app_dlcs.empty()) {
+            if(get_app_dlc_map().empty()) {
                 LOG_DEBUG("{} -> No cached DLCs, responding with original count", function_name);
                 return total_count(original_count);
             }
 
-            return total_count(static_cast<int>(app_dlcs[app_id].size()));
+            return total_count(static_cast<int>(get_app_dlc_map()[app_id].size()));
         } catch(const std::exception& e) {
             LOG_ERROR("{} -> Uncaught exception: {}", function_name, e.what());
             return 0;
@@ -188,8 +195,8 @@ namespace smoke_api::steam_apps {
                 pchName[bytes_to_copy] = '\0'; // Ensure null-termination
             };
 
-            if(!app_dlcs.empty() && app_dlcs.contains(app_id)) {
-                const auto& dlcs = app_dlcs[app_id];
+            if(!get_app_dlc_map().empty() && get_app_dlc_map().contains(app_id)) {
+                const auto& dlcs = get_app_dlc_map()[app_id];
 
                 if(iDLC >= 0 && iDLC < dlcs.size()) {
                     output_dlc(dlcs[iDLC]);

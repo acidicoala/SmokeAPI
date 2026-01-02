@@ -1,14 +1,16 @@
 #include <koalabox/config.hpp>
-#include <koalabox/io.hpp>
 #include <koalabox/logger.hpp>
 
 #include "smoke_api/config.hpp"
 
 namespace smoke_api::config {
-    Config instance; // NOLINT(cert-err58-cpp)
+    Config& get() noexcept {
+        static Config config;
+        return config;
+    }
 
     std::vector<DLC> get_extra_dlcs(const uint32_t app_id) {
-        return DLC::get_dlcs_from_apps(instance.extra_dlcs, app_id);
+        return DLC::get_dlcs_from_apps(get().extra_dlcs, app_id);
     }
 
     bool is_dlc_unlocked(
@@ -16,16 +18,16 @@ namespace smoke_api::config {
         const AppId_t dlc_id,
         const std::function<bool()>& original_function
     ) {
-        auto status = instance.default_app_status;
+        auto status = get().default_app_status;
 
         const auto app_id_str = std::to_string(app_id);
-        if(instance.override_app_status.contains(app_id_str)) {
-            status = instance.override_app_status[app_id_str];
+        if(get().override_app_status.contains(app_id_str)) {
+            status = get().override_app_status[app_id_str];
         }
 
         const auto dlc_id_str = std::to_string(dlc_id);
-        if(instance.override_dlc_status.contains(dlc_id_str)) {
-            status = instance.override_dlc_status[dlc_id_str];
+        if(get().override_dlc_status.contains(dlc_id_str)) {
+            status = get().override_dlc_status[dlc_id_str];
         }
 
         bool is_unlocked;

@@ -70,11 +70,11 @@ namespace smoke_api::steam_inventory {
             );
 
             static uint32_t original_count = 0;
-            const auto injected_count = config::instance.extra_inventory_items.size();
+            const auto injected_count = config::get().extra_inventory_items.size();
 
             // Automatically get inventory items from steam
             static std::vector<SteamItemDef_t> auto_inventory_items;
-            if(config::instance.auto_inject_inventory) {
+            if(config::get().auto_inject_inventory) {
                 static std::once_flag inventory_inject_flag;
                 std::call_once(
                     inventory_inject_flag,
@@ -126,7 +126,7 @@ namespace smoke_api::steam_inventory {
 
                 for(int i = 0; i < injected_count; i++) {
                     auto& item = pOutItemsArray[original_count + auto_injected_count + i];
-                    const auto item_def_id = config::instance.extra_inventory_items[i];
+                    const auto item_def_id = config::get().extra_inventory_items[i];
 
                     item = new_item(item_def_id);
 

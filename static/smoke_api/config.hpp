@@ -43,7 +43,7 @@ namespace smoke_api::config {
         )
     };
 
-    extern Config instance;
+    Config& get() noexcept;
 
     std::vector<DLC> get_extra_dlcs(AppId_t app_id);
 
