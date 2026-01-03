@@ -65,12 +65,13 @@ namespace {
         std::set<std::string> versions;
 
         // On Linux the section name depends on individual lib file, so we can't use generic constants
-        const std::string str_section_name = kb::platform::is_windows ? ".text" : ".rodata.str";
-        const auto rdata_section = kb::lib::get_section_or_throw(steamapi_handle, str_section_name);
-        const auto rdata = rdata_section.to_string();
+        // ReSharper disable once CppDFAUnreachableCode
+        const std::string str_section_name = kb::platform::is_windows ? ".rdata" : ".rodata";
+        const auto str_section = kb::lib::get_section_or_throw(steamapi_handle, str_section_name);
+        const auto str_section_str = str_section.to_string();
 
         const std::regex pattern(R"(SteamClient\d{3})");
-        const auto matches_begin = std::sregex_iterator(rdata.begin(), rdata.end(), pattern);
+        const auto matches_begin = std::sregex_iterator(str_section_str.begin(), str_section_str.end(), pattern);
         const auto matches_end = std::sregex_iterator();
 
         for(std::sregex_iterator i = matches_begin; i != matches_end; ++i) {
@@ -110,10 +111,10 @@ namespace {
 
         static const auto CreateInterface$ = KB_LIB_GET_FUNC(steamclient_handle, CreateInterface);
 
-        if(auto* steamapi_handle = kb::lib::get_lib_handle(STEAM_API_MODULE)) {
+        if(original_steamapi_handle) {
             // SteamAPI might have been initialized.
             // Hence, we need to query SteamClient interfaces and hook them if needed.
-            const auto steamclient_versions = find_steamclient_versions(steamapi_handle);
+            const auto steamclient_versions = find_steamclient_versions(original_steamapi_handle);
             for(const auto& steamclient_version : steamclient_versions) {
                 if(CreateInterface$(steamclient_version.c_str(), nullptr)) {
 #ifdef KB_WIN
@@ -125,6 +126,8 @@ namespace {
                     LOG_INFO("'{}' has not been initialized. Waiting for initialization.", steamclient_version);
                 }
             }
+        } else {
+            LOG_ERROR("{} -> original_steamapi_handle is null", __func__);
         }
 
         return true;
