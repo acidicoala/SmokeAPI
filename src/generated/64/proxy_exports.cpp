@@ -7208,6 +7208,211 @@ EXPORT void VR_Shutdown() {
     asm volatile ("jmp *%rax");
 }
 
+EXPORT void __gcclibcxx_demangle_callback() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __gxx_personality_v0() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __new_handler() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap___lxstat() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap___lxstat64() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap___xstat() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap___xstat64() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_access() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_chdir() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_chmod() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_chown() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_dlmopen() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_dlopen() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_fopen() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_fopen64() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_freopen() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_lchown() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_link() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_lstat() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_lstat64() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_mkdir() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_mkfifo() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_mknod() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_mount() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_open() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_open64() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_opendir() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_rename() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_rmdir() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_scandir() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_scandir64() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_stat() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_stat64() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_statfs() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_statfs64() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_statvfs() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_statvfs64() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_symlink() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_unlink() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_utime() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
+EXPORT void __wrap_utimes() {
+    asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
+    asm volatile ("jmp *%rax");
+}
+
 EXPORT void g_pSteamClientGameServer() {
     asm volatile ("movabs $0xFeedBeefDeadC0de, %%rax":::"rax");
     asm volatile ("jmp *%rax");
@@ -14440,6 +14645,211 @@ namespace proxy_exports {
 
         dest_address = dlsym(self_lib_handle, "VR_Shutdown");
         src_address = dlsym(original_lib_handle, "VR_Shutdown");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__gcclibcxx_demangle_callback");
+        src_address = dlsym(original_lib_handle, "__gcclibcxx_demangle_callback");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__gxx_personality_v0");
+        src_address = dlsym(original_lib_handle, "__gxx_personality_v0");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__new_handler");
+        src_address = dlsym(original_lib_handle, "__new_handler");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap___lxstat");
+        src_address = dlsym(original_lib_handle, "__wrap___lxstat");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap___lxstat64");
+        src_address = dlsym(original_lib_handle, "__wrap___lxstat64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap___xstat");
+        src_address = dlsym(original_lib_handle, "__wrap___xstat");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap___xstat64");
+        src_address = dlsym(original_lib_handle, "__wrap___xstat64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_access");
+        src_address = dlsym(original_lib_handle, "__wrap_access");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_chdir");
+        src_address = dlsym(original_lib_handle, "__wrap_chdir");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_chmod");
+        src_address = dlsym(original_lib_handle, "__wrap_chmod");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_chown");
+        src_address = dlsym(original_lib_handle, "__wrap_chown");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_dlmopen");
+        src_address = dlsym(original_lib_handle, "__wrap_dlmopen");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_dlopen");
+        src_address = dlsym(original_lib_handle, "__wrap_dlopen");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_fopen");
+        src_address = dlsym(original_lib_handle, "__wrap_fopen");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_fopen64");
+        src_address = dlsym(original_lib_handle, "__wrap_fopen64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_freopen");
+        src_address = dlsym(original_lib_handle, "__wrap_freopen");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_lchown");
+        src_address = dlsym(original_lib_handle, "__wrap_lchown");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_link");
+        src_address = dlsym(original_lib_handle, "__wrap_link");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_lstat");
+        src_address = dlsym(original_lib_handle, "__wrap_lstat");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_lstat64");
+        src_address = dlsym(original_lib_handle, "__wrap_lstat64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_mkdir");
+        src_address = dlsym(original_lib_handle, "__wrap_mkdir");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_mkfifo");
+        src_address = dlsym(original_lib_handle, "__wrap_mkfifo");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_mknod");
+        src_address = dlsym(original_lib_handle, "__wrap_mknod");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_mount");
+        src_address = dlsym(original_lib_handle, "__wrap_mount");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_open");
+        src_address = dlsym(original_lib_handle, "__wrap_open");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_open64");
+        src_address = dlsym(original_lib_handle, "__wrap_open64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_opendir");
+        src_address = dlsym(original_lib_handle, "__wrap_opendir");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_rename");
+        src_address = dlsym(original_lib_handle, "__wrap_rename");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_rmdir");
+        src_address = dlsym(original_lib_handle, "__wrap_rmdir");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_scandir");
+        src_address = dlsym(original_lib_handle, "__wrap_scandir");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_scandir64");
+        src_address = dlsym(original_lib_handle, "__wrap_scandir64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_stat");
+        src_address = dlsym(original_lib_handle, "__wrap_stat");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_stat64");
+        src_address = dlsym(original_lib_handle, "__wrap_stat64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_statfs");
+        src_address = dlsym(original_lib_handle, "__wrap_statfs");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_statfs64");
+        src_address = dlsym(original_lib_handle, "__wrap_statfs64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_statvfs");
+        src_address = dlsym(original_lib_handle, "__wrap_statvfs");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_statvfs64");
+        src_address = dlsym(original_lib_handle, "__wrap_statvfs64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_symlink");
+        src_address = dlsym(original_lib_handle, "__wrap_symlink");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_unlink");
+        src_address = dlsym(original_lib_handle, "__wrap_unlink");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_utime");
+        src_address = dlsym(original_lib_handle, "__wrap_utime");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_utimes");
+        src_address = dlsym(original_lib_handle, "__wrap_utimes");
         if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
         std::memcpy(static_cast<uint8_t*>(dest_address) + 2, &src_address, sizeof(void*));
 

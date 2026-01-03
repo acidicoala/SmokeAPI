@@ -7403,6 +7403,751 @@ EXPORT void VR_Shutdown() {
     asm volatile ("jmp *%eax");
 }
 
+EXPORT void _DYNAMIC() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_Backtrace() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_DeleteException() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_FindEnclosingFunction() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_Find_FDE() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_ForcedUnwind() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_GetCFA() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_GetDataRelBase() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_GetGR() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_GetIP() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_GetLanguageSpecificData() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_GetRegionStart() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_GetTextRelBase() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_RaiseException() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_Resume() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_Resume_or_Rethrow() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_SetGR() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Unwind_SetIP() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv111__terminateEPFvvE() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv112__unexpectedEPFvvE() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv115__forced_unwindD0Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv115__forced_unwindD1Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv115__forced_unwindD2Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv117__class_type_infoD0Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv117__class_type_infoD1Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv117__class_type_infoD2Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv119__foreign_exceptionD0Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv119__foreign_exceptionD1Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv119__foreign_exceptionD2Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv119__terminate_handlerE() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv120__si_class_type_infoD0Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv120__si_class_type_infoD1Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv120__si_class_type_infoD2Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv120__unexpected_handlerE() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv121__vmi_class_type_infoD0Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv121__vmi_class_type_infoD1Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN10__cxxabiv121__vmi_class_type_infoD2Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN9__gnu_cxx20recursive_init_errorD0Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN9__gnu_cxx20recursive_init_errorD1Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN9__gnu_cxx20recursive_init_errorD2Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZN9__gnu_cxx27__verbose_terminate_handlerEv() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNK10__cxxabiv117__class_type_info10__do_catchEPKSt9type_infoPPvj() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PKvRNS0_15__upcast_resultE() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PPv() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNK10__cxxabiv117__class_type_info12__do_dyncastEiNS0_10__sub_kindEPKS0_PKvS3_S5_RNS0_16__dyncast_resultE() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNK10__cxxabiv117__class_type_info20__do_find_public_srcEiPKvPKS0_S2_() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNK10__cxxabiv120__si_class_type_info11__do_upcastEPKNS_17__class_type_infoEPKvRNS1_15__upcast_resultE() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNK10__cxxabiv120__si_class_type_info12__do_dyncastEiNS_17__class_type_info10__sub_kindEPKS1_PKvS4_S6_RNS1_16__dyncast_resultE() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNK10__cxxabiv120__si_class_type_info20__do_find_public_srcEiPKvPKNS_17__class_type_infoES2_() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNK10__cxxabiv121__vmi_class_type_info11__do_upcastEPKNS_17__class_type_infoEPKvRNS1_15__upcast_resultE() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNK10__cxxabiv121__vmi_class_type_info12__do_dyncastEiNS_17__class_type_info10__sub_kindEPKS1_PKvS4_S6_RNS1_16__dyncast_resultE() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNK10__cxxabiv121__vmi_class_type_info20__do_find_public_srcEiPKvPKNS_17__class_type_infoES2_() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNKSt10bad_typeid4whatEv() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNKSt13bad_exception4whatEv() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNKSt8bad_cast4whatEv() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNKSt9bad_alloc4whatEv() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNKSt9exception4whatEv() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNKSt9type_info10__do_catchEPKS_PPvj() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNKSt9type_info11__do_upcastEPKN10__cxxabiv117__class_type_infoEPPv() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNKSt9type_info14__is_pointer_pEv() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNKSt9type_info15__is_function_pEv() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt10bad_typeidD0Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt10bad_typeidD1Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt10bad_typeidD2Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt13bad_exceptionD0Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt13bad_exceptionD1Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt13bad_exceptionD2Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt8bad_castD0Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt8bad_castD1Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt8bad_castD2Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt9bad_allocD0Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt9bad_allocD1Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt9bad_allocD2Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt9exceptionD0Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt9exceptionD1Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt9exceptionD2Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt9type_infoD0Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt9type_infoD1Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZNSt9type_infoD2Ev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt10unexpectedv() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt13set_terminatePFvvE() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt14set_unexpectedPFvvE() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt15set_new_handlerPFvvE() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt18_Rb_tree_decrementPKSt18_Rb_tree_node_base() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt18_Rb_tree_decrementPSt18_Rb_tree_node_base() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt18_Rb_tree_incrementPKSt18_Rb_tree_node_base() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt18_Rb_tree_incrementPSt18_Rb_tree_node_base() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt18uncaught_exceptionv() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt20_Rb_tree_black_countPKSt18_Rb_tree_node_baseS1_() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt20_Rb_tree_rotate_leftPSt18_Rb_tree_node_baseRS0_() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt21_Rb_tree_rotate_rightPSt18_Rb_tree_node_baseRS0_() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt28_Rb_tree_rebalance_for_erasePSt18_Rb_tree_node_baseRS_() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt29_Rb_tree_insert_and_rebalancebPSt18_Rb_tree_node_baseS0_RS_() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt7nothrow() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZSt9terminatev() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _ZdlPv() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void _Znwj() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __deregister_frame() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __deregister_frame_info() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __deregister_frame_info_bases() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __dynamic_cast() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __frame_state_for() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __gcclibcxx_demangle_callback() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __gxx_personality_v0() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __new_handler() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __register_frame() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __register_frame_info() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __register_frame_info_bases() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __register_frame_info_table() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __register_frame_info_table_bases() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __register_frame_table() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap___lxstat() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap___lxstat64() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap___xstat() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap___xstat64() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_access() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_chdir() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_chmod() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_chown() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_dlmopen() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_dlopen() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_fopen() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_fopen64() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_freopen() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_lchown() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_link() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_lstat() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_lstat64() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_mkdir() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_mkfifo() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_mknod() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_mount() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_open() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_open64() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_opendir() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_rename() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_rmdir() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_scandir() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_scandir64() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_stat() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_stat64() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_statfs() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_statfs64() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_statvfs() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_statvfs64() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_symlink() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_unlink() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_utime() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
+EXPORT void __wrap_utimes() {
+    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
+    asm volatile ("jmp *%eax");
+}
+
 EXPORT void g_pSteamClientGameServer() {
     asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
     asm volatile ("jmp *%eax");
@@ -14830,6 +15575,751 @@ namespace proxy_exports {
 
         dest_address = dlsym(self_lib_handle, "VR_Shutdown");
         src_address = dlsym(original_lib_handle, "VR_Shutdown");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_DYNAMIC");
+        src_address = dlsym(original_lib_handle, "_DYNAMIC");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_Backtrace");
+        src_address = dlsym(original_lib_handle, "_Unwind_Backtrace");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_DeleteException");
+        src_address = dlsym(original_lib_handle, "_Unwind_DeleteException");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_FindEnclosingFunction");
+        src_address = dlsym(original_lib_handle, "_Unwind_FindEnclosingFunction");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_Find_FDE");
+        src_address = dlsym(original_lib_handle, "_Unwind_Find_FDE");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_ForcedUnwind");
+        src_address = dlsym(original_lib_handle, "_Unwind_ForcedUnwind");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_GetCFA");
+        src_address = dlsym(original_lib_handle, "_Unwind_GetCFA");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_GetDataRelBase");
+        src_address = dlsym(original_lib_handle, "_Unwind_GetDataRelBase");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_GetGR");
+        src_address = dlsym(original_lib_handle, "_Unwind_GetGR");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_GetIP");
+        src_address = dlsym(original_lib_handle, "_Unwind_GetIP");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_GetLanguageSpecificData");
+        src_address = dlsym(original_lib_handle, "_Unwind_GetLanguageSpecificData");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_GetRegionStart");
+        src_address = dlsym(original_lib_handle, "_Unwind_GetRegionStart");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_GetTextRelBase");
+        src_address = dlsym(original_lib_handle, "_Unwind_GetTextRelBase");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_RaiseException");
+        src_address = dlsym(original_lib_handle, "_Unwind_RaiseException");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_Resume");
+        src_address = dlsym(original_lib_handle, "_Unwind_Resume");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_Resume_or_Rethrow");
+        src_address = dlsym(original_lib_handle, "_Unwind_Resume_or_Rethrow");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_SetGR");
+        src_address = dlsym(original_lib_handle, "_Unwind_SetGR");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Unwind_SetIP");
+        src_address = dlsym(original_lib_handle, "_Unwind_SetIP");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv111__terminateEPFvvE");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv111__terminateEPFvvE");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv112__unexpectedEPFvvE");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv112__unexpectedEPFvvE");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv115__forced_unwindD0Ev");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv115__forced_unwindD0Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv115__forced_unwindD1Ev");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv115__forced_unwindD1Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv115__forced_unwindD2Ev");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv115__forced_unwindD2Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv117__class_type_infoD0Ev");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv117__class_type_infoD0Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv117__class_type_infoD1Ev");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv117__class_type_infoD1Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv117__class_type_infoD2Ev");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv117__class_type_infoD2Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv119__foreign_exceptionD0Ev");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv119__foreign_exceptionD0Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv119__foreign_exceptionD1Ev");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv119__foreign_exceptionD1Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv119__foreign_exceptionD2Ev");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv119__foreign_exceptionD2Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv119__terminate_handlerE");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv119__terminate_handlerE");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv120__si_class_type_infoD0Ev");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv120__si_class_type_infoD0Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv120__si_class_type_infoD1Ev");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv120__si_class_type_infoD1Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv120__si_class_type_infoD2Ev");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv120__si_class_type_infoD2Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv120__unexpected_handlerE");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv120__unexpected_handlerE");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv121__vmi_class_type_infoD0Ev");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv121__vmi_class_type_infoD0Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv121__vmi_class_type_infoD1Ev");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv121__vmi_class_type_infoD1Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN10__cxxabiv121__vmi_class_type_infoD2Ev");
+        src_address = dlsym(original_lib_handle, "_ZN10__cxxabiv121__vmi_class_type_infoD2Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN9__gnu_cxx20recursive_init_errorD0Ev");
+        src_address = dlsym(original_lib_handle, "_ZN9__gnu_cxx20recursive_init_errorD0Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN9__gnu_cxx20recursive_init_errorD1Ev");
+        src_address = dlsym(original_lib_handle, "_ZN9__gnu_cxx20recursive_init_errorD1Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN9__gnu_cxx20recursive_init_errorD2Ev");
+        src_address = dlsym(original_lib_handle, "_ZN9__gnu_cxx20recursive_init_errorD2Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZN9__gnu_cxx27__verbose_terminate_handlerEv");
+        src_address = dlsym(original_lib_handle, "_ZN9__gnu_cxx27__verbose_terminate_handlerEv");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNK10__cxxabiv117__class_type_info10__do_catchEPKSt9type_infoPPvj");
+        src_address = dlsym(original_lib_handle, "_ZNK10__cxxabiv117__class_type_info10__do_catchEPKSt9type_infoPPvj");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PKvRNS0_15__upcast_resultE");
+        src_address = dlsym(original_lib_handle, "_ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PKvRNS0_15__upcast_resultE");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PPv");
+        src_address = dlsym(original_lib_handle, "_ZNK10__cxxabiv117__class_type_info11__do_upcastEPKS0_PPv");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNK10__cxxabiv117__class_type_info12__do_dyncastEiNS0_10__sub_kindEPKS0_PKvS3_S5_RNS0_16__dyncast_resultE");
+        src_address = dlsym(original_lib_handle, "_ZNK10__cxxabiv117__class_type_info12__do_dyncastEiNS0_10__sub_kindEPKS0_PKvS3_S5_RNS0_16__dyncast_resultE");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNK10__cxxabiv117__class_type_info20__do_find_public_srcEiPKvPKS0_S2_");
+        src_address = dlsym(original_lib_handle, "_ZNK10__cxxabiv117__class_type_info20__do_find_public_srcEiPKvPKS0_S2_");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNK10__cxxabiv120__si_class_type_info11__do_upcastEPKNS_17__class_type_infoEPKvRNS1_15__upcast_resultE");
+        src_address = dlsym(original_lib_handle, "_ZNK10__cxxabiv120__si_class_type_info11__do_upcastEPKNS_17__class_type_infoEPKvRNS1_15__upcast_resultE");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNK10__cxxabiv120__si_class_type_info12__do_dyncastEiNS_17__class_type_info10__sub_kindEPKS1_PKvS4_S6_RNS1_16__dyncast_resultE");
+        src_address = dlsym(original_lib_handle, "_ZNK10__cxxabiv120__si_class_type_info12__do_dyncastEiNS_17__class_type_info10__sub_kindEPKS1_PKvS4_S6_RNS1_16__dyncast_resultE");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNK10__cxxabiv120__si_class_type_info20__do_find_public_srcEiPKvPKNS_17__class_type_infoES2_");
+        src_address = dlsym(original_lib_handle, "_ZNK10__cxxabiv120__si_class_type_info20__do_find_public_srcEiPKvPKNS_17__class_type_infoES2_");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNK10__cxxabiv121__vmi_class_type_info11__do_upcastEPKNS_17__class_type_infoEPKvRNS1_15__upcast_resultE");
+        src_address = dlsym(original_lib_handle, "_ZNK10__cxxabiv121__vmi_class_type_info11__do_upcastEPKNS_17__class_type_infoEPKvRNS1_15__upcast_resultE");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNK10__cxxabiv121__vmi_class_type_info12__do_dyncastEiNS_17__class_type_info10__sub_kindEPKS1_PKvS4_S6_RNS1_16__dyncast_resultE");
+        src_address = dlsym(original_lib_handle, "_ZNK10__cxxabiv121__vmi_class_type_info12__do_dyncastEiNS_17__class_type_info10__sub_kindEPKS1_PKvS4_S6_RNS1_16__dyncast_resultE");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNK10__cxxabiv121__vmi_class_type_info20__do_find_public_srcEiPKvPKNS_17__class_type_infoES2_");
+        src_address = dlsym(original_lib_handle, "_ZNK10__cxxabiv121__vmi_class_type_info20__do_find_public_srcEiPKvPKNS_17__class_type_infoES2_");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNKSt10bad_typeid4whatEv");
+        src_address = dlsym(original_lib_handle, "_ZNKSt10bad_typeid4whatEv");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNKSt13bad_exception4whatEv");
+        src_address = dlsym(original_lib_handle, "_ZNKSt13bad_exception4whatEv");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNKSt8bad_cast4whatEv");
+        src_address = dlsym(original_lib_handle, "_ZNKSt8bad_cast4whatEv");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNKSt9bad_alloc4whatEv");
+        src_address = dlsym(original_lib_handle, "_ZNKSt9bad_alloc4whatEv");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNKSt9exception4whatEv");
+        src_address = dlsym(original_lib_handle, "_ZNKSt9exception4whatEv");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNKSt9type_info10__do_catchEPKS_PPvj");
+        src_address = dlsym(original_lib_handle, "_ZNKSt9type_info10__do_catchEPKS_PPvj");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNKSt9type_info11__do_upcastEPKN10__cxxabiv117__class_type_infoEPPv");
+        src_address = dlsym(original_lib_handle, "_ZNKSt9type_info11__do_upcastEPKN10__cxxabiv117__class_type_infoEPPv");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNKSt9type_info14__is_pointer_pEv");
+        src_address = dlsym(original_lib_handle, "_ZNKSt9type_info14__is_pointer_pEv");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNKSt9type_info15__is_function_pEv");
+        src_address = dlsym(original_lib_handle, "_ZNKSt9type_info15__is_function_pEv");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt10bad_typeidD0Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt10bad_typeidD0Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt10bad_typeidD1Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt10bad_typeidD1Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt10bad_typeidD2Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt10bad_typeidD2Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt13bad_exceptionD0Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt13bad_exceptionD0Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt13bad_exceptionD1Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt13bad_exceptionD1Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt13bad_exceptionD2Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt13bad_exceptionD2Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt8bad_castD0Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt8bad_castD0Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt8bad_castD1Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt8bad_castD1Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt8bad_castD2Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt8bad_castD2Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt9bad_allocD0Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt9bad_allocD0Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt9bad_allocD1Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt9bad_allocD1Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt9bad_allocD2Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt9bad_allocD2Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt9exceptionD0Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt9exceptionD0Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt9exceptionD1Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt9exceptionD1Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt9exceptionD2Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt9exceptionD2Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt9type_infoD0Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt9type_infoD0Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt9type_infoD1Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt9type_infoD1Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZNSt9type_infoD2Ev");
+        src_address = dlsym(original_lib_handle, "_ZNSt9type_infoD2Ev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt10unexpectedv");
+        src_address = dlsym(original_lib_handle, "_ZSt10unexpectedv");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt13set_terminatePFvvE");
+        src_address = dlsym(original_lib_handle, "_ZSt13set_terminatePFvvE");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt14set_unexpectedPFvvE");
+        src_address = dlsym(original_lib_handle, "_ZSt14set_unexpectedPFvvE");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt15set_new_handlerPFvvE");
+        src_address = dlsym(original_lib_handle, "_ZSt15set_new_handlerPFvvE");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt18_Rb_tree_decrementPKSt18_Rb_tree_node_base");
+        src_address = dlsym(original_lib_handle, "_ZSt18_Rb_tree_decrementPKSt18_Rb_tree_node_base");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt18_Rb_tree_decrementPSt18_Rb_tree_node_base");
+        src_address = dlsym(original_lib_handle, "_ZSt18_Rb_tree_decrementPSt18_Rb_tree_node_base");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt18_Rb_tree_incrementPKSt18_Rb_tree_node_base");
+        src_address = dlsym(original_lib_handle, "_ZSt18_Rb_tree_incrementPKSt18_Rb_tree_node_base");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt18_Rb_tree_incrementPSt18_Rb_tree_node_base");
+        src_address = dlsym(original_lib_handle, "_ZSt18_Rb_tree_incrementPSt18_Rb_tree_node_base");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt18uncaught_exceptionv");
+        src_address = dlsym(original_lib_handle, "_ZSt18uncaught_exceptionv");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt20_Rb_tree_black_countPKSt18_Rb_tree_node_baseS1_");
+        src_address = dlsym(original_lib_handle, "_ZSt20_Rb_tree_black_countPKSt18_Rb_tree_node_baseS1_");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt20_Rb_tree_rotate_leftPSt18_Rb_tree_node_baseRS0_");
+        src_address = dlsym(original_lib_handle, "_ZSt20_Rb_tree_rotate_leftPSt18_Rb_tree_node_baseRS0_");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt21_Rb_tree_rotate_rightPSt18_Rb_tree_node_baseRS0_");
+        src_address = dlsym(original_lib_handle, "_ZSt21_Rb_tree_rotate_rightPSt18_Rb_tree_node_baseRS0_");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt28_Rb_tree_rebalance_for_erasePSt18_Rb_tree_node_baseRS_");
+        src_address = dlsym(original_lib_handle, "_ZSt28_Rb_tree_rebalance_for_erasePSt18_Rb_tree_node_baseRS_");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt29_Rb_tree_insert_and_rebalancebPSt18_Rb_tree_node_baseS0_RS_");
+        src_address = dlsym(original_lib_handle, "_ZSt29_Rb_tree_insert_and_rebalancebPSt18_Rb_tree_node_baseS0_RS_");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt7nothrow");
+        src_address = dlsym(original_lib_handle, "_ZSt7nothrow");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZSt9terminatev");
+        src_address = dlsym(original_lib_handle, "_ZSt9terminatev");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_ZdlPv");
+        src_address = dlsym(original_lib_handle, "_ZdlPv");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "_Znwj");
+        src_address = dlsym(original_lib_handle, "_Znwj");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__deregister_frame");
+        src_address = dlsym(original_lib_handle, "__deregister_frame");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__deregister_frame_info");
+        src_address = dlsym(original_lib_handle, "__deregister_frame_info");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__deregister_frame_info_bases");
+        src_address = dlsym(original_lib_handle, "__deregister_frame_info_bases");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__dynamic_cast");
+        src_address = dlsym(original_lib_handle, "__dynamic_cast");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__frame_state_for");
+        src_address = dlsym(original_lib_handle, "__frame_state_for");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__gcclibcxx_demangle_callback");
+        src_address = dlsym(original_lib_handle, "__gcclibcxx_demangle_callback");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__gxx_personality_v0");
+        src_address = dlsym(original_lib_handle, "__gxx_personality_v0");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__new_handler");
+        src_address = dlsym(original_lib_handle, "__new_handler");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__register_frame");
+        src_address = dlsym(original_lib_handle, "__register_frame");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__register_frame_info");
+        src_address = dlsym(original_lib_handle, "__register_frame_info");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__register_frame_info_bases");
+        src_address = dlsym(original_lib_handle, "__register_frame_info_bases");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__register_frame_info_table");
+        src_address = dlsym(original_lib_handle, "__register_frame_info_table");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__register_frame_info_table_bases");
+        src_address = dlsym(original_lib_handle, "__register_frame_info_table_bases");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__register_frame_table");
+        src_address = dlsym(original_lib_handle, "__register_frame_table");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap___lxstat");
+        src_address = dlsym(original_lib_handle, "__wrap___lxstat");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap___lxstat64");
+        src_address = dlsym(original_lib_handle, "__wrap___lxstat64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap___xstat");
+        src_address = dlsym(original_lib_handle, "__wrap___xstat");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap___xstat64");
+        src_address = dlsym(original_lib_handle, "__wrap___xstat64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_access");
+        src_address = dlsym(original_lib_handle, "__wrap_access");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_chdir");
+        src_address = dlsym(original_lib_handle, "__wrap_chdir");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_chmod");
+        src_address = dlsym(original_lib_handle, "__wrap_chmod");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_chown");
+        src_address = dlsym(original_lib_handle, "__wrap_chown");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_dlmopen");
+        src_address = dlsym(original_lib_handle, "__wrap_dlmopen");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_dlopen");
+        src_address = dlsym(original_lib_handle, "__wrap_dlopen");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_fopen");
+        src_address = dlsym(original_lib_handle, "__wrap_fopen");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_fopen64");
+        src_address = dlsym(original_lib_handle, "__wrap_fopen64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_freopen");
+        src_address = dlsym(original_lib_handle, "__wrap_freopen");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_lchown");
+        src_address = dlsym(original_lib_handle, "__wrap_lchown");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_link");
+        src_address = dlsym(original_lib_handle, "__wrap_link");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_lstat");
+        src_address = dlsym(original_lib_handle, "__wrap_lstat");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_lstat64");
+        src_address = dlsym(original_lib_handle, "__wrap_lstat64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_mkdir");
+        src_address = dlsym(original_lib_handle, "__wrap_mkdir");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_mkfifo");
+        src_address = dlsym(original_lib_handle, "__wrap_mkfifo");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_mknod");
+        src_address = dlsym(original_lib_handle, "__wrap_mknod");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_mount");
+        src_address = dlsym(original_lib_handle, "__wrap_mount");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_open");
+        src_address = dlsym(original_lib_handle, "__wrap_open");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_open64");
+        src_address = dlsym(original_lib_handle, "__wrap_open64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_opendir");
+        src_address = dlsym(original_lib_handle, "__wrap_opendir");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_rename");
+        src_address = dlsym(original_lib_handle, "__wrap_rename");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_rmdir");
+        src_address = dlsym(original_lib_handle, "__wrap_rmdir");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_scandir");
+        src_address = dlsym(original_lib_handle, "__wrap_scandir");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_scandir64");
+        src_address = dlsym(original_lib_handle, "__wrap_scandir64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_stat");
+        src_address = dlsym(original_lib_handle, "__wrap_stat");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_stat64");
+        src_address = dlsym(original_lib_handle, "__wrap_stat64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_statfs");
+        src_address = dlsym(original_lib_handle, "__wrap_statfs");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_statfs64");
+        src_address = dlsym(original_lib_handle, "__wrap_statfs64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_statvfs");
+        src_address = dlsym(original_lib_handle, "__wrap_statvfs");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_statvfs64");
+        src_address = dlsym(original_lib_handle, "__wrap_statvfs64");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_symlink");
+        src_address = dlsym(original_lib_handle, "__wrap_symlink");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_unlink");
+        src_address = dlsym(original_lib_handle, "__wrap_unlink");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_utime");
+        src_address = dlsym(original_lib_handle, "__wrap_utime");
+        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
+        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
+
+        dest_address = dlsym(self_lib_handle, "__wrap_utimes");
+        src_address = dlsym(original_lib_handle, "__wrap_utimes");
         if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
         std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
 
