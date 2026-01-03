@@ -150,9 +150,6 @@ The following list features links in Arch Linux repositories, but if you are usi
 you should use the equivalent package for your distro.
 
 Required libraries:
-- [brotli](https://archlinux.org/packages/core/x86_64/brotli/)
-  [[32-bit](https://archlinux.org/packages/multilib/x86_64/lib32-brotli/)]
-
 - [gcc-libs](https://archlinux.org/packages/core/x86_64/gcc-libs/)
   [[32-bit](https://archlinux.org/packages/core/x86_64/lib32-gcc-libs/)]
 
@@ -164,12 +161,6 @@ Required libraries:
 
 - [libnghttp2](https://archlinux.org/packages/core/x86_64/libnghttp2/)
   [[32-bit](https://archlinux.org/packages/multilib/x86_64/lib32-libnghttp2/)]
-
-- [libssh2](https://archlinux.org/packages/core/x86_64/libssh2/)
-  [[32-bit](https://archlinux.org/packages/multilib/x86_64/lib32-libssh2/)]
-
-- [openssl](https://archlinux.org/packages/core/x86_64/openssl/)
-  [[32-bit](https://archlinux.org/packages/multilib/x86_64/lib32-openssl/)]
 
 - [zlib](https://archlinux.org/packages/core/x86_64/zlib/)
   [[32-bit](https://archlinux.org/packages/multilib/x86_64/lib32-zlib/)]
@@ -194,7 +185,6 @@ wrappers might cause issues in theory. However, in practice real tests show that
 chance of success compared to proxy mode. So, at the end of the day, try both modes to see which one works
 best for you.
 
-
 ### 🔀 Proxy mode (🐧 Linux)
 
 Same as on Windows:
@@ -214,10 +204,10 @@ For example:
 1. Extract and paste the `libsmoke_api32.so` or `libsmoke_api64.so` in the root of game's installation directory.
 2. In Steam _Library_ open game's _Properties_, switch to the _General_ tab, and set the following _LAUNCH OPTIONS_:
 
-| Bitness | Launch Options                                                                                                         |
-|---------|------------------------------------------------------------------------------------------------------------------------|
-| 32-bit  | `LD_PRELOAD="./libsmoke_api32.so $HOME/.local/share/Steam/ubuntu12_32/gameoverlayrenderer.so" ./<GameExe32> %command%` |
-| 64-bit  | `LD_PRELOAD="./libsmoke_api64.so $HOME/.local/share/Steam/ubuntu12_64/gameoverlayrenderer.so" ./<GameExe64> %command%` |
+| Bitness | Launch Options                                                                                                                  |
+|---------|---------------------------------------------------------------------------------------------------------------------------------|
+| 32-bit  | `LD_PRELOAD="./libsmoke_api32.so $HOME/.local/share/Steam/ubuntu12_32/gameoverlayrenderer.so" ./<GameExe32> ; exit ; %command%` |
+| 64-bit  | `LD_PRELOAD="./libsmoke_api64.so $HOME/.local/share/Steam/ubuntu12_64/gameoverlayrenderer.so" ./<GameExe64> ; exit ; %command%` |
 
 Where `<GameExe32>` and `<GameExe64>` correspond to the actual filename of the game executable. For example:
 - `TheEscapists2.x86` (32-bit)
@@ -234,6 +224,9 @@ If you have other environment variables, and you don't know how to correctly com
 then please make extensive use of search engines and LLMs for guidance and examples
 before seeking help the official forum topic.
 
+> [!NOTE]
+> The `; exit ; %command%` at the end of launch options
+> is a trick used to force Steam to directly run the game executable.
 
 ## ⚙ Configuration
 
