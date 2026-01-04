@@ -7,6 +7,7 @@
 #include <koalabox/config.hpp>
 #include <koalabox/globals.hpp>
 #include <koalabox/hook.hpp>
+#include <koalabox/http_client.hpp>
 #include <koalabox/lib.hpp>
 #include <koalabox/lib_monitor.hpp>
 #include <koalabox/logger.hpp>
@@ -56,6 +57,27 @@ namespace {
 
     void* original_steamapi_handle = nullptr;
     bool is_hook_mode;
+
+    void check_for_updates() {
+        const auto latest_release_url = std::format(
+            "https://api.github.com/repos/acidicoala/{}/releases/latest",
+            PROJECT_NAME
+        );
+        const auto res = kb::http_client::get_json(latest_release_url);
+        const auto latest_tag = res["tag_name"].get<std::string>();
+        const auto current_tag = std::format("v{}", PROJECT_VERSION);
+
+        if(current_tag == latest_tag) {
+            LOG_DEBUG("Running the latest version");
+        } else {
+            const auto release_page = std::format(
+                "https://github.com/acidicoala/{}/releases/{}",
+                PROJECT_NAME, latest_tag
+            );
+
+            LOG_WARN("New version {} available: {}", latest_tag, release_page);
+        }
+    }
 
     std::set<std::string> find_steamclient_versions(void* steamapi_handle) {
         if(!steamapi_handle) {
@@ -253,6 +275,12 @@ namespace smoke_api {
 
 #ifdef KB_WIN
             kb::win::check_self_duplicates();
+#endif
+
+#ifdef KB_DEBUG
+            // TODO: Add config option to toggle this and show native OS notification
+            // The real reason behind this is for automatic testing of HTTPs dependencies
+            std::thread(check_for_updates).detach();
 #endif
 
             // We need to hook functions in either mode
