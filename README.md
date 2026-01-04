@@ -218,7 +218,7 @@ Where `<GameExe32>` and `<GameExe64>` correspond to the actual filename of the g
 - `TheEscapists2.x86_64` (64-bit)
 - `_linux/darkest.bin.x86` (32-bit)
 - `_linux/darkest.bin.x86_64` (64-bit)
-- `bin/linux_x64/eurotrucks2` (64-bit)
+- `eurotrucks2` (64-bit)
 - `binaries/victoria3` (64-bit)
 
 And so on. Notice that Linux executables do not have `.exe` extension like on Windows, so make sure to copy the entire
