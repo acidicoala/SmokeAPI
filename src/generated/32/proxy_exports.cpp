@@ -7403,11 +7403,6 @@ EXPORT void VR_Shutdown() {
     asm volatile ("jmp *%eax");
 }
 
-EXPORT void _DYNAMIC() {
-    asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
-    asm volatile ("jmp *%eax");
-}
-
 EXPORT void _Unwind_Backtrace() {
     asm volatile ("movl $0xDeadC0de, %%eax":::"eax");
     asm volatile ("jmp *%eax");
@@ -15575,11 +15570,6 @@ namespace proxy_exports {
 
         dest_address = dlsym(self_lib_handle, "VR_Shutdown");
         src_address = dlsym(original_lib_handle, "VR_Shutdown");
-        if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
-        std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
-
-        dest_address = dlsym(self_lib_handle, "_DYNAMIC");
-        src_address = dlsym(original_lib_handle, "_DYNAMIC");
         if(!src_address) src_address = reinterpret_cast<void*>(panic_exit);
         std::memcpy(static_cast<uint8_t*>(dest_address) + 1, &src_address, sizeof(void*));
 
