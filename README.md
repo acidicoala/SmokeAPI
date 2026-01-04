@@ -145,7 +145,11 @@ In such cases, it might be worth trying [Special K], which can inject SmokeAPI a
 
 ### ✔️ Requirements
 
-Linux builds of SmokeAPI depend on several libraries. Make sure they are installed on your system.
+Linux builds of SmokeAPI depend on several libraries. These libraries are usually included in the 
+[Steam Linux Runtime 3.0 (sniper)](https://github.com/ValveSoftware/steam-runtime#readme),
+so nothing is required to be installed on the system. But when launching a game directly via its executable
+(such as in case of hook mode) your system needs to have the following required libraries installed.
+
 The following list features links in Arch Linux repositories, but if you are using a different distribution,
 you should use the equivalent package for your distro.
 
