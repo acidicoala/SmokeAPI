@@ -234,7 +234,7 @@ namespace {
     }
 
     void init_proxy_mode([[maybe_unused]] void* self_module_handle) {
-        is_hook_mode = true;
+        is_hook_mode = false;
 
         original_steamapi_handle = kb::lib::load_original_library(kb::paths::get_self_dir(), STEAM_API_MODULE);
 #ifdef KB_LINUX
