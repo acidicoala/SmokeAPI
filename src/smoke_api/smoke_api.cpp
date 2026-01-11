@@ -133,10 +133,17 @@ namespace {
 
         static const auto CreateInterface$ = KB_LIB_GET_FUNC(steamclient_handle, CreateInterface);
 
-        if(original_steamapi_handle) {
+        if(auto* steamapi_handle = kb::lib::get_lib_handle(STEAM_API_MODULE)) {
+            if(steamapi_handle != original_steamapi_handle) {
+                LOG_WARN(
+                    "{} -> steamapi_handle ({}) != original_steamapi_handle ({})",
+                    __func__, steamapi_handle, original_steamapi_handle
+                );
+            }
+
             // SteamAPI might have been initialized.
             // Hence, we need to query SteamClient interfaces and hook them if needed.
-            const auto steamclient_versions = find_steamclient_versions(original_steamapi_handle);
+            const auto steamclient_versions = find_steamclient_versions(steamapi_handle);
             for(const auto& steamclient_version : steamclient_versions) {
                 if(CreateInterface$(steamclient_version.c_str(), nullptr)) {
 #ifdef KB_WIN
@@ -149,7 +156,7 @@ namespace {
                 }
             }
         } else {
-            LOG_ERROR("{} -> original_steamapi_handle is null", __func__);
+            LOG_ERROR("{} -> steamapi_handle is null", __func__);
         }
 
         return true;
