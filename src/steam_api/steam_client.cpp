@@ -15,7 +15,9 @@ namespace steam_client {
             if(interface_version) {
                 LOG_DEBUG("{} -> '{}' @ {}", function_name, interface_version, interface);
 
-                steam_interfaces::hook_virtuals(interface, interface_version);
+                if(interface) {
+                    steam_interfaces::hook_virtuals(interface, interface_version);
+                }
             }
 
             return interface;

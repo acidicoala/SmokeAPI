@@ -237,13 +237,10 @@ namespace steam_interfaces {
                     continue;
                 }
 
-                const auto* const interface_ptr = ISteamClient_GetISteamGenericInterface(
+                ISteamClient_GetISteamGenericInterface(
                     ARGS(steam_user, steam_pipe, interface_version.c_str())
                 );
 
-                if(not interface_ptr) {
-                    LOG_ERROR("Failed to get generic interface: '{}'", interface_version)
-                }
             }
         } catch(const std::exception& e) {
             LOG_ERROR("{} -> Unhandled exception: {}", __func__, e.what());

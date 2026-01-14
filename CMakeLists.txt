@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.24)
 
-project(SmokeAPI VERSION 4.1.1)
+project(SmokeAPI VERSION 4.1.3)
 
 include(KoalaBox/cmake/KoalaBox.cmake)
 add_subdirectory(KoalaBox)

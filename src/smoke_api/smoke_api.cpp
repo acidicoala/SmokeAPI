@@ -224,7 +224,10 @@ namespace {
             if(const auto lib_bitness = kb::lib::get_bitness(lib_path)) {
                 if(static_cast<uint8_t>(*lib_bitness) == kb::platform::bitness) {
                     if(const auto lib_handle = kb::lib::load(lib_path)) {
-                        LOG_INFO("Found original library: {}", kb::path::to_str(lib_path));
+                        LOG_INFO(
+                            "Found & loaded original library '{}' @ {}",
+                            kb::path::to_str(lib_path), *lib_handle
+                        );
 
                         original_steamapi_handle = *lib_handle;
                         proxy_exports::init(self_module_handle, original_steamapi_handle);
