@@ -20,8 +20,8 @@
     "logging": {
       "type": "boolean",
       "default": false,
-      "x-packaged-default": true,
       "description": "Enables logging to SmokeAPI.log.log file.",
+      "x-packaged-default": true,
       "x-valid-values": "`true` or `false`."
     },
     "log_steam_http": {
